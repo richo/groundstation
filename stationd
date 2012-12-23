@@ -7,16 +7,20 @@ import time
 from groundstation.station import Station
 from groundstation.broadcast_discoverer import BroadcastDiscoverer
 from groundstation.broadcast_announcer import BroadcastAnnouncer
+from groundstation.node import Node
 
 from os.path import expanduser
 
 PORT=1248
+
+myself = Node()
 
 station_path = expanduser("~/.groundstation")
 station = Station(station_path)
 
 discoverer = BroadcastDiscoverer(PORT)
 announcer  = BroadcastAnnouncer(PORT)
+announcer.name = myself.name
 
 sockets = [discoverer.socket]
 
@@ -33,6 +37,11 @@ while True:
 
     for i in sread:
         if i == discoverer.socket:
+            # TODO Return Event objects instead of raw data
             data, peer = discoverer.recv(1024)
-            print("Got %s from %s" % (data, repr(peer)))
+            event_type, event_payload = data.split(" ", 1)
+            if event_payload != "None" and event_payload != myself.name:
+                print("Got %s from %s" % (data, repr(peer)))
+            else:
+                print("Discarding %s from myself" % (data))
         # else: # Right now that's the only socket
