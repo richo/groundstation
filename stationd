@@ -1,0 +1,38 @@
+#!/usr/bin/env python
+import os
+import sys
+import select
+import time
+
+from groundstation.station import Station
+from groundstation.broadcast_discoverer import BroadcastDiscoverer
+from groundstation.broadcast_announcer import BroadcastAnnouncer
+
+from os.path import expanduser
+
+PORT=1248
+
+station_path = expanduser("~/.groundstation")
+station = Station(station_path)
+
+discoverer = BroadcastDiscoverer(PORT)
+announcer  = BroadcastAnnouncer(PORT)
+
+sockets = [discoverer.socket]
+
+last_beacon = time.time() - 5 # Gaurantee that we'll announce on the first run
+
+while True:
+    if time.time() > (last_beacon + 5):
+        last_beacon = time.time()
+        print("Pinging")
+        announcer.ping()
+
+    sys.stderr.write("Blocking on sockets\n")
+    (sread, write, sexc) = select.select(sockets, [], [], 5)
+
+    for i in sread:
+        if i == discoverer.socket:
+            data, peer = discoverer.recv(1024)
+            print("Got %s from %s" % (data, repr(peer)))
+        # else: # Right now that's the only socket
