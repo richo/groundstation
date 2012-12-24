@@ -10,6 +10,7 @@ log = logger.getLogger("stationd")
 from groundstation.station import Station
 from groundstation.broadcast_discoverer import BroadcastDiscoverer
 from groundstation.broadcast_announcer import BroadcastAnnouncer
+from groundstation.stream_listener import StreamListener
 from groundstation.node import Node
 
 from os.path import expanduser
@@ -23,9 +24,10 @@ station = Station(station_path)
 
 discoverer = BroadcastDiscoverer(PORT)
 announcer  = BroadcastAnnouncer(PORT)
+listener   = StreamListener(PORT)
 announcer.name = myself.name
 
-sockets = [discoverer.socket]
+sockets = [discoverer.socket, listener.socket]
 
 last_beacon = time.time() - 5 # Gaurantee that we'll announce on the first run
 
@@ -48,4 +50,11 @@ while True:
                 log.info("Got %s from %s" % (data, repr(peer)))
             else:
                 log.info("Discarding %s from myself" % (data))
+        elif i == listener.socket:
+            (conn, address) = listener.accept()
+            log.info("Accepted a connection from %s" % repr(address))
+            # Close the connection since we have no handling yet.
+            conn.close()
+
+
         # else: # Right now that's the only socket
