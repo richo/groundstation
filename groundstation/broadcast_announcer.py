@@ -1,5 +1,9 @@
 import socket
+import logger
 from broadcast_socket import BroadcastSocket
+
+import logger
+log = logger.getLogger(__name__)
 
 class BroadcastAnnouncer(BroadcastSocket):
     def __init__(self, port):
@@ -18,7 +22,7 @@ class BroadcastAnnouncer(BroadcastSocket):
         self.broadcast_payload = "PING %s" % (self._name)
 
     def ping(self):
+        log.info("ping payload: %s" % (self.broadcast_payload))
         transmitted = self.socket.sendto(self.broadcast_payload, self._addr)
         if transmitted != len(self.broadcast_payload):
-            # XXX Do we really care?
-            pass
+            log.warning("ping wasn't successfully broadcast")

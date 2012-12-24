@@ -1,6 +1,9 @@
 import socket
 from broadcast_socket import BroadcastSocket
 
+import logger
+log = logger.getLogger(__name__)
+
 class BroadcastDiscoverer(BroadcastSocket):
 
     def __init__(self, port):

@@ -4,6 +4,9 @@ import sys
 import select
 import time
 
+from groundstation import logger
+log = logger.getLogger("stationd")
+
 from groundstation.station import Station
 from groundstation.broadcast_discoverer import BroadcastDiscoverer
 from groundstation.broadcast_announcer import BroadcastAnnouncer
@@ -29,11 +32,12 @@ last_beacon = time.time() - 5 # Gaurantee that we'll announce on the first run
 while True:
     if time.time() > (last_beacon + 5):
         last_beacon = time.time()
-        print("Pinging")
+        log.info("Sending PING on broadcast")
         announcer.ping()
 
-    sys.stderr.write("Blocking on sockets\n")
+    log.info("Blocking on sockets")
     (sread, write, sexc) = select.select(sockets, [], [], 5)
+    log.info("Got %i ready fds" % len(sread))
 
     for i in sread:
         if i == discoverer.socket:
@@ -41,7 +45,7 @@ while True:
             data, peer = discoverer.recv(1024)
             event_type, event_payload = data.split(" ", 1)
             if event_payload != "None" and event_payload != myself.name:
-                print("Got %s from %s" % (data, repr(peer)))
+                log.info("Got %s from %s" % (data, repr(peer)))
             else:
-                print("Discarding %s from myself" % (data))
+                log.info("Discarding %s from myself" % (data))
         # else: # Right now that's the only socket
