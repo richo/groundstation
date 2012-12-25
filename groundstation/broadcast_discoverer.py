@@ -12,7 +12,6 @@ class BroadcastDiscoverer(BroadcastSocket):
 
     def __del__(self):
         "Shutdown and close the underlying socket."
-        self._sock.shutdown(socket.SHUT_RDWR)
         self._sock.close()
 
     @property
