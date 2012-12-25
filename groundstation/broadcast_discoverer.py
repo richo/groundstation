@@ -1,5 +1,5 @@
 import socket
-from broadcast_socket import BroadcastSocket
+from sockets.broadcast_socket import BroadcastSocket
 
 import logger
 log = logger.getLogger(__name__)
