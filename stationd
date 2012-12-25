@@ -7,6 +7,8 @@ import time
 from groundstation import logger
 log = logger.getLogger("stationd")
 
+from groundstation import settings
+
 from groundstation.station import Station
 from groundstation.broadcast_discoverer import BroadcastDiscoverer
 from groundstation.broadcast_announcer import BroadcastAnnouncer
@@ -16,8 +18,8 @@ from groundstation.peer_socket import PeerSocket
 
 from os.path import expanduser
 
-PORT=1248
-BEACON_TIMEOUT=5
+PORT = settings.PORT
+BEACON_TIMEOUT = settings.BEACON_TIMEOUT
 
 myself = Node()
 
