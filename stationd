@@ -74,6 +74,10 @@ while True:
                     log.info("Discarding PING from myself")
                 else:
                     log.info("Ping from %s" % str(peer))
+                    if event.payload > myself.uuid:
+                        log.info("Peer's uuid is larger, connecting and attempting sync")
+                    else:
+                        log.info("Peer's uuid is smaller, awaiting connection")
 
         elif i == listener:
             peer = listener.accept()
