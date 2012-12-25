@@ -15,6 +15,7 @@ from groundstation.broadcast_announcer import BroadcastAnnouncer
 from groundstation.stream_listener import StreamListener
 from groundstation.node import Node
 from groundstation.peer_socket import PeerSocket
+from groundstation.peer_socket_pool import PeerSocketPool
 
 from os.path import expanduser
 
@@ -32,7 +33,7 @@ listener   = StreamListener(PORT)
 announcer.name = myself.name
 
 sockets = [discoverer, listener]
-peer_sockets = []
+peer_sockets = PeerSocketPool()
 
 last_beacon = time.time() - BEACON_TIMEOUT # Gaurantee that we'll announce on the first run
 
