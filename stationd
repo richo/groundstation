@@ -16,6 +16,7 @@ from groundstation.node import Node
 from os.path import expanduser
 
 PORT=1248
+BEACON_TIMEOUT=5
 
 myself = Node()
 
@@ -29,16 +30,16 @@ announcer.name = myself.name
 
 sockets = [discoverer, listener]
 
-last_beacon = time.time() - 5 # Gaurantee that we'll announce on the first run
+last_beacon = time.time() - BEACON_TIMEOUT # Gaurantee that we'll announce on the first run
 
 while True:
-    if time.time() > (last_beacon + 5):
+    if time.time() > (last_beacon + BEACON_TIMEOUT):
         last_beacon = time.time()
         log.info("Sending PING on broadcast")
         announcer.ping()
 
-    log.info("Blocking on sockets")
-    (sread, write, sexc) = select.select(sockets, [], [], 5)
+    log.info("Blocking on sockets for up to %is" % (BEACON_TIMEOUT))
+    (sread, write, sexc) = select.select(sockets, [], [], BEACON_TIMEOUT)
     log.info("Got %i ready fds" % len(sread))
 
     for i in sread:
