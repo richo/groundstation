@@ -97,6 +97,8 @@ while True:
                 peer_sockets.remove(i)
         elif isinstance(i, StreamClient):
             data = i.socket.recv(1024)
+            if not data:
+                peer_sockets.remove(i)
             log.info("got %s back from peer" % (repr(data)))
 
     for i in swrite:
