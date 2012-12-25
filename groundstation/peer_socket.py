@@ -35,6 +35,9 @@ class PeerSocket(object):
     def recv(self):
         """Recieve some bytes fromt he socket, handling buffering internally"""
         data = self.conn.recv(1024)
+        if not data:
+            self.conn.close()
+            raise PeerSocketClosedException(self)
         log.debug("RECV %i bytes: %s from %s" %
                 (len(data), repr(data), self.peer))
         return data # TODO Buffering
@@ -46,3 +49,9 @@ class PeerSocket(object):
         log.debug("SEND %i bytes: %s to %s" %
                 (len(data), repr(data), self.peer))
         self.conn.send(data)
+
+class PeerSocketClosedException(Exception):
+    """Raised when a peer closes their socket"""
+    def __init__(self, peer):
+        log.info("Peer %s closed connection" % (str(peer.peer)))
+        self.peer = peer

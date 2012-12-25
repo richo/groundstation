@@ -14,7 +14,7 @@ from groundstation.broadcast_discoverer import BroadcastDiscoverer
 from groundstation.broadcast_announcer import BroadcastAnnouncer
 from groundstation.stream_listener import StreamListener
 from groundstation.node import Node
-from groundstation.peer_socket import PeerSocket
+from groundstation.peer_socket import PeerSocket, PeerSocketClosedException
 from groundstation.peer_socket_pool import PeerSocketPool
 
 from os.path import expanduser
@@ -72,8 +72,11 @@ while True:
             peer = listener.accept()
             peer_sockets.append(peer)
         elif isinstance(i, PeerSocket):
-            data = i.recv()
-            i.enqueue("%s" % data)
+            try:
+                data = i.recv()
+                i.enqueue("%s" % data)
+            except PeerSocketClosedException:
+                peer_sockets.remove(i)
 
     for i in swrite:
         if isinstance(i, PeerSocket):
