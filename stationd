@@ -12,6 +12,7 @@ from groundstation.broadcast_discoverer import BroadcastDiscoverer
 from groundstation.broadcast_announcer import BroadcastAnnouncer
 from groundstation.stream_listener import StreamListener
 from groundstation.node import Node
+from groundstation.peer_socket import PeerSocket
 
 from os.path import expanduser
 
@@ -29,8 +30,22 @@ listener   = StreamListener(PORT)
 announcer.name = myself.name
 
 sockets = [discoverer, listener]
+peer_sockets = []
 
 last_beacon = time.time() - BEACON_TIMEOUT # Gaurantee that we'll announce on the first run
+
+def _read_sockets():
+    read_sockets = []
+    for i in sockets: read_sockets.append(i)
+    for i in peer_sockets: read_sockets.append(i)
+    return read_sockets
+
+def _write_sockets():
+    write_sockets = []
+    for i in peer_sockets:
+        if i.has_data_ready():
+            write_sockets.append(i)
+    return write_sockets
 
 while True:
     if time.time() > (last_beacon + BEACON_TIMEOUT):
@@ -38,7 +53,7 @@ while True:
         announcer.ping()
 
     log.info("Blocking on sockets for up to %is" % (BEACON_TIMEOUT))
-    (sread, write, sexc) = select.select(sockets, [], [], BEACON_TIMEOUT)
+    (sread, swrite, sexc) = select.select(_read_sockets(), _write_sockets(), [], BEACON_TIMEOUT)
     log.info("Got %i ready fds" % len(sread))
 
     for i in sread:
@@ -51,10 +66,14 @@ while True:
             else:
                 log.info("Discarding %s from myself" % (data))
         elif i == listener:
-            (conn, address) = listener.accept()
-            log.info("Accepted a connection from %s" % repr(address))
-            # Close the connection since we have no handling yet.
-            conn.close()
+            peer = listener.accept()
+            peer_sockets.append(peer)
+        elif isinstance(i, PeerSocket):
+            data = i.recv()
+            i.enqueue("%s" % data)
 
+    for i in swrite:
+        if isinstance(i, PeerSocket):
+            i.send()
 
         # else: # Right now that's the only socket
