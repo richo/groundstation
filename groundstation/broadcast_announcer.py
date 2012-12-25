@@ -1,6 +1,6 @@
 import socket
 import logger
-from groundstation.broadcast_socket import BroadcastSocket
+from sockets.broadcast_socket import BroadcastSocket
 
 import logger
 log = logger.getLogger(__name__)
