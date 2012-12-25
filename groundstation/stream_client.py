@@ -4,6 +4,7 @@ import settings
 
 class StreamClient(StreamSocket):
     def __init__(self, addr):
+        self.peer = addr
         super(StreamClient, self).__init__()
         self._sock.connect((addr, settings.PORT))
 
