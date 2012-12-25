@@ -16,6 +16,8 @@ from groundstation.stream_listener import StreamListener
 from groundstation.node import Node
 from groundstation.peer_socket import PeerSocket, PeerSocketClosedException
 from groundstation.peer_socket_pool import PeerSocketPool
+from groundstation.broadcast_events import new_broadcast_event, UnknownBroadcastEvent
+from groundstation.broadcast_events.broadcast_ping import BroadcastPing
 
 from os.path import expanduser
 
@@ -63,11 +65,16 @@ while True:
         if i == discoverer:
             # TODO Return Event objects instead of raw data
             data, peer = discoverer.recv(1024)
-            event_type, event_payload = data.split(" ", 1)
-            if event_payload != "None" and event_payload != myself.name:
-                log.info("Got %s from %s" % (data, repr(peer)))
-            else:
-                log.info("Discarding %s from myself" % (data))
+            try:
+                event = new_broadcast_event(data)
+            except UnknownBroadcastEvent:
+                log.warning("Ooops got some weird event: %s" % (repr(data)))
+            if isinstance(event, BroadcastPing):
+                if event.payload == myself.uuid:
+                    log.info("Discarding PING from myself")
+                else:
+                    log.info("Ping from %s" % str(peer))
+
         elif i == listener:
             peer = listener.accept()
             peer_sockets.append(peer)

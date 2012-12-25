@@ -46,6 +46,8 @@ Protocol Specification for groundstation
 }
 ```
 
+* When a node is discovered by Broadcast, the UUID's are compared and the lower
+  ID will connect to the higher.
 * When a connection is initialized, the recieving node will check if it already
   has a connection to the given party and sever it in that case.
 * Should the connection not be severed, the connecting party shall immediately
