@@ -13,6 +13,7 @@ from groundstation.station import Station
 from groundstation.broadcast_discoverer import BroadcastDiscoverer
 from groundstation.broadcast_announcer import BroadcastAnnouncer
 from groundstation.stream_listener import StreamListener
+from groundstation.stream_client import StreamClient
 from groundstation.node import Node
 from groundstation.peer_socket import PeerSocket, PeerSocketClosedException
 from groundstation.peer_socket_pool import PeerSocketPool
@@ -59,7 +60,8 @@ while True:
 
     log.info("Blocking on sockets for up to %is" % (BEACON_TIMEOUT))
     (sread, swrite, sexc) = select.select(_read_sockets(), _write_sockets(), [], BEACON_TIMEOUT)
-    log.info("Got %i ready fds" % len(sread))
+    log.info("Got %i read fds" % (len(sread)))
+    log.info("Got %i write fds" % (len(swrite)))
 
     for i in sread:
         if i == discoverer:
@@ -75,8 +77,13 @@ while True:
                 else:
                     log.info("Ping from %s" % str(peer))
                     if event.payload > myself.uuid:
-                        log.info("Peer's uuid is larger, connecting and attempting sync")
+                        # Peer's uuid is larger, we should connect and initiate sync
+                        if peer[0] not in peer_sockets:
+                            client = StreamClient(peer[0])
+                            peer_sockets.append(client)
+                            client.begin_handshake()
                     else:
+                        # Peer's uuid is smaller, we should do nothing and await connection
                         log.info("Peer's uuid is smaller, awaiting connection")
 
         elif i == listener:
@@ -88,9 +95,14 @@ while True:
                 i.enqueue("%s" % data)
             except PeerSocketClosedException:
                 peer_sockets.remove(i)
+        elif isinstance(i, StreamClient):
+            data = i.socket.recv(1024)
+            log.info("got %s back from peer" % (repr(data)))
 
     for i in swrite:
         if isinstance(i, PeerSocket):
+            i.send()
+        elif isinstance(i, StreamClient):
             i.send()
 
         # else: # Right now that's the only socket

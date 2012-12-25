@@ -7,10 +7,8 @@ from groundstation.peer_socket import PeerSocket
 
 class StreamSocket(object):
     """Wraps a TCP socket"""
-    def __init__(self, port):
+    def __init__(self):
         self._sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self._sock.bind(('0.0.0.0', port))
-        self._sock.listen(16)
         # XXX Implement the queue as a seperate class/
         self.write_queue  = []
 
@@ -29,8 +27,13 @@ class StreamSocket(object):
 
     def enqueue(self, data):
         """Enqueues data for writing inside the select loop"""
-        self.write_queue.append(data)
+        self.write_queue.insert(0, data)
 
-    def data_ready(self):
+    def send(self):
+        data = self.write_queue.pop()
+        log.info("Attempting to write %i bytes" % (len(data)))
+        self._sock.send(data)
+
+    def has_data_ready(self):
         """(bool) does this socket have enqueued data ready"""
         return len(self.write_queue) > 0
