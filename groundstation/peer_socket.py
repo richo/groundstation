@@ -30,7 +30,7 @@ class PeerSocket(object):
         return len(self.queue) > 0
 
     def enqueue(self, data):
-        self.queue = [data] + self.queue
+        self.queue.insert(0, data)
 
     def recv(self):
         """Recieve some bytes fromt he socket, handling buffering internally"""
