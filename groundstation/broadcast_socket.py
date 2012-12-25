@@ -6,6 +6,10 @@ class BroadcastSocket(object):
         self._sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, True)
         self._sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, True)
 
+    def fileno(self):
+        """Return the underlying socket to make select() work"""
+        return self._sock.fileno()
+
     @property
     def socket(self):
         return self._sock

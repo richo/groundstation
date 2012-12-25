@@ -27,7 +27,7 @@ announcer  = BroadcastAnnouncer(PORT)
 listener   = StreamListener(PORT)
 announcer.name = myself.name
 
-sockets = [discoverer.socket, listener.socket]
+sockets = [discoverer, listener]
 
 last_beacon = time.time() - 5 # Gaurantee that we'll announce on the first run
 
@@ -42,7 +42,7 @@ while True:
     log.info("Got %i ready fds" % len(sread))
 
     for i in sread:
-        if i == discoverer.socket:
+        if i == discoverer:
             # TODO Return Event objects instead of raw data
             data, peer = discoverer.recv(1024)
             event_type, event_payload = data.split(" ", 1)
@@ -50,7 +50,7 @@ while True:
                 log.info("Got %s from %s" % (data, repr(peer)))
             else:
                 log.info("Discarding %s from myself" % (data))
-        elif i == listener.socket:
+        elif i == listener:
             (conn, address) = listener.accept()
             log.info("Accepted a connection from %s" % repr(address))
             # Close the connection since we have no handling yet.
