@@ -35,7 +35,6 @@ last_beacon = time.time() - BEACON_TIMEOUT # Gaurantee that we'll announce on th
 while True:
     if time.time() > (last_beacon + BEACON_TIMEOUT):
         last_beacon = time.time()
-        log.info("Sending PING on broadcast")
         announcer.ping()
 
     log.info("Blocking on sockets for up to %is" % (BEACON_TIMEOUT))
