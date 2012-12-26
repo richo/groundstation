@@ -17,4 +17,4 @@ class Request(object):
 
     def validate(self):
         if self.request not in VALID_REQUESTS:
-            raise "Invalid Request: %s" % (self.request)
+            raise Exception("Invalid Request: %s" % (self.request))
