@@ -1,5 +1,10 @@
 from groundstation.proto.gizmo_pb2 import Gizmo
 
+from groundstation import logger
+log = logger.getLogger(__name__)
+
+import pygit2
+
 class Response(object):
     def __init__(self, response_to, payload):
         self.type = "RESPONSE"
@@ -16,5 +21,12 @@ class Response(object):
         gizmo.type = Gizmo.REQUEST
         gizmo.verb = self.verb
         if self.payload:
-            gizmo.payload = self.payload
+            gizmo.payload = self.serialize_payload(self.payload)
         return gizmo.SerializeToString()
+
+    @staticmethod
+    def serialize_payload(payload):
+        if isinstance(payload, pygit2.Blob):
+            return payload.data
+        else:
+            return payload
