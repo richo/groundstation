@@ -59,13 +59,17 @@ class Request(object):
         response = self._Response(self.id, "DESCRIBEOBJECTS",
                                 chr(0).join(payload))
         self.stream.enqueue(response)
-        terminate = self._Response(self.id, "TERMINATE", None)
-        self.stream.enqueue(terminate)
+        self.TERMINATE()
 
     def handle_fetchobject(self):
         log.info("Handling FETCHOBJECT for %s" % (repr(self.payload)))
         response = self._Response(self.id, "TRANSFER", self.station.repo[self.payload])
         self.stream.enqueue(response)
+
+    def TERMINATE(self):
+        terminate = self._Response(self.id, "TERMINATE", None)
+        self.stream.enqueue(terminate)
+
 
     VALID_REQUESTS = {
             "LISTALLOBJECTS": handle_listallobjects,
