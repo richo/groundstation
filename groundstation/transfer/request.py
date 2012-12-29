@@ -20,6 +20,10 @@ class Request(object):
         self.payload = payload
         self.validate()
 
+    @classmethod
+    def from_gizmo(klass, gizmo, station, stream):
+        klass(gizmo.verb, station, stream, gizmo.payload)
+
     # @property
     # def station(self):
     #     return self.station
