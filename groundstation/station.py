@@ -8,13 +8,16 @@ log = logger.getLogger(__name__)
 from user import User, NoSuchUser
 
 from packed_keys import PackedKeys, NoKeysRef
+from gizmo_factory import GizmoFactory, InvalidGizmoError
 
 class Station(object):
-    def __init__(self, path):
+    def __init__(self, path, identity):
+        self.identity = identity
         if not os.path.exists(path):
             log.info("initializing database in %s" % (path))
             pygit2.init_repository(path, True)
         self.repo = pygit2.Repository(path)
+        self.gizmo_factory = GizmoFactory(self, identity)
 
     @staticmethod
     def _build_objects(db, dirname, files):

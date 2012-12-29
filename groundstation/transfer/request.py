@@ -11,7 +11,7 @@ class InvalidRequest(Exception):
 class Request(object):
     _Response = None
 
-    def __init__(self, verb, station=None, stream=None, payload=None):
+    def __init__(self, verb, station=None, stream=None, payload=None, origin=None):
         # Cheat and load this at class definition time
         if not self._Response:
             res = __import__("groundstation.transfer.response")
@@ -22,6 +22,9 @@ class Request(object):
         self.station = station
         self.stream = stream
         self.payload = payload
+        # if origin:
+        #     self.origin = uuid.UUID(origin)
+        self.origin = origin
         self.validate()
 
     @classmethod

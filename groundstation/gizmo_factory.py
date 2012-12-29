@@ -11,8 +11,13 @@ class GizmoFactory(object):
             Gizmo.REQUEST: Request,
             Gizmo.RESPONSE: Response
     }
-    def __init__(self, station):
+    def __init__(self, station, identity):
         self.station = station
+        self.identity = identity
+
+    def gizmo(self):
+        gizmo = Gizmo()
+        gizmo.stationid = self.identity.name
 
     def hydrate(self, data, stream):
         log.debug("Attempting to hydrate %s" % (repr(data)))

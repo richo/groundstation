@@ -7,7 +7,7 @@ import pygit2
 
 class Response(object):
     _Request = None
-    def __init__(self, response_to, verb, payload, station=None, stream=None):
+    def __init__(self, response_to, verb, payload, station=None, stream=None, origin=None):
         # Cheat and load this at class definition time
         if not self._Request:
             req = __import__("groundstation.transfer.request")
@@ -18,6 +18,9 @@ class Response(object):
         self.stream = stream
         self.verb = verb
         self.payload = payload
+        # if origin:
+        #     self.origin = uuid.UUID(origin)
+        self.origin = origin
 
     @classmethod
     def from_gizmo(klass, gizmo, station, stream):
