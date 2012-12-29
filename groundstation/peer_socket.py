@@ -1,3 +1,5 @@
+from sockets.socket_closed_exception import SocketClosedException
+
 import groundstation.logger
 log = groundstation.logger.getLogger(__name__)
 
@@ -50,8 +52,6 @@ class PeerSocket(object):
                 (len(data), repr(data), self.peer))
         self.conn.send(data)
 
-class PeerSocketClosedException(Exception):
+class PeerSocketClosedException(SocketClosedException):
     """Raised when a peer closes their socket"""
-    def __init__(self, peer):
-        log.info("Peer %s closed connection" % (str(peer.peer)))
-        self.peer = peer
+    pass

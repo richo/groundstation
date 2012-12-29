@@ -1,5 +1,6 @@
 import socket
 from sockets.stream_socket import StreamSocket
+from sockets.socket_closed_exception import SocketClosedException
 import settings
 
 class StreamClient(StreamSocket):
@@ -13,3 +14,7 @@ class StreamClient(StreamSocket):
 
     def recv(self):
         return self.socket.recv(1024)
+
+class StreamSocketClosedException(SocketClosedException):
+    """Raised when a peer closes their socket"""
+    pass

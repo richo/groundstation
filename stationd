@@ -15,7 +15,8 @@ from groundstation.broadcast_announcer import BroadcastAnnouncer
 from groundstation.stream_listener import StreamListener
 from groundstation.stream_client import StreamClient
 from groundstation.node import Node
-from groundstation.peer_socket import PeerSocket, PeerSocketClosedException
+from groundstation.peer_socket import PeerSocket
+from groundstation.sockets.socket_closed_exception import SocketClosedException
 from groundstation.peer_socket_pool import PeerSocketPool
 from groundstation.broadcast_events import new_broadcast_event, UnknownBroadcastEvent
 from groundstation.broadcast_events.broadcast_ping import BroadcastPing
@@ -89,17 +90,12 @@ while True:
         elif i == listener:
             peer = listener.accept()
             peer_sockets.append(peer)
-        elif isinstance(i, PeerSocket):
+        elif isinstance(i, PeerSocket) or isinstance(i, StreamClient):
             try:
                 data = i.recv()
-                i.enqueue("%s" % data)
-            except PeerSocketClosedException:
+                log.info("got %s back from peer" % (repr(data)))
+            except SocketClosedException:
                 peer_sockets.remove(i)
-        elif isinstance(i, StreamClient):
-            data = i.recv()
-            if not data:
-                peer_sockets.remove(i)
-            log.info("got %s back from peer" % (repr(data)))
 
     for i in swrite:
         if isinstance(i, PeerSocket):
