@@ -20,7 +20,7 @@ from groundstation.sockets.socket_closed_exception import SocketClosedException
 from groundstation.peer_socket_pool import PeerSocketPool
 from groundstation.broadcast_events import new_broadcast_event, UnknownBroadcastEvent
 from groundstation.broadcast_events.broadcast_ping import BroadcastPing
-from groundstation.gizmo_factory import GizmoFactory
+from groundstation.gizmo_factory import GizmoFactory, InvalidGizmoError
 
 from os.path import expanduser
 
@@ -101,6 +101,8 @@ while True:
                 gizmo.process()
             except SocketClosedException:
                 peer_sockets.remove(i)
+            except InvalidGizmoError:
+                pass # Ignore invalid gizmo's for now.
 
     for i in swrite:
         if isinstance(i, PeerSocket) or isinstance(i, StreamClient):
