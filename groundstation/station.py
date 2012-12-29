@@ -16,7 +16,7 @@ import settings
 class Station(object):
     def __init__(self, path, identity):
         self.identity = identity
-        if not os.path.exists(path):
+        if not os.path.exists(os.path.join(path, "objects")):
             log.info("initializing database in %s" % (path))
             pygit2.init_repository(path, True)
         self.repo = pygit2.Repository(path)
