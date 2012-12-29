@@ -11,11 +11,10 @@ from packed_keys import PackedKeys, NoKeysRef
 
 class Station(object):
     def __init__(self, path):
-        if os.path.exists(path):
-            self.repo = pygit2.Repository(path)
-        else:
+        if not os.path.exists(path):
             log.info("initializing database in %s" % (path))
             pygit2.init_repository(path, True)
+        self.repo = pygit2.Repository(path)
 
     @staticmethod
     def _build_objects(db, dirname, files):
