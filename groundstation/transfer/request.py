@@ -2,6 +2,9 @@ import uuid
 
 from groundstation.proto.gizmo_pb2 import Gizmo
 
+from groundstation import logger
+log = logger.getLogger(__name__)
+
 class InvalidRequest(Exception):
     pass
 
@@ -45,11 +48,13 @@ class Request(object):
         if self.verb not in self.VALID_REQUESTS:
             raise Exception("Invalid Request: %s" % (self.verb))
 
-    def handle(self):
+    def process(self):
         self.__getattribute__(self.VALID_REQUESTS[self.verb])()
 
     def handle_listallobjects(self):
-        pass # TODO
+        log.info("Handling LISTALLOBJECTS")
+        for i in self.station.objects():
+            log.debug(" Sending %s " % (i))
 
     def handle_fetchobject(self):
         pass # TODO
