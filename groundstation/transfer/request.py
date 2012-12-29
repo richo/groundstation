@@ -1,6 +1,7 @@
 import uuid
 
 from groundstation.proto.gizmo_pb2 import Gizmo
+from response import Response
 
 from groundstation import logger
 log = logger.getLogger(__name__)
@@ -55,6 +56,8 @@ class Request(object):
         log.info("Handling LISTALLOBJECTS")
         for i in self.station.objects():
             log.debug(" Sending %s " % (i))
+            response = Response(self.id, self.station.repo[i])
+            self.stream.enqueue(response)
 
     def handle_fetchobject(self):
         pass # TODO
