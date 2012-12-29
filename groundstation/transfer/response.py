@@ -53,8 +53,9 @@ class Response(object):
 
     def handle_describe_objects(self):
         for obj in self.payload.split(chr(0)):
-            request = self._Request("FETCHOBJECT", payload=obj)
-            self.stream.enqueue(request)
+            if obj not in self.station.repo:
+                request = self._Request("FETCHOBJECT", payload=obj)
+                self.stream.enqueue(request)
 
     def handle_terminate(self):
         log.warn("queing a request of all objects- loop incoming!")
