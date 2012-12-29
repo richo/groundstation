@@ -60,8 +60,6 @@ class Response(object):
                 log.debug("Not fetching already present object %s" % (str(obj)))
 
     def handle_terminate(self):
-        log.warn("queing a request of all objects- loop incoming!")
-        self.stream.enqueue(self._Request("LISTALLOBJECTS"))
         log.warn("Recieved unhandled event TERMINATE for request %s"
                 % (str(self.id)))
 
