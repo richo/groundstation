@@ -22,7 +22,7 @@ class Station(object):
         cur = os.path.basename(dirname)
         if len(cur) == 2:
             for file in files:
-                db.append("".join((cur, file)))
+                db.append(u"".join((cur, file)))
 
     def objects(self):
         db = []
