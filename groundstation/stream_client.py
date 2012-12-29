@@ -16,8 +16,3 @@ class StreamClient(StreamSocket):
     def begin_handshake(self):
         request = Request("LISTALLOBJECTS")
         self.enqueue(request)
-
-
-class StreamSocketClosedException(SocketClosedException):
-    """Raised when a peer closes their socket"""
-    pass

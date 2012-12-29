@@ -1,6 +1,7 @@
 import socket
 from groundstation import settings
 from groundstation.transfer.response import Response
+from socket_closed_exception import SocketClosedException
 
 import groundstation.logger
 log = groundstation.logger.getLogger(__name__)
@@ -54,7 +55,7 @@ class StreamSocket(object):
         data = self.socket.recv(settings.DEFAULT_BUFSIZE)
         if not data:
             self.socket.close()
-            raise StreamSocketClosedException(self)
+            raise SocketClosedException(self)
         log.debug("RECV %i bytes: %s from %s" %
                 (len(data), repr(data), self.peer))
         return data # TODO Buffering
