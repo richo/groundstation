@@ -17,6 +17,18 @@ class Station(object):
             log.info("initializing database in %s" % (path))
             pygit2.init_repository(path, True)
 
+    @staticmethod
+    def _build_objects(db, dirname, files):
+        cur = os.path.basename(dirname)
+        if len(cur) == 2:
+            for file in files:
+                db.append("".join((cur, file)))
+
+    def objects(self):
+        db = []
+        os.path.walk(os.path.join(self.repo.path, "objects"), self._build_objects, db)
+        return db
+
     def get_user(self, name):
         return User(name, self)
 
