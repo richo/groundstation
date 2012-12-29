@@ -1,4 +1,5 @@
 from sockets.socket_closed_exception import SocketClosedException
+from transfer.response import Response
 
 from groundstation import settings
 import groundstation.logger
@@ -48,10 +49,18 @@ class PeerSocket(object):
     def send(self):
         """Send some data that's presently in the queue"""
         assert self.has_data_ready(), "Attempt to send without data ready"
-        data = self.queue.pop()
+        data = self.serialize(self.queue.pop())
         log.debug("SEND %i bytes: %s to %s" %
                 (len(data), repr(data), self.peer))
         self.conn.send(data)
+
+    @staticmethod
+    def serialize(payload):
+        if isinstance(payload, Response):
+            return payload.SerializeToString()
+        else:
+            return payload
+
 
 class PeerSocketClosedException(SocketClosedException):
     """Raised when a peer closes their socket"""
