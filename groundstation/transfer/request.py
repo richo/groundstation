@@ -33,7 +33,8 @@ class Request(object):
 
     @classmethod
     def from_gizmo(klass, gizmo, station, stream):
-        return klass(gizmo.verb, station, stream, gizmo.payload)
+        log.debug("Hydrating a request from gizmo: %s" % (str(gizmo)))
+        return klass(gizmo.verb, station, stream, gizmo.payload, gizmo.stationid)
 
     def SerializeToString(self):
         gizmo = self.station.gizmo_factory.gizmo()
