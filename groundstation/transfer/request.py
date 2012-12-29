@@ -35,14 +35,6 @@ class Request(object):
     def from_gizmo(klass, gizmo, station, stream):
         return klass(gizmo.verb, station, stream, gizmo.payload)
 
-    # @property
-    # def station(self):
-    #     return self.station
-
-    # @station.setter
-    # (self, station):
-    #     self.station = station
-
     def SerializeToString(self):
         gizmo = self.station.gizmo_factory.gizmo()
         gizmo.id = str(self.id)
