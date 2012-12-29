@@ -83,7 +83,7 @@ while True:
                         if peer[0] not in peer_sockets:
                             client = StreamClient(peer[0])
                             peer_sockets.append(client)
-                            client.begin_handshake()
+                            client.begin_handshake(station)
                     else:
                         # Peer's uuid is smaller, we should do nothing and await connection
                         log.info("Peer's uuid is smaller, awaiting connection")

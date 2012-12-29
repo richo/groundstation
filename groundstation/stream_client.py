@@ -13,6 +13,6 @@ class StreamClient(StreamSocket):
         self.peer = addr
         self.socket.connect((addr, settings.PORT))
 
-    def begin_handshake(self):
-        request = Request("LISTALLOBJECTS")
+    def begin_handshake(self, station):
+        request = Request("LISTALLOBJECTS", station=station)
         self.enqueue(request)
