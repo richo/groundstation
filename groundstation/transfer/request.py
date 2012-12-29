@@ -13,10 +13,13 @@ class Request(object):
             "LISTALLOBJECTS": "handle_listallobjects",
             "FETCHOBJECT": "handle_fetchobject"
     }
+    _Response = None
 
     def __init__(self, verb, station=None, stream=None, payload=None):
         # Cheat and load this at class definition time
-        from response import Response
+        if not self._Response:
+            res = __import__("groundstation.transfer.response")
+            self._Response = res.transfer.response.Response
         self.type = "REQUEST"
         self.id = uuid.uuid1()
         self.verb = verb
@@ -57,9 +60,9 @@ class Request(object):
         log.info("Handling LISTALLOBJECTS")
         for i in self.station.objects():
             log.debug(" Sending %s " % (i))
-            response = Response(self.id, self.station.repo[i])
+            response = self._Response(self.id, self.station.repo[i])
             self.stream.enqueue(response)
-        terminate = Response(self.id, None)
+        terminate = self._Response(self.id, None)
         self.stream.enqueue(terminate)
 
     def handle_fetchobject(self):
