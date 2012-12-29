@@ -6,12 +6,12 @@ log = logger.getLogger(__name__)
 import pygit2
 
 class Response(object):
-    _Request = None
+    __Request = None
     def __init__(self, response_to, verb, payload, station=None, stream=None, origin=None):
         # Cheat and load this at class definition time
-        if not self._Request:
+        if not self.__Request:
             req = __import__("groundstation.transfer.request")
-            self._Request = req.transfer.request.Request
+            self.__Request = req.transfer.request.Request
         self.type = "RESPONSE"
         self.id = response_to
         self.station = station
@@ -21,6 +21,10 @@ class Response(object):
         # if origin:
         #     self.origin = uuid.UUID(origin)
         self.origin = origin
+
+    def _Request(self, *args, **kwargs):
+        kwargs['station'] = self.station
+        return self.__Request(*args, **kwargs)
 
     @classmethod
     def from_gizmo(klass, gizmo, station, stream):
