@@ -18,6 +18,7 @@ class GizmoFactory(object):
     def gizmo(self):
         gizmo = Gizmo()
         gizmo.stationid = self.identity.name
+        return gizmo
 
     def hydrate(self, data, stream):
         log.debug("Attempting to hydrate %s" % (repr(data)))

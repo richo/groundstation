@@ -28,7 +28,7 @@ class Response(object):
         return Response(gizmo.id, gizmo.verb, gizmo.payload, station, stream)
 
     def SerializeToString(self):
-        gizmo = Gizmo()
+        gizmo = self.station.gizmo_factory.gizmo()
         gizmo.id = str(self.id)
         gizmo.type = Gizmo.RESPONSE
         gizmo.verb = self.verb

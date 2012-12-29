@@ -40,7 +40,7 @@ class Request(object):
     #     self.station = station
 
     def SerializeToString(self):
-        gizmo = Gizmo()
+        gizmo = self.station.gizmo_factory.gizmo()
         gizmo.id = str(self.id)
         gizmo.type = Gizmo.REQUEST
         gizmo.verb = self.verb
