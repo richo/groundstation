@@ -20,6 +20,7 @@ from groundstation.sockets.socket_closed_exception import SocketClosedException
 from groundstation.peer_socket_pool import PeerSocketPool
 from groundstation.broadcast_events import new_broadcast_event, UnknownBroadcastEvent
 from groundstation.broadcast_events.broadcast_ping import BroadcastPing
+from groundstation.gizmo_factory import GizmoFactory
 
 from os.path import expanduser
 
@@ -30,6 +31,8 @@ myself = Node()
 
 station_path = expanduser("~/.groundstation")
 station = Station(station_path)
+
+gizmo_factory = GizmoFactory(station)
 
 discoverer = BroadcastDiscoverer(PORT)
 announcer  = BroadcastAnnouncer(PORT)
@@ -94,6 +97,8 @@ while True:
             try:
                 data = i.recv()
                 log.info("got %s back from peer" % (repr(data)))
+                gizmo = gizmo_factory.hydrate(data, i)
+                gizmo.process()
             except SocketClosedException:
                 peer_sockets.remove(i)
 
