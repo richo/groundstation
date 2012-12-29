@@ -23,12 +23,13 @@ class Station(object):
         self.gizmo_factory = GizmoFactory(self, identity)
         self.identity_cache = {}
 
-    @staticmethod
-    def _build_objects(db, dirname, files):
+    def _build_objects(self, db, dirname, files):
         cur = os.path.basename(dirname)
         if len(cur) == 2:
             for file in files:
-                db.append(u"".join((cur, file)))
+                objname = u"".join((cur, file))
+                if isinstance(self.repo[objname], pygit2.Blob):
+                    db.append(objname)
 
     def objects(self):
         db = []
