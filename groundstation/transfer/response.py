@@ -7,6 +7,8 @@ import pygit2
 
 class Response(object):
     def __init__(self, response_to, payload, station=None, stream=None):
+        # Cheat and load this at class definition time
+        from request import Request
         self.type = "RESPONSE"
         self.id = response_to
         self.station = station
@@ -43,5 +45,7 @@ class Response(object):
             ret = self.station.write_object(self.payload)
             log.info("Wrote object %s" % (str(ret)))
         elif self.verb == "TERMINATE":
+            log.warn("queing a request of all objects- loop incoming!")
+            self.stream.enqueue(Request("LISTALLOBJECTS"))
             log.warn("Recieved unhandled event TERMINATE for request %s"
                     % (str(self.id)))

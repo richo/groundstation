@@ -1,7 +1,6 @@
 import uuid
 
 from groundstation.proto.gizmo_pb2 import Gizmo
-from response import Response
 
 from groundstation import logger
 log = logger.getLogger(__name__)
@@ -16,6 +15,8 @@ class Request(object):
     }
 
     def __init__(self, verb, station=None, stream=None, payload=None):
+        # Cheat and load this at class definition time
+        from response import Response
         self.type = "REQUEST"
         self.id = uuid.uuid1()
         self.verb = verb
