@@ -14,9 +14,8 @@ class PeerSocket(StreamSocket):
 
     def __init__(self, conn, peer):
         self._sock = conn
+        super(PeerSocket, self).__init__(self)
         self.peer = peer
-        self.write_queue = []
-        #Intentioanlly don't call super(), we have a socket already
 
     @classmethod
     def from_accept(klass, args):

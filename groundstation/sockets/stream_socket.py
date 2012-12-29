@@ -7,11 +7,16 @@ import groundstation.logger
 log = groundstation.logger.getLogger(__name__)
 
 class StreamSocket(object):
-    """Wraps a TCP socket"""
+    """Base class for conversational protocols
+
+    If you don't want a socket allocated (ie, you already have one) set it to
+    ._sock before calling __init__"""
     def __init__(self):
-        self._sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        if not hasattr(self, "_sock"):
+            self._sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         # XXX Implement the queue as a seperate class/
         self.write_queue  = []
+        self.buffer = ""
 
     def fileno(self):
         return self.socket.fileno()
@@ -78,13 +83,3 @@ class StreamSocket(object):
             self.socket.close()
             raise SocketClosedException(self)
         self.buffer = self.buffer + data
-
-    @property
-    def buffer(self):
-        # Expensively look this up, because some children don't call super()
-        if not hasattr(self, '_buffer'):
-            self._buffer = ""
-        return self._buffer
-    @buffer.setter
-    def buffer(self, value):
-        self._buffer = value
