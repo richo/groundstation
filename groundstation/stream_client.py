@@ -10,3 +10,6 @@ class StreamClient(StreamSocket):
 
     def begin_handshake(self):
         self.enqueue("LISTALLOBJECTS")
+
+    def recv(self):
+        return self.socket.recv(1024)

@@ -96,7 +96,7 @@ while True:
             except PeerSocketClosedException:
                 peer_sockets.remove(i)
         elif isinstance(i, StreamClient):
-            data = i.socket.recv(1024)
+            data = i.recv()
             if not data:
                 peer_sockets.remove(i)
             log.info("got %s back from peer" % (repr(data)))
