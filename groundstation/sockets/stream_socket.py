@@ -41,7 +41,7 @@ class StreamSocket(object):
                 (len(data), repr(data), self.peer))
         # Send the number of bytes to read in ascii, and then a nul
         # TODO Buffer this out to amke sure that we don't block.
-        self.socket.send("%i%s" % (len(data), chr(0)))
+        self.socket.send(repr("%i%s" % (len(data), chr(0))))
         self.socket.send(data)
 
 
@@ -51,12 +51,17 @@ class StreamSocket(object):
 
     def recv(self):
         """Recieve some bytes fromt he socket, handling buffering internally"""
-        # TODO Duped with PeerSocket
-        data = self.socket.recv(settings.DEFAULT_BUFSIZE)
-        if not data:
-            self.socket.close()
-            raise SocketClosedException(self)
+        # TODO Build a queue that we can pop objects out o
+        self.recv_to_buffer()
+        assert chr(0) in self.buffer, \
+                'NUL not in buffer, something has gone awfully wrong'
+        segment_length, _, self.buffer = self.buffer.partition(chr(0))
+        segment_length = int(segment_length)
+        assert len(self.buffer) > segment_length, 'Not enough data to build the next segment'
+        data = self.buffer[:segment_length]
+        self.buffer = self.buffer[segment_length:]
         log.debug("RECV %i bytes: %s from %s" %
+                # XXX Ignore, subclasses set .peer
                 (len(data), repr(data), self.peer))
         return data # TODO Buffering
 
@@ -67,3 +72,19 @@ class StreamSocket(object):
         else:
             return payload
 
+    def recv_to_buffer(self):
+        data = self.socket.recv(settings.DEFAULT_BUFSIZE)
+        if not data:
+            self.socket.close()
+            raise SocketClosedException(self)
+        self.buffer = self.buffer + data
+
+    @property
+    def buffer(self):
+        # Expensively look this up, because some children don't call super()
+        if not hasattr(self, '_buffer'):
+            self._buffer = ""
+        return self._buffer
+    @buffer.setter
+    def buffer(self, value):
+        self._buffer = value
