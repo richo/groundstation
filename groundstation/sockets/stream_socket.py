@@ -15,7 +15,8 @@ class StreamSocket(object):
         if not hasattr(self, "_sock"):
             self._sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         # XXX Implement the queue as a seperate class/
-        self.write_queue  = []
+        self.write_queue = []
+        self.packet_queue = []
         self.buffer = ""
 
     def fileno(self):
@@ -60,15 +61,30 @@ class StreamSocket(object):
         self.recv_to_buffer()
         assert chr(0) in self.buffer, \
                 'NUL not in buffer, something has gone awfully wrong'
-        segment_length, _, self.buffer = self.buffer.partition(chr(0))
-        segment_length = int(segment_length)
-        assert len(self.buffer) >= segment_length, 'Not enough data to build the next segment'
-        data = self.buffer[:segment_length]
-        self.buffer = self.buffer[segment_length:]
-        log.debug("RECV %i bytes: %s from %s" %
-                # XXX Ignore, subclasses set .peer
-                (len(data), repr(data), self.peer))
-        return data # TODO Buffering
+
+        tmp_buffer = self.buffer
+        iterations = 0
+        while True:
+            segment_length, _, tmp_buffer = tmp_buffer.partition(chr(0))
+            segment_length = int(segment_length)
+            if len(tmp_buffer) >= segment_length:
+                iterations += 1
+                # We have the whole buffer
+                data = tmp_buffer[:segment_length]
+                tmp_buffer = tmp_buffer[segment_length:]
+                log.debug("RECV %i bytes: %s from %s" %
+                        # XXX Ignore, subclasses set .peer
+                        (len(data), repr(data), self.peer))
+                self.packet_queue.insert(0, data)
+                # Bail if we emptied the buffer
+                if not tmp_buffer:
+                    self.buffer = tmp_buffer
+                    return
+            else:
+                if iterations == 0:
+                    log.warn("Didn't construct a single full payload!")
+                break
+        self.buffer = tmp_buffer
 
     @staticmethod
     def serialize(payload):

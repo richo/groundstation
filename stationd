@@ -95,10 +95,12 @@ while True:
             peer_sockets.append(peer)
         elif isinstance(i, PeerSocket) or isinstance(i, StreamClient):
             try:
-                data = i.recv()
-                log.info("got %s back from peer" % (repr(data)))
-                gizmo = gizmo_factory.hydrate(data, i)
-                gizmo.process()
+                i.recv()
+                while i.packet_queue:
+                    data = i.packet_queue.pop()
+                    log.info("got %s back from peer" % (repr(data)))
+                    gizmo = gizmo_factory.hydrate(data, i)
+                    gizmo.process()
             except SocketClosedException:
                 peer_sockets.remove(i)
             except InvalidGizmoError:
