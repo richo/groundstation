@@ -58,6 +58,8 @@ class Request(object):
             log.debug(" Sending %s " % (i))
             response = Response(self.id, self.station.repo[i])
             self.stream.enqueue(response)
+        terminate = Response(self.id, None)
+        self.stream.enqueue(terminate)
 
     def handle_fetchobject(self):
         pass # TODO
