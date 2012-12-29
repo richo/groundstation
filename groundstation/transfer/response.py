@@ -18,7 +18,7 @@ class Response(object):
     def SerializeToString(self):
         gizmo = Gizmo()
         gizmo.id = str(self.id)
-        gizmo.type = Gizmo.REQUEST
+        gizmo.type = Gizmo.RESPONSE
         gizmo.verb = self.verb
         if self.payload:
             gizmo.payload = self.serialize_payload(self.payload)
