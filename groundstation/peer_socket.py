@@ -14,7 +14,7 @@ class PeerSocket(StreamSocket):
 
     def __init__(self, conn, peer):
         self._sock = conn
-        super(PeerSocket, self).__init__(self)
+        super(PeerSocket, self).__init__()
         self.peer = peer
 
     @classmethod
