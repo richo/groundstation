@@ -6,7 +6,7 @@ log = logger.getLogger(__name__)
 import pygit2
 
 class Response(object):
-    def __init__(self, response_to, payload):
+    def __init__(self, response_to, payload, station=None, stream=None):
         self.type = "RESPONSE"
         self.id = response_to
         if payload is not None:
@@ -14,6 +14,10 @@ class Response(object):
         else:
             self.verb = "TERMINATE"
         self.payload = payload
+
+    @classmethod
+    def from_gizmo(klass, gizmo, station, stream):
+        return Response(gizmo.id, gizmo.payload)
 
     def SerializeToString(self):
         gizmo = Gizmo()
@@ -30,3 +34,6 @@ class Response(object):
             return payload.data
         else:
             return payload
+
+    def process(self):
+        log.info("Handling reponse for %s" % (str(self)))
