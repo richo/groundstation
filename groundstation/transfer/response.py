@@ -9,6 +9,8 @@ class Response(object):
     def __init__(self, response_to, payload, station=None, stream=None):
         self.type = "RESPONSE"
         self.id = response_to
+        self.station = station
+        self.stream = stream
         if payload is not None:
             self.verb = "TRANSFER"
         else:
@@ -17,7 +19,7 @@ class Response(object):
 
     @classmethod
     def from_gizmo(klass, gizmo, station, stream):
-        return Response(gizmo.id, gizmo.payload)
+        return Response(gizmo.id, gizmo.payload, station, stream)
 
     def SerializeToString(self):
         gizmo = Gizmo()
@@ -36,4 +38,10 @@ class Response(object):
             return payload
 
     def process(self):
-        log.info("Handling reponse for %s" % (str(self)))
+        if self.verb == "TRANSFER":
+            log.info("Handling TRANSFER of %s" % (self.payload))
+            ret = self.station.write_object(self.payload)
+            log.info("Wrote object %s" % (str(ret)))
+        elif self.verb == "TERMINATE":
+            log.warn("Recieved unhandled event TERMINATE for request %s"
+                    % (str(self.id)))
