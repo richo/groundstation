@@ -52,6 +52,12 @@ class Request(object):
         self.VALID_REQUESTS[self.verb](self)
 
     def handle_listallobjects(self):
+        if not self.station.recently_queried(self.origin):
+            log.info("%s not up to date, issuing LISTALLOBJECTS" % (self.origin))
+            listobjects = Request("LISTALLOBJECTS", station=self.station)
+            self.stream.enqueue(listobjects)
+        else:
+            log.info("object cache for %s still valid" % (self.origin))
         log.info("Handling LISTALLOBJECTS")
         payload = self.station.objects()
         log.info("Sending %i object descriptions" % (len(payload)))
@@ -61,12 +67,6 @@ class Request(object):
         self.TERMINATE()
 
     def handle_fetchobject(self):
-        if not self.station.recently_queried(self.origin):
-            log.info("%s not up to date, issuing LISTALLOBJECTS" % (self.origin))
-            listobjects = Request("LISTALLOBJECTS", station=self.station)
-            self.stream.enqueue(listobjects)
-        else:
-            log.info("object cache for %s still valid" % (self.origin))
         log.info("Handling FETCHOBJECT for %s" % (repr(self.payload)))
         response = self._Response(self.id, "TRANSFER", self.station.repo[self.payload])
         self.stream.enqueue(response)
