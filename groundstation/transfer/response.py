@@ -56,6 +56,8 @@ class Response(object):
             if obj not in self.station.repo:
                 request = self._Request("FETCHOBJECT", payload=obj)
                 self.stream.enqueue(request)
+            else:
+                log.debug("Not fetching already present object %s" % (str(obj)))
 
     def handle_terminate(self):
         log.warn("queing a request of all objects- loop incoming!")
