@@ -27,6 +27,8 @@ class StreamSocket(object):
 
     def enqueue(self, data):
         """Enqueues data for writing inside the select loop"""
+        if hasattr(data, "SerializeToString"):
+            data = data.SerializeToString()
         self.write_queue.insert(0, data)
 
     def send(self):
