@@ -58,12 +58,15 @@ class Request(object):
 
     def handle_listallobjects(self):
         log.info("Handling LISTALLOBJECTS")
-        for i in self.station.objects():
-            log.debug(" Sending %s " % (i))
-            response = self._Response(self.id, "TRANSFER", self.station.repo[i])
-            self.stream.enqueue(response)
+        payload = self.station.objects()
+        log.info("Sending %i object descriptions" % (len(payload)))
+        response = self._Response(self.id, "DESCRIBEOBJECTS",
+                                chr(0).join(payload))
+        self.stream.enqueue(response)
         terminate = self._Response(self.id, "TERMINATE", None)
         self.stream.enqueue(terminate)
 
     def handle_fetchobject(self):
-        pass # TODO
+        log.info("Handling FETCHOBJECT for %s" % (repr(self.payload)))
+        response = self._Response(self.id, "TRANSFER", self.station.repo[self.payload])
+        self.stream.enqueue(response)

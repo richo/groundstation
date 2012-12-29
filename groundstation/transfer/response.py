@@ -6,6 +6,11 @@ log = logger.getLogger(__name__)
 import pygit2
 
 class Response(object):
+    VALID_RESPONSES = {
+            "TRANSFER": "handle_transfer",
+            "DESCRIBEOBJECTS": "handle_describe_objects",
+            "TERMINATE": "handle_terminate",
+    }
     _Request = None
     def __init__(self, response_to, verb, payload, station=None, stream=None):
         # Cheat and load this at class definition time
@@ -41,12 +46,23 @@ class Response(object):
             return payload
 
     def process(self):
-        if self.verb == "TRANSFER":
-            log.info("Handling TRANSFER of %s" % (self.payload))
-            ret = self.station.write_object(self.payload)
-            log.info("Wrote object %s" % (str(ret)))
-        elif self.verb == "TERMINATE":
-            log.warn("queing a request of all objects- loop incoming!")
-            self.stream.enqueue(self._Request("LISTALLOBJECTS"))
-            log.warn("Recieved unhandled event TERMINATE for request %s"
-                    % (str(self.id)))
+        if self.verb not in self.VALID_RESPONSES:
+            raise Exception("Invalid Response verb: %s" % (self.verb))
+
+        self.__getattribute__(self.VALID_RESPONSES[self.verb])()
+
+    def handle_transfer(self):
+        log.info("Handling TRANSFER of %s" % (self.payload))
+        ret = self.station.write_object(self.payload)
+        log.info("Wrote object %s" % (str(ret)))
+
+    def handle_describe_objects(self):
+        for obj in self.payload.split(chr(0)):
+            request = self._Request("FETCHOBJECT", payload=obj)
+            self.stream.enqueue(request)
+
+    def handle_terminate(self):
+        log.warn("queing a request of all objects- loop incoming!")
+        self.stream.enqueue(self._Request("LISTALLOBJECTS"))
+        log.warn("Recieved unhandled event TERMINATE for request %s"
+                % (str(self.id)))
