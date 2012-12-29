@@ -67,7 +67,7 @@ while True:
     for i in sread:
         if i == discoverer:
             # TODO Return Event objects instead of raw data
-            data, peer = discoverer.recv(1024)
+            data, peer = discoverer.recv(settings.DEFAULT_BUFSIZE)
             try:
                 event = new_broadcast_event(data)
             except UnknownBroadcastEvent:

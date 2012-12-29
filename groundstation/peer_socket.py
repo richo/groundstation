@@ -1,5 +1,6 @@
 from sockets.socket_closed_exception import SocketClosedException
 
+from groundstation import settings
 import groundstation.logger
 log = groundstation.logger.getLogger(__name__)
 
@@ -36,7 +37,7 @@ class PeerSocket(object):
 
     def recv(self):
         """Recieve some bytes fromt he socket, handling buffering internally"""
-        data = self.conn.recv(1024)
+        data = self.conn.recv(settings.DEFAULT_BUFSIZE)
         if not data:
             self.conn.close()
             raise PeerSocketClosedException(self)

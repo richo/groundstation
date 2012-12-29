@@ -13,7 +13,7 @@ class StreamClient(StreamSocket):
         self.enqueue("LISTALLOBJECTS")
 
     def recv(self):
-        return self.socket.recv(1024)
+        return self.socket.recv(settings.DEFAULT_BUFSIZE)
 
 class StreamSocketClosedException(SocketClosedException):
     """Raised when a peer closes their socket"""
