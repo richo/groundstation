@@ -50,7 +50,7 @@ class Request(object):
             raise Exception("Invalid Request: %s" % (self.verb))
 
     def process(self):
-        self.VALID_REQUESTS[self.verb]()
+        self.VALID_REQUESTS[self.verb](self)
 
     def handle_listallobjects(self):
         log.info("Handling LISTALLOBJECTS")

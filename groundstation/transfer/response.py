@@ -44,7 +44,7 @@ class Response(object):
         if self.verb not in self.VALID_RESPONSES:
             raise Exception("Invalid Response verb: %s" % (self.verb))
 
-        self.VALID_RESPONSES[self.verb]()
+        self.VALID_RESPONSES[self.verb](self)
 
     def handle_transfer(self):
         log.info("Handling TRANSFER of %s" % (self.payload))
