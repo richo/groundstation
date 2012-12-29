@@ -1,9 +1,9 @@
 import socket
+from groundstation import settings
+from groundstation.transfer.response import Response
 
 import groundstation.logger
 log = groundstation.logger.getLogger(__name__)
-
-from groundstation.peer_socket import PeerSocket
 
 class StreamSocket(object):
     """Wraps a TCP socket"""
@@ -13,17 +13,17 @@ class StreamSocket(object):
         self.write_queue  = []
 
     def fileno(self):
-        """Return the underlying socket to make select() work"""
-        return self._sock.fileno()
+        return self.socket.fileno()
 
     @property
     def socket(self):
         return self._sock
 
-    def accept(self):
+    def accept(self, klass):
         p = self._sock.accept()
         log.info("Accepted a connection from %s" % repr(p[1]))
-        return PeerSocket.from_accept(p)
+        # Return more instances of ourself.
+        return klass.from_accept(p)
 
     def enqueue(self, data):
         """Enqueues data for writing inside the select loop"""
@@ -32,10 +32,37 @@ class StreamSocket(object):
         self.write_queue.insert(0, data)
 
     def send(self):
-        data = self.write_queue.pop()
-        log.info("Attempting to write %i bytes" % (len(data)))
-        self._sock.send(data)
+        """Send some data that's presently in the queue"""
+        assert self.has_data_ready(), "Attempt to send without data ready"
+        data = self.serialize(self.write_queue.pop())
+        log.debug("SEND %i bytes: %s to %s" %
+                # XXX Ignore warnings, subclasses implement self.peer
+                (len(data), repr(data), self.peer))
+        # Send the number of bytes to read in ascii, and then a nul
+        # TODO Buffer this out to amke sure that we don't block.
+        self.socket.send("%i%s" % (len(data), chr(0)))
+        self.socket.send(data)
+
 
     def has_data_ready(self):
         """(bool) does this socket have enqueued data ready"""
         return len(self.write_queue) > 0
+
+    def recv(self):
+        """Recieve some bytes fromt he socket, handling buffering internally"""
+        # TODO Duped with PeerSocket
+        data = self.socket.recv(settings.DEFAULT_BUFSIZE)
+        if not data:
+            self.socket.close()
+            raise StreamSocketClosedException(self)
+        log.debug("RECV %i bytes: %s from %s" %
+                (len(data), repr(data), self.peer))
+        return data # TODO Buffering
+
+    @staticmethod
+    def serialize(payload):
+        if isinstance(payload, Response):
+            return payload.SerializeToString()
+        else:
+            return payload
+

@@ -1,20 +1,22 @@
 from sockets.socket_closed_exception import SocketClosedException
-from transfer.response import Response
+from sockets.stream_socket import StreamSocket
+
 
 from groundstation import settings
 import groundstation.logger
 log = groundstation.logger.getLogger(__name__)
 
-class PeerSocket(object):
+class PeerSocket(StreamSocket):
     """Wrapper for a peer who just connected, or one we've connected to
 
     Since the communication protocol should be implicitly bidirectional, the
     factory methods should be the only instanciation methods"""
 
     def __init__(self, conn, peer):
-        self.conn = conn
+        self._sock = conn
         self.peer = peer
-        self.queue = []
+        self.write_queue = []
+        #Intentioanlly don't call super(), we have a socket already
 
     @classmethod
     def from_accept(klass, args):
@@ -24,43 +26,8 @@ class PeerSocket(object):
     def from_connect(klass, args):
         return klass(*args)
 
-    def fileno(self):
-        return self.conn.fileno()
-
     def __repr__(self):
         return "<%s: from %s>" % (self.__class__, self.peer)
-
-    def has_data_ready(self):
-        return len(self.queue) > 0
-
-    def enqueue(self, data):
-        self.queue.insert(0, data)
-
-    def recv(self):
-        """Recieve some bytes fromt he socket, handling buffering internally"""
-        data = self.conn.recv(settings.DEFAULT_BUFSIZE)
-        if not data:
-            self.conn.close()
-            raise PeerSocketClosedException(self)
-        log.debug("RECV %i bytes: %s from %s" %
-                (len(data), repr(data), self.peer))
-        return data # TODO Buffering
-
-    def send(self):
-        """Send some data that's presently in the queue"""
-        assert self.has_data_ready(), "Attempt to send without data ready"
-        data = self.serialize(self.queue.pop())
-        log.debug("SEND %i bytes: %s to %s" %
-                (len(data), repr(data), self.peer))
-        self.conn.send(data)
-
-    @staticmethod
-    def serialize(payload):
-        if isinstance(payload, Response):
-            return payload.SerializeToString()
-        else:
-            return payload
-
 
 class PeerSocketClosedException(SocketClosedException):
     """Raised when a peer closes their socket"""

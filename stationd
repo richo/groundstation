@@ -91,7 +91,7 @@ while True:
                         log.info("Peer's uuid is smaller, awaiting connection")
 
         elif i == listener:
-            peer = listener.accept()
+            peer = listener.accept(PeerSocket)
             peer_sockets.append(peer)
         elif isinstance(i, PeerSocket) or isinstance(i, StreamClient):
             try:
