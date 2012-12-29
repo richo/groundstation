@@ -1,4 +1,5 @@
 import os
+import time
 
 import pygit2
 
@@ -10,6 +11,8 @@ from user import User, NoSuchUser
 from packed_keys import PackedKeys, NoKeysRef
 from gizmo_factory import GizmoFactory, InvalidGizmoError
 
+import settings
+
 class Station(object):
     def __init__(self, path, identity):
         self.identity = identity
@@ -18,6 +21,7 @@ class Station(object):
             pygit2.init_repository(path, True)
         self.repo = pygit2.Repository(path)
         self.gizmo_factory = GizmoFactory(self, identity)
+        self.identity_cache = {}
 
     @staticmethod
     def _build_objects(db, dirname, files):
@@ -53,3 +57,18 @@ class Station(object):
 
     def write_object(self, payload):
         return self.repo.create_blob(payload)
+
+    def recently_queried(self, identity):
+        """CAS the cache status of a given identity.
+
+        Returns False if you should query them."""
+        val = str(identity)
+        if val not in self.identity_cache:
+            self.identity_cache[identity] = time.time()
+            return False
+        else:
+            if self.identity_cache[identity] + settings.DEFAULT_CACHE_LIFETIME > time.time():
+                return True
+            else:
+                self.identity_cache[identity] = time.time()
+                return False

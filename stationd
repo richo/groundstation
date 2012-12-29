@@ -81,6 +81,8 @@ while True:
                     if event.payload > myself.uuid:
                         # Peer's uuid is larger, we should connect and initiate sync
                         if peer[0] not in peer_sockets:
+                            # Ensure that they're in our object cache- we're updating it now
+                            station.recently_queried(event.payload)
                             client = StreamClient(peer[0])
                             peer_sockets.append(client)
                             client.begin_handshake(station)
