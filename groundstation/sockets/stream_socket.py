@@ -65,22 +65,25 @@ class StreamSocket(object):
         tmp_buffer = self.buffer
         iterations = 0
         while True:
-            segment_length, _, tmp_buffer = tmp_buffer.partition(chr(0))
+            if not tmp_buffer: # Catch having emptied our buffer
+                break
+            # Keep the unmolested buffer
+            segment_length, _, payload_buffer = tmp_buffer.partition(chr(0))
             segment_length = int(segment_length)
-            if len(tmp_buffer) >= segment_length:
+            if len(payload_buffer) >= segment_length:
                 iterations += 1
                 # We have the whole buffer
-                data = tmp_buffer[:segment_length]
-                tmp_buffer = tmp_buffer[segment_length:]
+                data = payload_buffer[:segment_length]
+                payload_buffer = payload_buffer[segment_length:]
                 log.debug("RECV %i bytes: %s from %s" %
                         # XXX Ignore, subclasses set .peer
                         (len(data), repr(data), self.peer))
                 self.packet_queue.insert(0, data)
+                tmp_buffer = payload_buffer
                 # Bail if we emptied the buffer
-                if not tmp_buffer:
-                    self.buffer = tmp_buffer
-                    return
             else:
+                # We haven't touched tmp_buffer, it is therefore safe to save
+                # back to the classbuffer
                 if iterations == 0:
                     log.warn("Didn't construct a single full payload!")
                 break
