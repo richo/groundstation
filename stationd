@@ -103,9 +103,7 @@ while True:
                 peer_sockets.remove(i)
 
     for i in swrite:
-        if isinstance(i, PeerSocket):
-            i.send()
-        elif isinstance(i, StreamClient):
+        if isinstance(i, PeerSocket) or isinstance(i, StreamClient):
             i.send()
 
         # else: # Right now that's the only socket
