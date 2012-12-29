@@ -9,10 +9,6 @@ class InvalidRequest(Exception):
     pass
 
 class Request(object):
-    VALID_REQUESTS = {
-            "LISTALLOBJECTS": "handle_listallobjects",
-            "FETCHOBJECT": "handle_fetchobject"
-    }
     _Response = None
 
     def __init__(self, verb, station=None, stream=None, payload=None):
@@ -54,7 +50,7 @@ class Request(object):
             raise Exception("Invalid Request: %s" % (self.verb))
 
     def process(self):
-        self.__getattribute__(self.VALID_REQUESTS[self.verb])()
+        self.VALID_REQUESTS[self.verb]()
 
     def handle_listallobjects(self):
         log.info("Handling LISTALLOBJECTS")
@@ -70,3 +66,8 @@ class Request(object):
         log.info("Handling FETCHOBJECT for %s" % (repr(self.payload)))
         response = self._Response(self.id, "TRANSFER", self.station.repo[self.payload])
         self.stream.enqueue(response)
+
+    VALID_REQUESTS = {
+            "LISTALLOBJECTS": handle_listallobjects,
+            "FETCHOBJECT": handle_fetchobject,
+    }

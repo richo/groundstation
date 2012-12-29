@@ -6,11 +6,6 @@ log = logger.getLogger(__name__)
 import pygit2
 
 class Response(object):
-    VALID_RESPONSES = {
-            "TRANSFER": "handle_transfer",
-            "DESCRIBEOBJECTS": "handle_describe_objects",
-            "TERMINATE": "handle_terminate",
-    }
     _Request = None
     def __init__(self, response_to, verb, payload, station=None, stream=None):
         # Cheat and load this at class definition time
@@ -49,7 +44,7 @@ class Response(object):
         if self.verb not in self.VALID_RESPONSES:
             raise Exception("Invalid Response verb: %s" % (self.verb))
 
-        self.__getattribute__(self.VALID_RESPONSES[self.verb])()
+        self.VALID_RESPONSES[self.verb]()
 
     def handle_transfer(self):
         log.info("Handling TRANSFER of %s" % (self.payload))
@@ -66,3 +61,9 @@ class Response(object):
         self.stream.enqueue(self._Request("LISTALLOBJECTS"))
         log.warn("Recieved unhandled event TERMINATE for request %s"
                 % (str(self.id)))
+
+    VALID_RESPONSES = {
+            "TRANSFER": handle_transfer,
+            "DESCRIBEOBJECTS": handle_describe_objects,
+            "TERMINATE": handle_terminate,
+    }
