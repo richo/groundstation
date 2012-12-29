@@ -1,0 +1,12 @@
+message Gizmo {
+  required string id = 1;
+
+  enum GizmoType {
+    REQUEST = 0;
+    RESPONSE = 1;
+  }
+
+  required GizmoType type = 2;
+  required string verb = 3;
+  optional string payload = 4;
+}
