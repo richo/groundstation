@@ -36,12 +36,12 @@ class StreamSocket(object):
         """Send some data that's presently in the queue"""
         assert self.has_data_ready(), "Attempt to send without data ready"
         data = self.serialize(self.write_queue.pop())
+        data = ("%i%s" % (len(data), chr(0))) + data
         log.debug("SEND %i bytes: %s to %s" %
                 # XXX Ignore warnings, subclasses implement self.peer
                 (len(data), repr(data), self.peer))
         # Send the number of bytes to read in ascii, and then a nul
         # TODO Buffer this out to amke sure that we don't block.
-        self.socket.send(repr("%i%s" % (len(data), chr(0))))
         self.socket.send(data)
 
 
