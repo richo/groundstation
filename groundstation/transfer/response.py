@@ -7,7 +7,7 @@ import pygit2
 
 class Response(object):
     _Request = None
-    def __init__(self, response_to, payload, station=None, stream=None):
+    def __init__(self, response_to, verb, payload, station=None, stream=None):
         # Cheat and load this at class definition time
         if not self._Request:
             req = __import__("groundstation.transfer.request")
@@ -16,15 +16,13 @@ class Response(object):
         self.id = response_to
         self.station = station
         self.stream = stream
-        if payload is not None:
-            self.verb = "TRANSFER"
-        else:
-            self.verb = "TERMINATE"
+        self.verb = verb
         self.payload = payload
 
     @classmethod
     def from_gizmo(klass, gizmo, station, stream):
-        return Response(gizmo.id, gizmo.payload, station, stream)
+        log.debug("Hydrating a response from gizmo: %s" % (str(gizmo)))
+        return Response(gizmo.id, gizmo.verb, gizmo.payload, station, stream)
 
     def SerializeToString(self):
         gizmo = Gizmo()

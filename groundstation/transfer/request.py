@@ -60,9 +60,9 @@ class Request(object):
         log.info("Handling LISTALLOBJECTS")
         for i in self.station.objects():
             log.debug(" Sending %s " % (i))
-            response = self._Response(self.id, self.station.repo[i])
+            response = self._Response(self.id, "TRANSFER", self.station.repo[i])
             self.stream.enqueue(response)
-        terminate = self._Response(self.id, None)
+        terminate = self._Response(self.id, "TERMINATE", None)
         self.stream.enqueue(terminate)
 
     def handle_fetchobject(self):
