@@ -57,7 +57,7 @@ class StreamSocket(object):
                 'NUL not in buffer, something has gone awfully wrong'
         segment_length, _, self.buffer = self.buffer.partition(chr(0))
         segment_length = int(segment_length)
-        assert len(self.buffer) > segment_length, 'Not enough data to build the next segment'
+        assert len(self.buffer) >= segment_length, 'Not enough data to build the next segment'
         data = self.buffer[:segment_length]
         self.buffer = self.buffer[segment_length:]
         log.debug("RECV %i bytes: %s from %s" %
