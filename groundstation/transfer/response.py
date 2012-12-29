@@ -56,7 +56,7 @@ class Response(object):
     def handle_transfer(self):
         log.info("Handling TRANSFER of %s" % (self.payload))
         ret = self.station.write_object(self.payload)
-        log.info("Wrote object %s" % (str(ret)))
+        log.info("Wrote object %s" % (repr(ret)))
 
     def handle_describe_objects(self):
         if not self.payload:
