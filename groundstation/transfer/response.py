@@ -59,6 +59,9 @@ class Response(object):
         log.info("Wrote object %s" % (str(ret)))
 
     def handle_describe_objects(self):
+        if not self.payload:
+            log.info("station %s sent empty DESCRIVEOBJECTS payload - new database?" % (str(self.origin)))
+            return
         for obj in self.payload.split(chr(0)):
             if obj not in self.station.repo:
                 request = self._Request("FETCHOBJECT", payload=obj)
