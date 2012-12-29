@@ -22,7 +22,7 @@ class Request(object):
 
     @classmethod
     def from_gizmo(klass, gizmo, station, stream):
-        klass(gizmo.verb, station, stream, gizmo.payload)
+        return klass(gizmo.verb, station, stream, gizmo.payload)
 
     # @property
     # def station(self):
