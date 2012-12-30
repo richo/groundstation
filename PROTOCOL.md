@@ -57,3 +57,31 @@ Protocol Specification for groundstation
   loop, at this point all requests can be responded to in kind as a result of
   the ordinary event loop without outside interference.
 
+### Request Types
+
+Currently supported are
+
+#### LISTALLOBJECTS
+
+Doesn't accept a payload. Response should be a single `DESCRIBEOBJECT` with a
+null seperated list of object ID's as the payload
+
+#### FETCHOBJECT
+
+Accepts a payload of the object id to fetch. Returns a `TRANSFER` with a blob
+body (content) as the payload.
+
+### Response Types
+
+#### DESCRIBEOBJECT
+
+Accepts a list of object ID's null seperated. Usually yields some
+`FETCHOBJECT`s for any missing objects in the local db.
+
+#### TRANSFER
+
+Accepts an object body as a payload, to be inserted into a target database
+
+#### TERMINATE
+
+Specifies that a given `REQUEST` is fulfilled and may be freed.
