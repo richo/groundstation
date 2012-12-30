@@ -22,27 +22,29 @@ Protocol Specification for groundstation
 
 ## Transfer of data
 
-* Data is requested by sending a serialized hash, with the keys:
+* Data transfer takes place by sending packs `msg length``NUL``protobuf` to peers.
+* msg length is sent ascii encoded for ease or porting and debugging.
 
+#### Requests take the form
 ```javascript
 {
     "type": REQUEST,
-    "request": KEYWORD, // KEYWORDs include LISTALLOBJECTS FETCHOBJECT
-    "id": UUID          // UUID shall be a uuid to marry up with the response
+    "verb": KEYWORD,    // KEYWORDs include LISTALLOBJECTS FETCHOBJECT
+    "id": UUID,         // UUID shall be a uuid to marry up with the response
+    "payload": PAYLOAD or NULL
 }
 ```
 
-* Data shall be replied to with a similar hash,
-
+#### Responses take the form
 ```javascript
 {
     "type": RESPONSE,
-    "phrase": KEYWORD, // KEYWORDs include TRANSFER and TERMINATE. more than a
+    "verb": KEYWORD, // KEYWORDs include TRANSFER and TERMINATE. more than a
                        // single response is valid for a request, TERMINATE
                        // signifies that the storage allocated to the request
                        // may be freed
     "id": UUID,        // The UUID sent with the request. In the case
-    "payload": PAYLOAD // The payload associated with the request. request type specific.
+    "payload": PAYLOAD or NULL
 }
 ```
 
