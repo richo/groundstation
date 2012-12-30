@@ -15,4 +15,5 @@ class StreamClient(StreamSocket):
 
     def begin_handshake(self, station):
         request = Request("LISTALLOBJECTS", station=station)
+        station.register_request(request)
         self.enqueue(request)

@@ -10,6 +10,7 @@ from user import User, NoSuchUser
 
 from packed_keys import PackedKeys, NoKeysRef
 from gizmo_factory import GizmoFactory, InvalidGizmoError
+from request_registry import RequestRegistry
 
 import settings
 
@@ -22,6 +23,7 @@ class Station(object):
         self.repo = pygit2.Repository(path)
         self.gizmo_factory = GizmoFactory(self, identity)
         self.identity_cache = {}
+        self.registry = RequestRegistry()
 
     def _build_objects(self, db, dirname, files):
         cur = os.path.basename(dirname)
@@ -30,6 +32,14 @@ class Station(object):
                 objname = u"".join((cur, file))
                 if isinstance(self.repo[objname], pygit2.Blob):
                     db.append(objname)
+
+    def register_request(self, request):
+        log.info("Registering request %s" % (str(request.id)))
+        self.registry.register(request)
+
+    def free_request(self, request):
+        log.info("Freeing request %s" % (str(request.id)))
+        self.registry.free(request)
 
     def objects(self):
         db = []

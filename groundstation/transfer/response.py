@@ -24,7 +24,9 @@ class Response(object):
 
     def _Request(self, *args, **kwargs):
         kwargs['station'] = self.station
-        return self.__Request(*args, **kwargs)
+        req = self.__Request(*args, **kwargs)
+        self.station.register_request(req)
+        return req
 
     @classmethod
     def from_gizmo(klass, gizmo, station, stream):
