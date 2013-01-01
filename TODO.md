@@ -5,3 +5,5 @@
 * LISTALLOBJECTS actually sends the objects in the response, instead of a list..
 * Work out the station semantics for gizmo_factory. Not having globals is all well and good but this is getting retarded.
 * Manage a state table for all requests (honouring TERMINATE) and end connections when all requests are fulfilled.
+* use `extend` in the protobuf to declare actual messagetypes as a "subclass" of `Request`/`Response`.
+*1. Unpack the Toplevel class, inspect it's `verb`, reunpack as the correct child.
