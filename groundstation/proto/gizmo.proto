@@ -1,3 +1,4 @@
+// vim: ft=c ts=2 sw=2
 message Gizmo {
   required string id = 1;
 
@@ -8,6 +9,6 @@ message Gizmo {
 
   required string stationid = 2;
   required GizmoType type = 3;
-  required string verb = 4;
-  optional string payload = 5;
+  required string verb = 4; // {Request,Response}Type for hydration
+  optional bytes payload = 5;
 }

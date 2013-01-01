@@ -1,0 +1,13 @@
+message Response {
+  required string id = 1; // ID that this response belongs to
+
+  enum ResponseType {
+    TERMINATE = 0;
+    TRANSFER = 1;
+    DESCRIBEOBJECTS = 2;
+  }
+
+  required ResponseType verb = 2;
+
+  required bytes payload = 3;
+}

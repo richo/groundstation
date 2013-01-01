@@ -1,0 +1,12 @@
+message Request {
+  required string id = 1; // Request ID
+
+  enum RequestType {
+    LISTALLOBJECTS = 0;
+    FETCHOBJECT = 1;
+  }
+
+  required RequestType verb = 2;
+
+  optional bytes payload = 3;
+}
