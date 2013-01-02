@@ -1,6 +1,7 @@
 import uuid
 
 from groundstation.proto.gizmo_pb2 import Gizmo
+import groundstation.transfer.response
 
 from groundstation import logger
 log = logger.getLogger(__name__)
@@ -9,12 +10,7 @@ class InvalidRequest(Exception):
     pass
 
 class Request(object):
-    __Response = None
     def __init__(self, verb, station=None, stream=None, payload=None, origin=None):
-        # Cheat and load this at class definition time
-        if not self.__Response:
-            res = __import__("groundstation.transfer.response")
-            self.__Response = res.transfer.response.Response
         self.type = "REQUEST"
         self.id = uuid.uuid1()
         self.verb = verb
@@ -28,7 +24,7 @@ class Request(object):
 
     def _Response(self, *args, **kwargs):
         kwargs['station'] = self.station
-        return self.__Response(*args, **kwargs)
+        return groundstation.transfer.response.Response(*args, **kwargs)
 
 
     @classmethod

@@ -1,4 +1,5 @@
 from groundstation.proto.gizmo_pb2 import Gizmo
+import groundstation.transfer.request
 
 from groundstation import logger
 log = logger.getLogger(__name__)
@@ -6,12 +7,7 @@ log = logger.getLogger(__name__)
 import pygit2
 
 class Response(object):
-    __Request = None
     def __init__(self, response_to, verb, payload, station=None, stream=None, origin=None):
-        # Cheat and load this at class definition time
-        if not self.__Request:
-            req = __import__("groundstation.transfer.request")
-            self.__Request = req.transfer.request.Request
         self.type = "RESPONSE"
         self.id = response_to
         self.station = station
@@ -24,7 +20,7 @@ class Response(object):
 
     def _Request(self, *args, **kwargs):
         kwargs['station'] = self.station
-        req = self.__Request(*args, **kwargs)
+        req = groundstation.transfer.request.Request(*args, **kwargs)
         self.station.register_request(req)
         return req
 
