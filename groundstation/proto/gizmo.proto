@@ -8,7 +8,6 @@ message Gizmo {
   }
 
   required string stationid = 2;
-  required GizmoType type = 3;
-  required string verb = 4; // {Request,Response}Type for hydration
+  required GizmoType type = 3; // {Request,Response}Type for hydration
   optional bytes payload = 5;
 }

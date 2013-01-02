@@ -1,6 +1,7 @@
 import uuid
 
 from groundstation.proto.gizmo_pb2 import Gizmo
+from groundstation.proto import request_pb2
 
 from groundstation import logger
 log = logger.getLogger(__name__)
@@ -38,11 +39,17 @@ class Request(object):
 
     def SerializeToString(self):
         gizmo = self.station.gizmo_factory.gizmo()
+        g_request = request_pb2.Request()
+
         gizmo.id = str(self.id)
         gizmo.type = Gizmo.REQUEST
-        gizmo.verb = self.verb
+
+        g_request.verb = self.verb
+
         if self.payload:
-            gizmo.payload = self.payload
+            g_request.payload = self.payload
+
+        gizmo.payload = g_request.SerializeToString()
         return gizmo.SerializeToString()
 
     def validate(self):
