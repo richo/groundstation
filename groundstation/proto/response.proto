@@ -9,5 +9,5 @@ message Response {
 
   required ResponseType verb = 2;
 
-  required bytes payload = 3;
+  optional bytes payload = 3;
 }
