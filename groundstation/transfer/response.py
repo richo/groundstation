@@ -1,4 +1,5 @@
 from groundstation.proto.gizmo_pb2 import Gizmo
+from groundstation.proto import response_pb2
 
 from groundstation import logger
 log = logger.getLogger(__name__)
@@ -35,11 +36,15 @@ class Response(object):
 
     def SerializeToString(self):
         gizmo = self.station.gizmo_factory.gizmo()
+        g_response = response_pb2.Response()
+
         gizmo.id = str(self.id)
         gizmo.type = Gizmo.RESPONSE
-        gizmo.verb = self.verb
+        g_response.verb = self.verb
         if self.payload:
-            gizmo.payload = self.serialize_payload(self.payload)
+            g_response.payload = self.serialize_payload(self.payload)
+
+        self.payload = g_response.SerializeToString()
         return gizmo.SerializeToString()
 
     @staticmethod
