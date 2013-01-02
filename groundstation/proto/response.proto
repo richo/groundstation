@@ -10,4 +10,6 @@ message Response {
   required ResponseType verb = 2;
 
   optional bytes payload = 3;
+  optional bytes signature = 4;
+  optional string signatureid = 5;
 }
