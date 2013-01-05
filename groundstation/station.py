@@ -25,14 +25,6 @@ class Station(object):
         self.identity_cache = {}
         self.registry = RequestRegistry()
 
-    def _build_objects(self, db, dirname, files):
-        cur = os.path.basename(dirname)
-        if len(cur) == 2:
-            for file in files:
-                objname = u"".join((cur, file))
-                if isinstance(self.repo[objname], pygit2.Blob):
-                    db.append(objname)
-
     def register_request(self, request):
         log.info("Registering request %s" % (str(request.id)))
         self.registry.register(request)
@@ -42,9 +34,7 @@ class Station(object):
         self.registry.free(request)
 
     def objects(self):
-        db = []
-        os.path.walk(os.path.join(self.repo.path, "objects"), self._build_objects, db)
-        return db
+        return list(self.repo)
 
     def get_user(self, name):
         return User(name, self)
