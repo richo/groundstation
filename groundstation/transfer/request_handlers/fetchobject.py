@@ -11,7 +11,7 @@ def handle_fetchobject(self):
     git_pb = GitObject()
 
     git_pb.type = git_obj.type
-    git_pb.data = git_obj.data
+    git_pb.data = git_obj.read_raw()
 
     response = self._Response(self.id, "TRANSFER", git_pb.SerializeToString())
     self.stream.enqueue(response)
