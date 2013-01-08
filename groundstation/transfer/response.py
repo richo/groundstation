@@ -38,15 +38,8 @@ class Response(object):
         gizmo.type = Gizmo.RESPONSE
         gizmo.verb = self.verb
         if self.payload:
-            gizmo.payload = self.serialize_payload(self.payload)
+            gizmo.payload = self.payload
         return gizmo.SerializeToString()
-
-    @staticmethod
-    def serialize_payload(payload):
-        if isinstance(payload, pygit2.Blob):
-            return payload.data
-        else:
-            return payload
 
     def process(self):
         if self.verb not in self.VALID_RESPONSES:
