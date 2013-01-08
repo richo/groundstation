@@ -96,7 +96,7 @@ def handle_tcpnetwork_event():
     except SocketClosedException:
         peer_sockets.remove(i)
     except InvalidGizmoError:
-        pass # Ignore invalid gizmo's for now.
+        log.warn("Recieved invalid gizmo!")
 
 
 def handler_for(thing):
