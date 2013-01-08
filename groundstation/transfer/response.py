@@ -8,6 +8,7 @@ log = logger.getLogger(__name__)
 
 import pygit2
 
+
 class Response(object):
     def __init__(self, response_to, verb, payload, station=None, stream=None, origin=None):
         self.type = "RESPONSE"
@@ -53,17 +54,12 @@ class Response(object):
 
         self.VALID_RESPONSES[self.verb](self)
 
-    def handle_transfer(self):
-        log.info("Handling TRANSFER of %s" % (self.payload))
-        ret = self.station.write_object(self.payload)
-        log.info("Wrote object %s" % (repr(ret)))
-
     def handle_terminate(self):
         log.warn("Recieved unhandled event TERMINATE for request %s"
                 % (str(self.id)))
 
     VALID_RESPONSES = {
-            "TRANSFER": handle_transfer,
+            "TRANSFER": response_handlers.handle_transfer,
             "DESCRIBEOBJECTS": response_handlers.handle_describeobjects,
             "TERMINATE": handle_terminate,
     }
