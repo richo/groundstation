@@ -7,7 +7,7 @@ log = logger.getLogger(__name__)
 
 def handle_fetchobject(self):
     log.info("Handling FETCHOBJECT for %s" % (repr(self.payload)))
-    git_obj = self.station.repo[self.payload]
+    git_obj = self.station[self.payload]
     git_pb = GitObject()
 
     git_pb.type = git_obj.type

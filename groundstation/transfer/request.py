@@ -61,3 +61,11 @@ class Request(object):
         terminate = self._Response(self.id, "TERMINATE", None)
         self.stream.enqueue(terminate)
 
+    # Boilerplate to appease protobuf
+    @property
+    def payload(self):
+        return self._payload
+    @payload.setter
+    def payload(self, value):
+        self._payload = str(value)
+

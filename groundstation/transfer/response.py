@@ -52,3 +52,10 @@ class Response(object):
             "DESCRIBEOBJECTS": response_handlers.handle_describeobjects,
             "TERMINATE": response_handlers.handle_terminate,
     }
+
+    @property
+    def payload(self):
+        return self._payload
+    @payload.setter
+    def payload(self, value):
+        self._payload = str(value)

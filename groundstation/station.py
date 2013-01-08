@@ -36,6 +36,9 @@ class Station(object):
     def objects(self):
         return list(self.repo)
 
+    def __getitem__(self, key):
+        return self.repo[unicode(key)]
+
     def get_user(self, name):
         return User(name, self)
 
@@ -44,7 +47,7 @@ class Station(object):
         try:
             ref = self.repo.lookup_reference(user.keys_ref)
             assert ref.oid in self.repo, "Invalid user keys ref"
-            return PackedKeys(self.repo[ref.oid].read_raw())
+            return PackedKeys(self[ref.oid].read_raw())
         except KeyError:
             raise NoKeysRef(user.name)
 
