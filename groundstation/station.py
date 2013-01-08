@@ -39,6 +39,9 @@ class Station(object):
     def __getitem__(self, key):
         return self.repo[unicode(key)]
 
+    def __contains__(self, item):
+        return unicode(item) in self.repo
+
     def get_user(self, name):
         return User(name, self)
 

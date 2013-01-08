@@ -7,7 +7,7 @@ def handle_describeobjects(self):
         log.info("station %s sent empty DESCRIVEOBJECTS payload - new database?" % (str(self.origin)))
         return
     for obj in self.payload.split(chr(0)):
-        if obj not in self.station.repo:
+        if obj not in self.station:
             request = self._Request("FETCHOBJECT", payload=obj)
             self.stream.enqueue(request)
         else:
