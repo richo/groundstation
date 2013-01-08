@@ -3,6 +3,8 @@ import uuid
 from groundstation.proto.gizmo_pb2 import Gizmo
 import groundstation.transfer.response
 
+from groundstation.transfer import request_handlers
+
 from groundstation import logger
 log = logger.getLogger(__name__)
 
@@ -10,6 +12,11 @@ class InvalidRequest(Exception):
     pass
 
 class Request(object):
+    VALID_REQUESTS = {
+            "LISTALLOBJECTS": request_handlers.handle_listallobjects,
+            "FETCHOBJECT": request_handlers.handle_fetchobject,
+    }
+
     def __init__(self, verb, station=None, stream=None, payload=None, origin=None):
         self.type = "REQUEST"
         self.id = uuid.uuid1()
@@ -48,31 +55,7 @@ class Request(object):
     def process(self):
         self.VALID_REQUESTS[self.verb](self)
 
-    def handle_listallobjects(self):
-        if not self.station.recently_queried(self.origin):
-            log.info("%s not up to date, issuing LISTALLOBJECTS" % (self.origin))
-            listobjects = Request("LISTALLOBJECTS", station=self.station)
-            self.stream.enqueue(listobjects)
-        else:
-            log.info("object cache for %s still valid" % (self.origin))
-        log.info("Handling LISTALLOBJECTS")
-        payload = self.station.objects()
-        log.info("Sending %i object descriptions" % (len(payload)))
-        response = self._Response(self.id, "DESCRIBEOBJECTS",
-                                chr(0).join(payload))
-        self.stream.enqueue(response)
-        self.TERMINATE()
-
-    def handle_fetchobject(self):
-        log.info("Handling FETCHOBJECT for %s" % (repr(self.payload)))
-        response = self._Response(self.id, "TRANSFER", self.station.repo[self.payload])
-        self.stream.enqueue(response)
-
     def TERMINATE(self):
         terminate = self._Response(self.id, "TERMINATE", None)
         self.stream.enqueue(terminate)
 
-    VALID_REQUESTS = {
-            "LISTALLOBJECTS": handle_listallobjects,
-            "FETCHOBJECT": handle_fetchobject,
-    }
