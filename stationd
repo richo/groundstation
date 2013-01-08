@@ -55,6 +55,62 @@ def _write_sockets():
             write_sockets.append(i)
     return write_sockets
 
+def handle_discoverer_event():
+    # TODO Return Event objects instead of raw data
+    data, peer = discoverer.recv(settings.DEFAULT_BUFSIZE)
+    try:
+        event = new_broadcast_event(data)
+    except UnknownBroadcastEvent:
+        log.warning("Ooops got some weird event: %s" % (repr(data)))
+    if isinstance(event, BroadcastPing):
+        if event.payload == myself.uuid:
+            log.info("Discarding PING from myself")
+        else:
+            log.info("Ping from %s" % str(peer))
+            if event.payload > myself.uuid:
+                # Peer's uuid is larger, we should connect and initiate sync
+                if peer[0] not in peer_sockets:
+                    # Ensure that they're in our object cache- we're updating it now
+                    if not station.recently_queried(event.payload):
+                        client = StreamClient(peer[0])
+                        peer_sockets.append(client)
+                        client.begin_handshake(station)
+            else:
+                # Peer's uuid is smaller, we should do nothing and await connection
+                log.info("Peer's uuid is smaller, awaiting connection")
+
+
+def handle_listener_event():
+    peer = listener.accept(PeerSocket)
+    peer_sockets.append(peer)
+
+
+def handle_tcpnetwork_event():
+    try:
+        i.recv()
+        while i.packet_queue:
+            data = i.packet_queue.pop()
+            log.info("got %s back from peer" % (repr(data)))
+            gizmo = station.gizmo_factory.hydrate(data, i)
+            assert(gizmo is not None, "gizmo_factory returned None")
+            gizmo.process()
+    except SocketClosedException:
+        peer_sockets.remove(i)
+    except InvalidGizmoError:
+        pass # Ignore invalid gizmo's for now.
+
+
+def handler_for(thing):
+    if thing == discoverer:
+        return handle_discoverer_event
+    elif thing == listener:
+        return handle_listener_event
+    elif isinstance(thing, PeerSocket) or isinstance(i, StreamClient):
+        return handle_tcpnetwork_event
+    else:
+        raise KeyError
+
+
 while True:
     if time.time() > (last_beacon + BEACON_TIMEOUT):
         last_beacon = time.time()
@@ -66,46 +122,7 @@ while True:
     log.info("Got %i write fds" % (len(swrite)))
 
     for i in sread:
-        if i == discoverer:
-            # TODO Return Event objects instead of raw data
-            data, peer = discoverer.recv(settings.DEFAULT_BUFSIZE)
-            try:
-                event = new_broadcast_event(data)
-            except UnknownBroadcastEvent:
-                log.warning("Ooops got some weird event: %s" % (repr(data)))
-            if isinstance(event, BroadcastPing):
-                if event.payload == myself.uuid:
-                    log.info("Discarding PING from myself")
-                else:
-                    log.info("Ping from %s" % str(peer))
-                    if event.payload > myself.uuid:
-                        # Peer's uuid is larger, we should connect and initiate sync
-                        if peer[0] not in peer_sockets:
-                            # Ensure that they're in our object cache- we're updating it now
-                            if not station.recently_queried(event.payload):
-                                client = StreamClient(peer[0])
-                                peer_sockets.append(client)
-                                client.begin_handshake(station)
-                    else:
-                        # Peer's uuid is smaller, we should do nothing and await connection
-                        log.info("Peer's uuid is smaller, awaiting connection")
-
-        elif i == listener:
-            peer = listener.accept(PeerSocket)
-            peer_sockets.append(peer)
-        elif isinstance(i, PeerSocket) or isinstance(i, StreamClient):
-            try:
-                i.recv()
-                while i.packet_queue:
-                    data = i.packet_queue.pop()
-                    log.info("got %s back from peer" % (repr(data)))
-                    gizmo = station.gizmo_factory.hydrate(data, i)
-                    assert(gizmo is not None, "gizmo_factory returned None")
-                    gizmo.process()
-            except SocketClosedException:
-                peer_sockets.remove(i)
-            except InvalidGizmoError:
-                pass # Ignore invalid gizmo's for now.
+        handler_for(i)()
 
     for i in swrite:
         if isinstance(i, PeerSocket) or isinstance(i, StreamClient):
