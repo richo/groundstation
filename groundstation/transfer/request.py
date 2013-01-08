@@ -8,8 +8,10 @@ from groundstation.transfer import request_handlers
 from groundstation import logger
 log = logger.getLogger(__name__)
 
+
 class InvalidRequest(Exception):
     pass
+
 
 class Request(object):
     VALID_REQUESTS = {

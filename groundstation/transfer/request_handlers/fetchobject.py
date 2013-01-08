@@ -1,3 +1,5 @@
+import groundstation.transfer.request
+
 from groundstation import logger
 log = logger.getLogger(__name__)
 

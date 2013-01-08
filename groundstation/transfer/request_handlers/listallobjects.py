@@ -1,10 +1,13 @@
+import groundstation.transfer.request
+
 from groundstation import logger
 log = logger.getLogger(__name__)
 
 def handle_listallobjects(self):
     if not self.station.recently_queried(self.origin):
         log.info("%s not up to date, issuing LISTALLOBJECTS" % (self.origin))
-        listobjects = Request("LISTALLOBJECTS")
+        #                                                                      Pass in the station for gizmo_factory in the constructor
+        listobjects = groundstation.transfer.request.Request("LISTALLOBJECTS", station=self.station)
         self.stream.enqueue(listobjects)
     else:
         log.info("object cache for %s still valid" % (self.origin))
