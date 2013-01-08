@@ -99,6 +99,14 @@ def handle_tcpnetwork_event():
         log.warn("Recieved invalid gizmo!")
 
 
+def handle_iterators():
+    for i in station.iterators:
+        try:
+            i.next()
+        except StopIteration:
+            station.iterators.remove(i)
+
+
 def handler_for(thing):
     if thing == discoverer:
         return handle_discoverer_event
@@ -126,5 +134,10 @@ while True:
     for i in swrite:
         if isinstance(i, PeerSocket) or isinstance(i, StreamClient):
             i.send()
+        else:
+            log.warn("Something that isn't PeerSocket or StreamClient wants to do IO")
+
+    # Deal with iterators last, this way if they queue up network stuff it'll be processed immediately.
+    handle_iterators()
 
         # else: # Right now that's the only socket

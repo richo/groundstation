@@ -1,7 +1,16 @@
 import groundstation.transfer.request
 
+from groundstation import settings
 from groundstation import logger
 log = logger.getLogger(__name__)
+
+
+def chunks(l, n):
+    """ Yield successive n-sized chunks from l.
+    """
+    for i in xrange(0, len(l), n):
+        yield l[i:i+n]
+
 
 def handle_listallobjects(self):
     if not self.station.recently_queried(self.origin):
@@ -13,8 +22,21 @@ def handle_listallobjects(self):
         log.info("object cache for %s still valid" % (self.origin))
     log.info("Handling LISTALLOBJECTS")
     payload = self.station.objects()
-    log.info("Sending %i object descriptions" % (len(payload)))
-    response = self._Response(self.id, "DESCRIBEOBJECTS",
-                            chr(0).join(payload))
-    self.stream.enqueue(response)
-    self.TERMINATE()
+    if len(payload) > settings.LISTALLOBJECTS_CHUNK_THRESHOLD:
+        log.info("Lots of objects to send, registering an iterator")
+        def _():
+            for chunk in chunks(payload, settings.LISTALLOBJECTS_CHUNK_THRESHOLD):
+                log.info("Sending %i object descriptions" % (len(payload)))
+                response = self._Response(self.id, "DESCRIBEOBJECTS",
+                                        chr(0).join(payload))
+                self.stream.enqueue(response)
+                yield
+            self.TERMINATE()
+        self.station.register_iter(_())
+
+    else:
+        log.info("Sending %i object descriptions" % (len(payload)))
+        response = self._Response(self.id, "DESCRIBEOBJECTS",
+                                chr(0).join(payload))
+        self.stream.enqueue(response)
+        self.TERMINATE()
