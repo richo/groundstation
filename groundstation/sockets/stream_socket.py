@@ -43,9 +43,9 @@ class StreamSocket(object):
         assert self.has_data_ready(), "Attempt to send without data ready"
         data = self.serialize(self.write_queue.pop())
         data = ("%i%s" % (len(data), chr(0))) + data
-        log.debug("SEND %i bytes: %s to %s" %
+        log.debug("SEND %i bytes to %s" %
                 # XXX Ignore warnings, subclasses implement self.peer
-                (len(data), repr(data), self.peer))
+                (len(data), self.peer))
         # Send the number of bytes to read in ascii, and then a nul
         # TODO Buffer this out to amke sure that we don't block.
         self.socket.send(data)
@@ -75,9 +75,9 @@ class StreamSocket(object):
                 # We have the whole buffer
                 data = payload_buffer[:segment_length]
                 payload_buffer = payload_buffer[segment_length:]
-                log.debug("RECV %i bytes: %s from %s" %
+                log.debug("RECV %i bytes from %s" %
                         # XXX Ignore, subclasses set .peer
-                        (len(data), repr(data), self.peer))
+                        (len(data), self.peer))
                 self.packet_queue.insert(0, data)
                 tmp_buffer = payload_buffer
                 # Bail if we emptied the buffer
