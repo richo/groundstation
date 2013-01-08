@@ -3,5 +3,6 @@ log = logger.getLogger(__name__)
 
 
 def handle_terminate(self):
-    log.warn("Recieved unhandled event TERMINATE for request %s"
+    log.warn("Attempting to free request %s"
             % (str(self.id)))
+    self.station.free_request(self)

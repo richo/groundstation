@@ -15,3 +15,4 @@ def handle_fetchobject(self):
 
     response = self._Response(self.id, "TRANSFER", git_pb.SerializeToString())
     self.stream.enqueue(response)
+    self.TERMINATE()

@@ -9,14 +9,15 @@ class RequestRegistry(object):
         return str(other) in self._reg
 
     def register(self, req):
-        if req in self:
+        if req.id in self:
             log.warn("%s already registered in %s" % (repr(req), repr(self)))
         self._reg[str(req.id)] = req
 
     def free(self, req):
-        if req not in self:
-            log.warn("%s not registered in %s" % (repr(req), repr(self)))
-        del self._reg[str(req.id)]
+        if req.id not in self:
+            log.warn("%s (id: %s) not registered in %s" % (repr(req), repr(req.id), repr(self)))
+        else:
+            del self._reg[str(req.id)]
 
     def __getitem__(self, key):
         return self._reg[str(key)]

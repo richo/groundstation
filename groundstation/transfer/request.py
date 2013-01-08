@@ -19,9 +19,9 @@ class Request(object):
             "FETCHOBJECT": request_handlers.handle_fetchobject,
     }
 
-    def __init__(self, verb, station=None, stream=None, payload=None, origin=None):
+    def __init__(self, verb, station=None, stream=None, payload=None, origin=None, remoteId=None):
         self.type = "REQUEST"
-        self.id = uuid.uuid1()
+        self.id = remoteId or uuid.uuid1()
         self.verb = verb
         self.station = station
         self.stream = stream
@@ -39,7 +39,7 @@ class Request(object):
     @classmethod
     def from_gizmo(klass, gizmo, station, stream):
         log.debug("Hydrating a request from gizmo: %s" % (str(gizmo)))
-        return klass(gizmo.verb, station, stream, gizmo.payload, gizmo.stationid)
+        return klass(gizmo.verb, station, stream, gizmo.payload, gizmo.stationid, remoteId=gizmo.id)
 
     def SerializeToString(self):
         gizmo = self.station.gizmo_factory.gizmo()
