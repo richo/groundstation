@@ -1,0 +1,6 @@
+message ResponseTransfer {
+  // Represents a TRANSFER payload
+  required int32 type = 1; // Carries the GIT_OBJ_{BLOB,TREE,TAG,COMMIT} constant
+
+  required bytes data = 2;
+}
