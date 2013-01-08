@@ -54,12 +54,8 @@ class Response(object):
 
         self.VALID_RESPONSES[self.verb](self)
 
-    def handle_terminate(self):
-        log.warn("Recieved unhandled event TERMINATE for request %s"
-                % (str(self.id)))
-
     VALID_RESPONSES = {
             "TRANSFER": response_handlers.handle_transfer,
             "DESCRIBEOBJECTS": response_handlers.handle_describeobjects,
-            "TERMINATE": handle_terminate,
+            "TERMINATE": response_handlers.handle_terminate,
     }

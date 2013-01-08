@@ -1,2 +1,3 @@
 from describeobjects import handle_describeobjects
 from transfer import handle_transfer
+from terminate import handle_terminate
