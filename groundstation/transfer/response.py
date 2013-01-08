@@ -1,4 +1,4 @@
-from groundstation.proto.gizmo_pb2 import Gizmo
+import groundstation.proto
 import groundstation.transfer.request
 
 from groundstation import logger
@@ -18,6 +18,17 @@ class Response(object):
         #     self.origin = uuid.UUID(origin)
         self.origin = origin
 
+    def __init_from_gizmo__(self, gizmo, station, stream):
+        self.id = gizmo.id
+        self.station = station
+        self.stream = stream
+        self.origin = gizmo.stationid
+        self.verb = gizmo.verb
+        if gizmo.verb in self.PAYLOAD_INITIALISERS:
+            self.payload = self.PAYLOAD_INITIALISERS[gizmo.verb](gizmo.payload)
+        else:
+            self.payload = gizmo.payload
+
     def _Request(self, *args, **kwargs):
         kwargs['station'] = self.station
         req = groundstation.transfer.request.Request(*args, **kwargs)
@@ -27,12 +38,14 @@ class Response(object):
     @classmethod
     def from_gizmo(klass, gizmo, station, stream):
         log.debug("Hydrating a response from gizmo: %s" % (str(gizmo)))
-        return Response(gizmo.id, gizmo.verb, gizmo.payload, station, stream, gizmo.stationid)
+        resp = Response.__new__(Response)
+        resp.__init_from_gizmo__(gizmo, station, stream)
+        return resp
 
     def SerializeToString(self):
         gizmo = self.station.gizmo_factory.gizmo()
         gizmo.id = str(self.id)
-        gizmo.type = Gizmo.RESPONSE
+        gizmo.type = groundstation.proto.gizmo_pb2.Gizmo.RESPONSE
         gizmo.verb = self.verb
         if self.payload:
             gizmo.payload = self.serialize_payload(self.payload)
@@ -40,8 +53,8 @@ class Response(object):
 
     @staticmethod
     def serialize_payload(payload):
-        if isinstance(payload, pygit2.Blob):
-            return payload.data
+        if isinstance(payload, groundstation.proto.gizmo_pb2.Gizmo):
+            return str(payload.SerializeToString())
         else:
             return payload
 
@@ -52,6 +65,8 @@ class Response(object):
         self.VALID_RESPONSES[self.verb](self)
 
     def handle_transfer(self):
+        resp = groundstation.proto.response.transfer_pb2.Transfer()
+        resp.ParseFromString(self.payl)
         log.info("Handling TRANSFER of %s" % (self.payload))
         ret = self.station.write_object(self.payload)
         log.info("Wrote object %s" % (repr(ret)))
@@ -71,8 +86,17 @@ class Response(object):
         log.warn("Recieved unhandled event TERMINATE for request %s"
                 % (str(self.id)))
 
+    def init_transfer(self, payload):
+        resp = groundstation.proto.response.transfer_pb2.Transfer()
+        resp.type = payload.type
+        resp.data = payload.data
+        return resp.SerializeToString()
+
     VALID_RESPONSES = {
             "TRANSFER": handle_transfer,
             "DESCRIBEOBJECTS": handle_describe_objects,
             "TERMINATE": handle_terminate,
+    }
+    PAYLOAD_INITIALISERS = {
+            "TRANSFER": init_transfer
     }

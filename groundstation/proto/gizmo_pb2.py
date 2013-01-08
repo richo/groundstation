@@ -11,7 +11,7 @@ from google.protobuf import descriptor_pb2
 DESCRIPTOR = descriptor.FileDescriptor(
   name='groundstation/proto/gizmo.proto',
   package='',
-  serialized_pb='\n\x1fgroundstation/proto/gizmo.proto\"\x8d\x01\n\x05Gizmo\x12\n\n\x02id\x18\x01 \x02(\t\x12\x11\n\tstationid\x18\x02 \x02(\t\x12\x1e\n\x04type\x18\x03 \x02(\x0e\x32\x10.Gizmo.GizmoType\x12\x0c\n\x04verb\x18\x04 \x02(\t\x12\x0f\n\x07payload\x18\x05 \x01(\x0c\"&\n\tGizmoType\x12\x0b\n\x07REQUEST\x10\x00\x12\x0c\n\x08RESPONSE\x10\x01')
+  serialized_pb='\n\x1fgroundstation/proto/gizmo.proto\"\x8d\x01\n\x05Gizmo\x12\n\n\x02id\x18\x01 \x02(\t\x12\x11\n\tstationid\x18\x02 \x02(\t\x12\x1e\n\x04type\x18\x03 \x02(\x0e\x32\x10.Gizmo.GizmoType\x12\x0c\n\x04verb\x18\x04 \x02(\t\x12\x0f\n\x07payload\x18\x05 \x01(\t\"&\n\tGizmoType\x12\x0b\n\x07REQUEST\x10\x00\x12\x0c\n\x08RESPONSE\x10\x01')
 
 
 
@@ -74,8 +74,8 @@ _GIZMO = descriptor.Descriptor(
       options=None),
     descriptor.FieldDescriptor(
       name='payload', full_name='Gizmo.payload', index=4,
-      number=5, type=12, cpp_type=9, label=1,
-      has_default_value=False, default_value="",
+      number=5, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=unicode("", "utf-8"),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),

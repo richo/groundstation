@@ -9,5 +9,5 @@ message Gizmo {
   required string stationid = 2;
   required GizmoType type = 3;
   required string verb = 4;
-  optional bytes payload = 5;
+  optional string payload = 5;
 }
