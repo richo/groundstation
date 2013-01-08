@@ -90,7 +90,6 @@ def handle_tcpnetwork_event():
         i.recv()
         while i.packet_queue:
             data = i.packet_queue.pop()
-            log.info("got %s back from peer" % (repr(data)))
             gizmo = station.gizmo_factory.hydrate(data, i)
             assert gizmo is not None, "gizmo_factory returned None"
             gizmo.process()
