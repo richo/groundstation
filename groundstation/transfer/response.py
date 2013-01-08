@@ -1,3 +1,5 @@
+from groundstation.transfer import response_handlers
+
 from groundstation.proto.gizmo_pb2 import Gizmo
 import groundstation.transfer.request
 
@@ -56,23 +58,12 @@ class Response(object):
         ret = self.station.write_object(self.payload)
         log.info("Wrote object %s" % (repr(ret)))
 
-    def handle_describe_objects(self):
-        if not self.payload:
-            log.info("station %s sent empty DESCRIVEOBJECTS payload - new database?" % (str(self.origin)))
-            return
-        for obj in self.payload.split(chr(0)):
-            if obj not in self.station.repo:
-                request = self._Request("FETCHOBJECT", payload=obj)
-                self.stream.enqueue(request)
-            else:
-                log.debug("Not fetching already present object %s" % (str(obj)))
-
     def handle_terminate(self):
         log.warn("Recieved unhandled event TERMINATE for request %s"
                 % (str(self.id)))
 
     VALID_RESPONSES = {
             "TRANSFER": handle_transfer,
-            "DESCRIBEOBJECTS": handle_describe_objects,
+            "DESCRIBEOBJECTS": response_handlers.handle_describeobjects,
             "TERMINATE": handle_terminate,
     }
