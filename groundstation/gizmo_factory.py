@@ -21,7 +21,7 @@ class GizmoFactory(object):
         return gizmo
 
     def hydrate(self, data, stream):
-        log.debug("Attempting to hydrate a Gizmo")
+        log.debug("Attempting to hydrate a Gizmo: %i bytes" % (len(data)))
         gizmo = Gizmo()
         try:
             gizmo.ParseFromString(data)

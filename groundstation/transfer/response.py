@@ -29,7 +29,7 @@ class Response(object):
 
     @classmethod
     def from_gizmo(klass, gizmo, station, stream):
-        log.debug("Hydrating a response from gizmo: %s" % (str(gizmo)))
+        log.debug("Hydrating a response from gizmo")
         return Response(gizmo.id, gizmo.verb, gizmo.payload, station, stream, gizmo.stationid)
 
     def SerializeToString(self):

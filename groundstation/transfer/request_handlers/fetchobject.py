@@ -6,7 +6,7 @@ from groundstation import logger
 log = logger.getLogger(__name__)
 
 def handle_fetchobject(self):
-    log.info("Handling FETCHOBJECT for %s" % (repr(self.payload)))
+    log.info("Handling FETCHOBJECT")
     git_obj = self.station[self.payload]
     git_pb = GitObject()
 

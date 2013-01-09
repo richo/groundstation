@@ -65,6 +65,7 @@ def handle_discoverer_event():
     if isinstance(event, BroadcastPing):
         if event.payload == myself.uuid:
             log.info("Discarding PING from myself")
+        #elif event.addr == me!
         else:
             log.info("Ping from %s" % str(peer))
             if event.payload > myself.uuid:
@@ -119,10 +120,8 @@ while True:
         last_beacon = time.time()
         announcer.ping()
 
-    log.info("Blocking on sockets for up to %is" % (BEACON_TIMEOUT))
     (sread, swrite, sexc) = select.select(_read_sockets(), _write_sockets(), [], BEACON_TIMEOUT)
-    log.info("Got %i read fds" % (len(sread)))
-    log.info("Got %i write fds" % (len(swrite)))
+    log.info("Got %i fds. read: %s write: %i" % (len(sread) + len(swrite), len(sread), len(swrite)))
 
     for i in sread:
         handler_for(i)()
