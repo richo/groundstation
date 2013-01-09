@@ -1,0 +1,8 @@
+# vi: ft=ruby
+Vagrant::Config.run do |config|
+  config.vm.box = "precise64"
+  config.vm.network :bridged
+
+  config.vm.share_folder("groundstation", "~/groundstation", "../") # , :nfs=>true)
+end
+
