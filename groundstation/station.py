@@ -24,6 +24,7 @@ class Station(object):
         self.gizmo_factory = GizmoFactory(self, identity)
         self.identity_cache = {}
         self.registry = RequestRegistry()
+        self.iterators = []
 
     def register_request(self, request):
         log.info("Registering request %s" % (str(request.id)))
@@ -32,6 +33,20 @@ class Station(object):
     def free_request(self, request):
         log.info("Freeing request %s" % (str(request.id)))
         self.registry.free(request)
+
+    def register_iter(self, iterator):
+        log.info("Registering iterator %s" % (repr(iterator)))
+        self.iterators.append(iterator())
+
+    def has_ready_iterators(self):
+        return len(self.iterators) > 0
+
+    def handle_iters(self):
+        for i in self.iterators:
+            try:
+                i.next()
+            except StopIteration:
+                self.iterators.remove(i)
 
     def objects(self):
         return list(self.repo)
