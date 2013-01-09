@@ -100,11 +100,7 @@ def handle_tcpnetwork_event():
 
 
 def handle_iterators():
-    for i in station.iterators:
-        try:
-            i.next()
-        except StopIteration:
-            station.iterators.remove(i)
+    station.handle_iters()
 
 
 def handler_for(thing):
@@ -138,6 +134,7 @@ while True:
             log.warn("Something that isn't PeerSocket or StreamClient wants to do IO")
 
     # Deal with iterators last, this way if they queue up network stuff it'll be processed immediately.
-    handle_iterators()
+    if station.has_ready_iterators():
+        handle_iterators()
 
         # else: # Right now that's the only socket

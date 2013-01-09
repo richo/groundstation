@@ -36,7 +36,17 @@ class Station(object):
 
     def register_iter(self, iterator):
         log.info("Registering iterator %s" % (repr(iterator)))
-        self.iterators.append(iterator)
+        self.iterators.append(iterator())
+
+    def has_ready_iterators(self):
+        return len(self.iterators) > 0
+
+    def handle_iters(self):
+        for i in self.iterators:
+            try:
+                i.next()
+            except StopIteration:
+                self.iterators.remove(i)
 
     def objects(self):
         return list(self.repo)
