@@ -24,15 +24,16 @@ def handle_listallobjects(self):
     payload = self.station.objects()
     if len(payload) > settings.LISTALLOBJECTS_CHUNK_THRESHOLD:
         log.info("Lots of objects to send, registering an iterator")
-        def _():
+
+        @self.station.register_iter
+        def iterator():
             for chunk in chunks(payload, settings.LISTALLOBJECTS_CHUNK_THRESHOLD):
-                log.info("Sending %i object descriptions" % (len(payload)))
+                log.info("Sending %i object descriptions" % (len(chunk)))
                 response = self._Response(self.id, "DESCRIBEOBJECTS",
-                                        chr(0).join(payload))
+                                        chr(0).join(chunk))
                 self.stream.enqueue(response)
                 yield
             self.TERMINATE()
-        self.station.register_iter(_())
 
     else:
         log.info("Sending %i object descriptions" % (len(payload)))
