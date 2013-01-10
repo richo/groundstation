@@ -12,4 +12,4 @@ clean:
 _test:
 
 test: _test
-	python -m unittest discover test
+	GROUNDSTATION_DEBUG=WARN python -m unittest discover test

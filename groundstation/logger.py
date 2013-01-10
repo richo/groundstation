@@ -1,6 +1,10 @@
+import os
 import logging
 
-LEVEL = logging.DEBUG # TODO hang this off an environment variable.
+if "GROUNDSTATION_DEBUG" in os.environ:
+    LEVEL = getattr(logging, os.getenv("GROUNDSTATION_DEBUG"))
+else:
+    LEVEL = logging.DEBUG
 
 def _get_formatter():
     return logging.Formatter('%(name)s - %(levelname)s - %(message)s')
