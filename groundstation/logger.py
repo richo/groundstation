@@ -6,10 +6,12 @@ if "GROUNDSTATION_DEBUG" in os.environ:
 else:
     LEVEL = logging.DEBUG
 
+
 def _get_formatter():
     return logging.Formatter('%(name)s - %(levelname)s - %(message)s')
 
 CONSOLE_FORMATTER = _get_formatter()
+
 
 def _get_console_handler():
     ch = logging.StreamHandler()
@@ -19,9 +21,10 @@ def _get_console_handler():
 
 CONSOLE_HANDLER = _get_console_handler()
 
-LOGGERS = {} # Cache for instanciated loggers
+LOGGERS = {}  # Cache for instanciated loggers
 
-def getLogger(name): # Not threadsafe
+
+def getLogger(name):  # Not threadsafe
     if name in LOGGERS:
         return LOGGERS[name]
     logger = logging.getLogger(name)
