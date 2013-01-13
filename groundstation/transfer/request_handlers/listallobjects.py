@@ -1,4 +1,5 @@
 import groundstation.transfer.request
+import groundstation.proto.object_list_pb2
 
 from groundstation import settings
 from groundstation import logger
@@ -28,16 +29,19 @@ def handle_listallobjects(self):
         @self.station.register_iter
         def iterator():
             for chunk in chunks(payload, settings.LISTALLOBJECTS_CHUNK_THRESHOLD):
+                this_chunk = groundstation.proto.object_list_pb2.ObjectList()
+                this_chunk.objectname.extend(chunk)
                 log.info("Sending %i object descriptions" % (len(chunk)))
-                response = self._Response(self.id, "DESCRIBEOBJECTS",
-                                        chr(0).join(chunk))
+                response = self._Response(self.id, "DESCRIBEOBJECTS", this_chunk.SerializeToString())
                 self.stream.enqueue(response)
                 yield
             self.TERMINATE()
 
     else:
         log.info("Sending %i object descriptions" % (len(payload)))
+        chunk = groundstation.proto.object_list_pb2.ObjectList()
+        chunk.extend(payload)
         response = self._Response(self.id, "DESCRIBEOBJECTS",
-                                chr(0).join(payload))
+                                chunk.SerializeToString())
         self.stream.enqueue(response)
         self.TERMINATE()
