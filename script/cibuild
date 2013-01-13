@@ -1,4 +1,6 @@
 #!/bin/sh
+set -e
+
 if [ ! -d env ]; then
   virtualenv env
 fi
