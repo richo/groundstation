@@ -1,0 +1,3 @@
+message ObjectList {
+  repeated string objectname = 1;
+}
