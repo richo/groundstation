@@ -27,8 +27,9 @@ class Station(object):
         self.iterators = []
 
     def register_request(self, request):
-        log.info("Registering request %s" % (str(request.id)))
-        self.registry.register(request)
+        log.info("NOT Registering request %s" % (str(request.id)))
+        if False:
+            self.registry.register(request)
 
     def free_request(self, request):
         log.info("Freeing request %s" % (str(request.id)))
