@@ -27,12 +27,12 @@ class Station(object):
         self.iterators = []
 
     def register_request(self, request):
-        log.info("NOT Registering request %s" % (str(request.id)))
+        log.info("NOT Registering request %s" % (str(request.requestid)))
         if False:
             self.registry.register(request)
 
     def free_request(self, request):
-        log.info("Freeing request %s" % (str(request.id)))
+        log.info("Freeing request %s" % (str(request.requestid)))
         self.registry.free(request)
 
     def register_iter(self, iterator):

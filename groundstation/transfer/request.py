@@ -21,7 +21,7 @@ class Request(object):
 
     def __init__(self, verb, station=None, stream=None, payload=None, origin=None, remoteId=None):
         self.type = "REQUEST"
-        self.id = remoteId or uuid.uuid1()
+        self.requestid = remoteId or uuid.uuid1()
         self.verb = verb
         self.station = station
         self.stream = stream
@@ -39,11 +39,11 @@ class Request(object):
     @classmethod
     def from_gizmo(klass, gizmo, station, stream):
         log.debug("Hydrating a request from gizmo")
-        return klass(gizmo.verb, station, stream, gizmo.payload, gizmo.stationid, remoteId=gizmo.id)
+        return klass(gizmo.verb, station, stream, gizmo.payload, gizmo.stationid, remoteId=gizmo.requestid)
 
     def SerializeToString(self):
         gizmo = self.station.gizmo_factory.gizmo()
-        gizmo.id = str(self.id)
+        gizmo.requestid = str(self.requestid)
         gizmo.type = Gizmo.REQUEST
         gizmo.verb = self.verb
         if self.payload:
@@ -58,7 +58,7 @@ class Request(object):
         self.VALID_REQUESTS[self.verb](self)
 
     def TERMINATE(self):
-        terminate = self._Response(self.id, "TERMINATE", None)
+        terminate = self._Response(self.requestid, "TERMINATE", None)
         self.stream.enqueue(terminate)
 
     # Boilerplate to appease protobuf

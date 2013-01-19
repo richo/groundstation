@@ -1,5 +1,5 @@
 message Gizmo {
-  required string id = 1;
+  required string requestid = 1;
 
   enum GizmoType {
     REQUEST = 0;

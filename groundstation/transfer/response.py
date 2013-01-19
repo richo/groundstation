@@ -12,7 +12,7 @@ import pygit2
 class Response(object):
     def __init__(self, response_to, verb, payload, station=None, stream=None, origin=None):
         self.type = "RESPONSE"
-        self.id = response_to
+        self.requestid = response_to
         self.station = station
         self.stream = stream
         self.verb = verb
@@ -30,11 +30,11 @@ class Response(object):
     @classmethod
     def from_gizmo(klass, gizmo, station, stream):
         log.debug("Hydrating a response from gizmo")
-        return Response(gizmo.id, gizmo.verb, gizmo.payload, station, stream, gizmo.stationid)
+        return Response(gizmo.requestid, gizmo.verb, gizmo.payload, station, stream, gizmo.stationid)
 
     def SerializeToString(self):
         gizmo = self.station.gizmo_factory.gizmo()
-        gizmo.id = str(self.id)
+        gizmo.requestid = str(self.requestid)
         gizmo.type = Gizmo.RESPONSE
         gizmo.verb = self.verb
         if self.payload:

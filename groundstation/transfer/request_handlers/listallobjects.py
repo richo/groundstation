@@ -32,7 +32,7 @@ def handle_listallobjects(self):
                 this_chunk = groundstation.proto.object_list_pb2.ObjectList()
                 this_chunk.objectname.extend(chunk)
                 log.info("Sending %i object descriptions" % (len(chunk)))
-                response = self._Response(self.id, "DESCRIBEOBJECTS", this_chunk.SerializeToString())
+                response = self._Response(self.requestid, "DESCRIBEOBJECTS", this_chunk.SerializeToString())
                 self.stream.enqueue(response)
                 yield
             self.TERMINATE()
@@ -41,7 +41,7 @@ def handle_listallobjects(self):
         log.info("Sending %i object descriptions" % (len(payload)))
         chunk = groundstation.proto.object_list_pb2.ObjectList()
         chunk.extend(payload)
-        response = self._Response(self.id, "DESCRIBEOBJECTS",
+        response = self._Response(self.requestid, "DESCRIBEOBJECTS",
                                 chunk.SerializeToString())
         self.stream.enqueue(response)
         self.TERMINATE()
