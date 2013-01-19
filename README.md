@@ -19,5 +19,13 @@ features that it depends on have not landed in a stable release yet.
 For this reason, you'll need to build and install the latest [libgit2](1) and
 [pygit2](2) from source.
 
+development
+-----------
+
+1. install development libgit2 (on OSX this is streamlined by `brew install --HEAD libgit2`)
+2. `pip install -r requirements.txt`
+3. ???????
+4. profit!
+
 [1]:http://libgit2.github.com/
 [2]:https://github.com/libgit2/pygit2#building-on-nix-including-os-x
