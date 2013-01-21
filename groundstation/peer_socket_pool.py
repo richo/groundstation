@@ -13,3 +13,9 @@ class PeerSocketPool(list):
             if i.peer == other:
                 return True
         return False
+
+    def __getitem__(self, key):
+        for i in self:
+            if i.peer == key:
+                return i
+        raise KeyError

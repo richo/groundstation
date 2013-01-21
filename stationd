@@ -76,6 +76,11 @@ def handle_discoverer_event():
                         client = StreamClient(peer[0])
                         peer_sockets.append(client)
                         client.begin_handshake(station)
+                else: # XXX This should check if we have open transactions.
+                    if not station.recently_queried(event.payload):
+                        client = peer_sockets(peer[0])
+                        client.begin_handshake(station)
+
             else:
                 # Peer's uuid is smaller, we should do nothing and await connection
                 log.info("Peer's uuid is smaller, awaiting connection")
