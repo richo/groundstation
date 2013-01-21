@@ -13,6 +13,3 @@ class BroadcastSocket(object):
     @property
     def socket(self):
         return self._sock
-
-
-
