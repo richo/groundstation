@@ -30,7 +30,8 @@ def handle_listallobjects(self):
         def iterator():
             for chunk in chunks(payload, settings.LISTALLOBJECTS_CHUNK_THRESHOLD):
                 this_chunk = groundstation.proto.object_list_pb2.ObjectList()
-                this_chunk.objectname.extend(chunk)
+                for obj in chunk:
+                    this_chunk.objectname.append(obj)
                 log.info("Sending %i object descriptions" % (len(chunk)))
                 response = self._Response(self.id, "DESCRIBEOBJECTS", this_chunk.SerializeToString())
                 self.stream.enqueue(response)
@@ -40,7 +41,8 @@ def handle_listallobjects(self):
     else:
         log.info("Sending %i object descriptions" % (len(payload)))
         chunk = groundstation.proto.object_list_pb2.ObjectList()
-        chunk.extend(payload)
+        for obj in payload:
+            chunk.objectname.append(payload)
         response = self._Response(self.id, "DESCRIBEOBJECTS",
                                 chunk.SerializeToString())
         self.stream.enqueue(response)
