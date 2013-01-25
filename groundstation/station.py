@@ -78,9 +78,6 @@ class Station(object):
         except KeyError:
             self.repo.create_reference(user.keys_ref, ref)
 
-    def write_object(self, payload):
-        return self.repo.create_blob(payload)
-
     def recently_queried(self, identity):
         """CAS the cache status of a given identity.
 
