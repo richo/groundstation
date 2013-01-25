@@ -1,5 +1,6 @@
 from sockets.socket_closed_exception import SocketClosedException
 from sockets.stream_socket import StreamSocket
+import socket.error
 
 
 from groundstation import settings
@@ -27,6 +28,20 @@ class PeerSocket(StreamSocket):
 
     def __repr__(self):
         return "<%s: from %s>" % (self.__class__, self.peer)
+
+    # Wrap StreamSocket's send and recv in exception handling
+    def send(self, *args, **kwargs):
+        try:
+            return super(PeerSocket, self).send(*args, **kwargs)
+        except socket.error as e:
+            raise PeerSocketClosedException(e)
+
+    def recv(self, *args, **kwargs):
+        try:
+            return super(PeerSocket, self).send(*args, **kwargs)
+        except socket.error as e:
+            raise PeerSocketClosedException(e)
+
 
 class PeerSocketClosedException(SocketClosedException):
     """Raised when a peer closes their socket"""
