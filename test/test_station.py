@@ -23,3 +23,17 @@ class TestStationIterator(StationTestCase):
         self.assertEqual(len(values), 0)
         self.assertEqual(return_values[0], 6)
         self.assertTrue(return_values[1])
+
+    def test_ready_iterator(self):
+        values = [1, 2]
+        def iterator():
+            while values:
+                yield
+                values.pop()
+            return
+        self.station.register_iter(iterator)
+        # +1 is for the extra iteration to do cleanup
+        for i in xrange(len(values) + 1):
+            self.assertTrue(self.station.has_ready_iterators())
+            self.station.handle_iters()
+        self.assertFalse(self.station.has_ready_iterators())
