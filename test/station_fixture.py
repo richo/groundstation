@@ -11,4 +11,4 @@ class StationTestCase(unittest.TestCase):
         self.station = Station(tempfile.mkdtemp(), self.node)
 
     def tearDown(self):
-        shutil.rmtree(self.station.repo.path)
+        shutil.rmtree(self.station.store.path)
