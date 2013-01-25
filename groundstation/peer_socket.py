@@ -1,7 +1,6 @@
 from sockets.socket_closed_exception import SocketClosedException
 from sockets.stream_socket import StreamSocket
-import socket.error
-
+import socket
 
 from groundstation import settings
 import groundstation.logger
