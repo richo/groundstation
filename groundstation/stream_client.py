@@ -12,6 +12,7 @@ class StreamClient(StreamSocket):
         super(StreamClient, self).__init__()
         self.peer = addr
         self.socket.connect((addr, settings.PORT))
+        self.socket.setblocking(False)
 
     def begin_handshake(self, station):
         request = Request("LISTALLOBJECTS", station=station)
