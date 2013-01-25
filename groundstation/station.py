@@ -67,19 +67,19 @@ class Station(object):
     def get_keys(self, user):
         """Fetch the keys from an object pointed to by $db/users/_name_/keys"""
         try:
-            ref = self.repo.lookup_reference(user.keys_ref)
-            assert ref.oid in self.repo, "Invalid user keys ref"
-            return PackedKeys(self[ref.oid].read_raw())
+            ref = self.store.lookup_reference(user.keys_ref)
+            assert ref.oid in self.store, "Invalid user keys ref"
+            return PackedKeys(self.store[ref.oid].read_raw())
         except KeyError:
             raise NoKeysRef(user.name)
 
     def set_keys(self, user, keys):
         """Serialize the keys, then write them out to the db and update the ref"""
-        ref = self.repo.create_blob(keys.pack())
+        ref = self.store.create_blob(keys.pack())
         try:
-            self.repo.lookup_reference(user.keys_ref).oid = ref
+            self.store.lookup_reference(user.keys_ref).oid = ref
         except KeyError:
-            self.repo.create_reference(user.keys_ref, ref)
+            self.store.create_reference(user.keys_ref, ref)
 
     def recently_queried(self, identity):
         """CAS the cache status of a given identity.

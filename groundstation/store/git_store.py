@@ -20,3 +20,15 @@ class GitStore(object):
 
     def __contains__(self, item):
         return unicode(item) in self.repo
+
+    def lookup_reference(self, ref):
+        return self.repo.lookup_reference(ref)
+
+    def write(self, typ, data):
+        self.repo.write(typ, data)
+
+    def create_blob(self, data):
+        return self.repo.create_blob(data)
+
+    def create_reference(self, ref, data):
+        return self.repo.create_reference(ref, data)
