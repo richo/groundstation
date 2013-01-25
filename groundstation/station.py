@@ -1,8 +1,6 @@
 import os
 import time
 
-import pygit2
-
 import logger
 log = logger.getLogger(__name__)
 
@@ -12,15 +10,18 @@ from packed_keys import PackedKeys, NoKeysRef
 from gizmo_factory import GizmoFactory, InvalidGizmoError
 from request_registry import RequestRegistry
 
+import store.git_store
+
 import settings
+
+STORAGE_BACKENDS = {
+        "git": store.git_store.GitStore,
+        }
 
 class Station(object):
     def __init__(self, path, identity):
         self.identity = identity
-        if not os.path.exists(os.path.join(path, "objects")):
-            log.info("initializing database in %s" % (path))
-            pygit2.init_repository(path, True)
-        self.repo = pygit2.Repository(path)
+        self.store = STORAGE_BACKENDS[settings.STORAGE_BACKEND](path)
         self.gizmo_factory = GizmoFactory(self, identity)
         self.identity_cache = {}
         self.registry = RequestRegistry()
@@ -49,14 +50,16 @@ class Station(object):
             except StopIteration:
                 self.iterators.remove(i)
 
+    # Delegate some methods to the store
     def objects(self):
-        return list(self.repo)
+        return self.store.objects()
 
     def __getitem__(self, key):
-        return self.repo[unicode(key)]
+        return self.store.__getitem__(key)
 
     def __contains__(self, item):
-        return unicode(item) in self.repo
+        return self.store.__contains__(item)
+    # End delegates to store
 
     def get_user(self, name):
         return User(name, self)
