@@ -10,18 +10,14 @@ from packed_keys import PackedKeys, NoKeysRef
 from gizmo_factory import GizmoFactory, InvalidGizmoError
 from request_registry import RequestRegistry
 
-import store.git_store
+import store
 
 import settings
-
-STORAGE_BACKENDS = {
-        "git": store.git_store.GitStore,
-        }
 
 class Station(object):
     def __init__(self, path, identity):
         self.identity = identity
-        self.store = STORAGE_BACKENDS[settings.STORAGE_BACKEND](path)
+        self.store = store.STORAGE_BACKENDS[settings.STORAGE_BACKEND](path)
         self.gizmo_factory = GizmoFactory(self, identity)
         self.identity_cache = {}
         self.registry = RequestRegistry()
