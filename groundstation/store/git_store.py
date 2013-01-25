@@ -7,6 +7,7 @@ log = groundstation.logger.getLogger(__name__)
 class GitStore(object):
     def __init__(self, path):
         # TODO path should probably be a resource, ie redis url etc.
+        self.path = path
         if not os.path.exists(os.path.join(path, "objects")):
             log.info("initializing database in %s" % (path))
             pygit2.init_repository(path, True)
