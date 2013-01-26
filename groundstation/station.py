@@ -1,8 +1,6 @@
 import os
 import time
 
-import pygit2
-
 import logger
 log = logger.getLogger(__name__)
 
@@ -12,15 +10,14 @@ from packed_keys import PackedKeys, NoKeysRef
 from gizmo_factory import GizmoFactory, InvalidGizmoError
 from request_registry import RequestRegistry
 
+import store
+
 import settings
 
 class Station(object):
     def __init__(self, path, identity):
         self.identity = identity
-        if not os.path.exists(os.path.join(path, "objects")):
-            log.info("initializing database in %s" % (path))
-            pygit2.init_repository(path, True)
-        self.repo = pygit2.Repository(path)
+        self.store = store.STORAGE_BACKENDS[settings.STORAGE_BACKEND](path)
         self.gizmo_factory = GizmoFactory(self, identity)
         self.identity_cache = {}
         self.registry = RequestRegistry()
@@ -49,14 +46,16 @@ class Station(object):
             except StopIteration:
                 self.iterators.remove(i)
 
+    # Delegate some methods to the store
     def objects(self):
-        return list(self.repo)
+        return self.store.objects()
 
     def __getitem__(self, key):
-        return self.repo[unicode(key)]
+        return self.store.__getitem__(key)
 
     def __contains__(self, item):
-        return unicode(item) in self.repo
+        return self.store.__contains__(item)
+    # End delegates to store
 
     def get_user(self, name):
         return User(name, self)
@@ -64,19 +63,19 @@ class Station(object):
     def get_keys(self, user):
         """Fetch the keys from an object pointed to by $db/users/_name_/keys"""
         try:
-            ref = self.repo.lookup_reference(user.keys_ref)
-            assert ref.oid in self.repo, "Invalid user keys ref"
-            return PackedKeys(self[ref.oid].read_raw())
+            ref = self.store.lookup_reference(user.keys_ref)
+            assert ref.oid in self.store, "Invalid user keys ref"
+            return PackedKeys(self.store[ref.oid].read_raw())
         except KeyError:
             raise NoKeysRef(user.name)
 
     def set_keys(self, user, keys):
         """Serialize the keys, then write them out to the db and update the ref"""
-        ref = self.repo.create_blob(keys.pack())
+        ref = self.store.create_blob(keys.pack())
         try:
-            self.repo.lookup_reference(user.keys_ref).oid = ref
+            self.store.lookup_reference(user.keys_ref).oid = ref
         except KeyError:
-            self.repo.create_reference(user.keys_ref, ref)
+            self.store.create_reference(user.keys_ref, ref)
 
     def recently_queried(self, identity):
         """CAS the cache status of a given identity.
