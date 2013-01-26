@@ -29,7 +29,8 @@ class GitStore(object):
         self.repo.write(typ, data)
 
     def create_blob(self, data):
-        return self.repo.create_blob(data)
+        blob = self.repo.create_blob(data)
+        return "".join(["%02x" % ord(i) for i in blob])
 
     def create_reference(self, ref, data):
         return self.repo.create_reference(ref, data)

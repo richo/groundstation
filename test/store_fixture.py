@@ -20,3 +20,4 @@ class StoreTestCase(unittest.TestCase):
 
     def test_create_blob(self):
         blob = self.repo.create_blob("rawr lol butts")
+        self.assertTrue(blob in self.repo)
