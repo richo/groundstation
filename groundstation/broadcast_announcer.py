@@ -1,9 +1,10 @@
 import socket
 import logger
-from sockets.broadcast_socket import BroadcastSocket
+from sockets.broadcast_socket import BroadcastSocket, BroadcastUnrouteable
 
 import logger
 log = logger.getLogger(__name__)
+
 
 class BroadcastAnnouncer(BroadcastSocket):
     def __init__(self, port):
@@ -23,6 +24,10 @@ class BroadcastAnnouncer(BroadcastSocket):
 
     def ping(self):
         log.info("ping payload: %s" % (self.broadcast_payload))
-        transmitted = self.socket.sendto(self.broadcast_payload, self._addr)
+        try:
+            transmitted = self.socket.sendto(self.broadcast_payload, self._addr)
+        except socket.error as e:
+            if e.errno == 65:  # No route to host
+                raise BroadcastUnrouteable(e)
         if transmitted != len(self.broadcast_payload):
             log.warning("ping wasn't successfully broadcast")

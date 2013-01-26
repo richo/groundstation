@@ -1,5 +1,10 @@
 import socket
 
+class BroadcastUnrouteable(Exception):
+    def __init__(self, socketerror):
+        self.socketerror = socketerror
+        super(BroadcastUnrouteable, self).__init__()
+
 class BroadcastSocket(object):
     def __init__(self):
         self._sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
