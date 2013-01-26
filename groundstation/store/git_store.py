@@ -26,11 +26,14 @@ class GitStore(object):
         return self.repo.lookup_reference(ref)
 
     def write(self, typ, data):
-        self.repo.write(typ, data)
+        return self._format_id(self.repo.write(typ, data))
 
     def create_blob(self, data):
-        blob = self.repo.create_blob(data)
-        return "".join(["%02x" % ord(i) for i in blob])
+        return self._format_id(self.repo.create_blob(data))
 
     def create_reference(self, ref, data):
         return self.repo.create_reference(ref, data)
+
+    @staticmethod
+    def _format_id(obj_id):
+        return "".join(["%02x" % ord(i) for i in obj_id])
