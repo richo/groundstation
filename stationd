@@ -10,6 +10,7 @@ log = logger.getLogger("stationd")
 from groundstation import settings
 
 from groundstation.station import Station
+from groundstation.sockets.broadcast_socket import BroadcastUnrouteable
 from groundstation.broadcast_discoverer import BroadcastDiscoverer
 from groundstation.broadcast_announcer import BroadcastAnnouncer
 from groundstation.stream_listener import StreamListener
@@ -123,7 +124,10 @@ def handler_for(thing):
 while True:
     if time.time() > (last_beacon + BEACON_TIMEOUT):
         last_beacon = time.time()
-        announcer.ping()
+        try:
+            announcer.ping()
+        except BroadcastUnrouteable as e:
+            log.fatal("broadcast was unrouteable")
 
     (sread, swrite, sexc) = select.select(_read_sockets(), _write_sockets(), [], BEACON_TIMEOUT)
     log.info("Got %i fds. read: %s write: %i" % (len(sread) + len(swrite), len(sread), len(swrite)))
