@@ -3,7 +3,7 @@ groundstation
 
 groundstation is a decentralised task/project management suite.
 
-The core of it's implementation is an object store of linked immutable objects
+The core of its implementation is an object store of linked immutable objects
 that are synced via a gossip protocol.
 
 The current version uses libgit2 as a storage backend, but doesn't use many git
@@ -13,7 +13,7 @@ future.
 pygit2
 ------
 
-groundstation uses pygit2 under the hood for it's git interactions, and some
+groundstation uses pygit2 under the hood for its git interactions, and some
 features that it depends on have not landed in a stable release yet.
 
 For this reason, you'll need to build and install the latest [libgit2](1) and

@@ -5,7 +5,7 @@ Protocol Specification for groundstation
 
 * Nodes will bind to a UDP socket, and a TCP port on $PORT.
 * Nodes will periodically broadcast to any peers listening on UDP.
-* A node recieving a UDP broadcast will first check it's existing received
+* A node recieving a UDP broadcast will first check its existing received
     connection pool, before immediately connecting to the broadcasting party to
     arrange an exchange of data.
 

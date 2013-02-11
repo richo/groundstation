@@ -1,7 +1,7 @@
 Development
 ===========
 
-Developing for groundstation is made awkward by it's design. I'm finding that
+Developing for groundstation is made awkward by its design. I'm finding that
 Vagrant works reasonably well, a Vagrantfile is distributed in HACKING/
 
 Stations
@@ -48,7 +48,7 @@ a--b--c
 1. An indexing process will start at one of the foremost nodes (at time of
 writing, this should occur when new objects are written with ancestors)
 
-2. This process should enumerate it's ancestors, writing them out to a tempfile
+2. This process should enumerate its ancestors, writing them out to a tempfile
 in the repository (tentatively in `/tmp/$$/...` for dotlocking) one hash per
 line, in reverse order, ie most recent commit first.
 
@@ -56,7 +56,7 @@ line, in reverse order, ie most recent commit first.
 implementation to create a file in `$objdb/rindex` with the name of the object
 whose history has been enumerated.
 
-4. This process may at it's option then unlink the files named by any ancestors
+4. This process may at its option then unlink the files named by any ancestors
 named in the file just written.
 
 ### Traversing
