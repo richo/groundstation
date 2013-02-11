@@ -1,0 +1,50 @@
+#!/usr/bin/env python
+import os
+import sys
+
+import argparse
+import github
+
+from groundstation.station import Station
+from groundstation.node import Node
+
+from groundstation.nodes.issues import Issue as GroundStationIssue
+
+
+class NoGithubToken(Exception): pass
+
+
+def _create_option_parser():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--repo", dest='repo', action='store')
+    return parser
+
+
+def _create_station():
+    station_path = os.path.expanduser("~/.groundstation")
+    myself = Node()
+    station = Station(station_path, myself)
+    return station
+
+
+def main(argv):
+    if "GITHUB_TOKEN" not in os.environ:
+        raise NoGithubToken()
+
+    parser = _create_option_parser()
+    station = _create_station()
+
+    args = parser.parse_args(argv[1:])
+    gh = github.Github(os.getenv("GITHUB_TOKEN"))
+
+    repo = gh.get_repo(args.repo)
+
+    for issue in repo.get_issues():
+        gs_issue = GroundStationIssue()
+        gs_issue.create_timestamp = issue.created_at
+        gs_issue.upstream_url = issue.html_url
+        gs_issue.state = issue.state
+        station.append(gs_issue)
+
+if __name__ == "__main__":
+    main(sys.argv)
