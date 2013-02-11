@@ -64,3 +64,32 @@ named in the file just written.
 To find the forward ancestors of a given object, simply grep over
 `$odjdb/reindex` for the commit has in question. the filenames represent the
 tips, any intermediate nodes are contained inside the file.
+
+object structure
+----------------
+
+### Construction
+
+Objects are represented by tree structures, beginning with a root node (Which
+will be implementation specific, but for reasons relating to user sanity you
+should create a root node with the bare amount of uniquely identifying data
+possible, to maximise the chances that two people doing the same thing gets the
+same hash if you're pulling data in) and a series of transformative updates on
+these root objects.
+
+### Transformations
+
+A transformation is represented as an ObjectEvent which will contain an event
+specific payload which should be treated as a mask for the underlying event.
+
+Transformations can (and will) have multiple parents, but it should be noted
+that noop merges will not be possible, merges will be created when NEW events
+are created, as all visible tips will be direct ancestors to the new
+ObjectEvent.
+
+### Presentation
+
+Presenting data will not be done with a single node, but rather with the tips
+of all divergent branches from a root object.
+
+Tie resolution is currently undefined.
