@@ -59,6 +59,22 @@ whose history has been enumerated.
 4. This process may at its option then unlink the files named by any ancestors
 named in the file just written.
 
+### Edgecases
+
+#### TODO
+
+According to the current indexing spec, for the tree given by:
+
+```
+a--b--c--f--g
+     \    /
+      d--e
+```
+
+Once the rindex is resolved, a search for `f` will return `g`, which in turn
+includes `d` and `e` which have nothing to do with `f`. Notation for branching
+and resolution will need to be created.
+
 ### Traversing
 
 To find the forward ancestors of a given object, simply grep over
