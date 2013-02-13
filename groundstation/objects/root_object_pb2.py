@@ -11,7 +11,7 @@ from google.protobuf import descriptor_pb2
 DESCRIPTOR = descriptor.FileDescriptor(
   name='groundstation/objects/root_object.proto',
   package='',
-  serialized_pb='\n\'groundstation/objects/root_object.proto\"I\n\nRootObject\x12\x0c\n\x04sha1\x18\x01 \x02(\x0c\x12\n\n\x02id\x18\x02 \x02(\t\x12\x0f\n\x07\x63hannel\x18\x03 \x02(\t\x12\x10\n\x08protocol\x18\x04 \x02(\t')
+  serialized_pb='\n\'groundstation/objects/root_object.proto\";\n\nRootObject\x12\n\n\x02id\x18\x01 \x02(\t\x12\x0f\n\x07\x63hannel\x18\x02 \x02(\t\x12\x10\n\x08protocol\x18\x03 \x02(\t')
 
 
 
@@ -24,29 +24,22 @@ _ROOTOBJECT = descriptor.Descriptor(
   containing_type=None,
   fields=[
     descriptor.FieldDescriptor(
-      name='sha1', full_name='RootObject.sha1', index=0,
-      number=1, type=12, cpp_type=9, label=2,
-      has_default_value=False, default_value="",
+      name='id', full_name='RootObject.id', index=0,
+      number=1, type=9, cpp_type=9, label=2,
+      has_default_value=False, default_value=unicode("", "utf-8"),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     descriptor.FieldDescriptor(
-      name='id', full_name='RootObject.id', index=1,
+      name='channel', full_name='RootObject.channel', index=1,
       number=2, type=9, cpp_type=9, label=2,
       has_default_value=False, default_value=unicode("", "utf-8"),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     descriptor.FieldDescriptor(
-      name='channel', full_name='RootObject.channel', index=2,
+      name='protocol', full_name='RootObject.protocol', index=2,
       number=3, type=9, cpp_type=9, label=2,
-      has_default_value=False, default_value=unicode("", "utf-8"),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None),
-    descriptor.FieldDescriptor(
-      name='protocol', full_name='RootObject.protocol', index=3,
-      number=4, type=9, cpp_type=9, label=2,
       has_default_value=False, default_value=unicode("", "utf-8"),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
@@ -61,7 +54,7 @@ _ROOTOBJECT = descriptor.Descriptor(
   is_extendable=False,
   extension_ranges=[],
   serialized_start=43,
-  serialized_end=116,
+  serialized_end=102,
 )
 
 DESCRIPTOR.message_types_by_name['RootObject'] = _ROOTOBJECT

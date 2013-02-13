@@ -1,6 +1,5 @@
 message RootObject {
-    required bytes sha1 = 1;
-    required string id = 2;
-    required string channel = 3;
-    required string protocol = 4;
+    required string id = 1;
+    required string channel = 2;
+    required string protocol = 3;
 }
