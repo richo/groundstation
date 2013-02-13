@@ -8,6 +8,9 @@ import github
 from groundstation.station import Station
 from groundstation.node import Node
 
+from groundstation import logger
+log = logger.getLogger(__name__)
+
 from groundstation.objects.root_object import RootObject
 from groundstation.objects.update_object import UpdateObject
 
@@ -47,13 +50,18 @@ def main(argv):
     repo = gh.get_repo(args.repo)
 
     for issue in repo.get_issues():
-        issue_id = "%s/issue_%d" % (args.repo, issue.id)
+        issue_id = "issues/%d" % (issue.number)
         # XXX Is including a user token actually sane? github:user/repo ought to be uniquely identifying
-        channel  = "%s:github:%s" % (user, args.repo)
+        channel = "%s:github:%s" % (user, args.repo)
         protocol = github_protocol._identifier_
+        log.info(("Creating a new root_object with:\n" +
+                  "id: %s\n" +
+                  "channel: %s\n" +
+                  "protocol: %s") % (issue_id, channel, protocol))
+
         root_object = RootObject(issue_id, channel, protocol)
         root_object_oid = station.write(root_object.as_object())
-        station.update_ref(channel, issue_id, [root_object_oid])
+        station.update_gref(channel, issue_id, [root_object_oid])
 
 if __name__ == "__main__":
     main(sys.argv)
