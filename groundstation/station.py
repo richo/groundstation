@@ -48,7 +48,10 @@ class Station(object):
 
     # Delegate some methods to the store
     def write(self, obj):
-        return self.store.create_blob(obj)
+        log.info("Writing object to db")
+        oid = self.store.create_blob(obj)
+        log.info("Wrote object %s" % oid)
+        return oid
 
     def objects(self):
         return self.store.objects()
