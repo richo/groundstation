@@ -24,6 +24,6 @@ class UpdateObject(object):
         """Convert a RootObject into data suitable to write into the database
         as a Git object"""
         protobuf = update_object_pb2.UpdateObject()
-        for member in self.data_members:
-            setattr(protobuf, member, getattr(self, member))
+        protobuf.parents.extend(self.parents)
+        protobuf.data = self.data
         return protobuf.SerializeToString()
