@@ -1,5 +1,4 @@
 message UpdateObject {
-    required bytes sha1 = 1;
-    repeated bytes parent = 2;
-    required bytes data = 3;
+    repeated bytes parent = 1;
+    required bytes data = 2;
 }
