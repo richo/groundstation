@@ -47,6 +47,9 @@ class Station(object):
                 self.iterators.remove(i)
 
     # Delegate some methods to the store
+    def write(self, obj):
+        return self.store.create_blob(obj)
+
     def objects(self):
         return self.store.objects()
 
