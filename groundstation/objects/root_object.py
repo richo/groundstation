@@ -6,6 +6,13 @@ class RootObject(object):
         self.id = id
         self.channel = channel
         self.protocol = protocol
+        self.sha1 = None
+
+    @property
+    def sha1(self):
+        if self.sha1:
+            return self.sha1
+        # XXX Calculate sha1 of this object
 
     @staticmethod
     def from_object(obj):
