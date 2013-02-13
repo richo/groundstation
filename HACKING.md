@@ -75,6 +75,13 @@ Once the rindex is resolved, a search for `f` will return `g`, which in turn
 includes `d` and `e` which have nothing to do with `f`. Notation for branching
 and resolution will need to be created.
 
+### Writing data out
+
+Updates to refs that are recieved from a peer should be accompanied by a valid
+signature. All objects should be accepted (unless the signature is actually
+invalid, not just untrusted), but only objects that are signed by a trusted
+party should be included into the rindex for consideration for rendering.
+
 ### Traversing
 
 To find the forward ancestors of a given object, simply grep over
