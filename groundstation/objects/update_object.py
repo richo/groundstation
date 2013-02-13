@@ -5,12 +5,12 @@ class UpdateObject(object):
     def __init__(self, parents, data):
         self.parents = parents
         self.data = data
-        self.sha1 = None
+        self._sha1 = None
 
     @property
     def sha1(self):
-        if self.sha1:
-            return self.sha1
+        if self._sha1:
+            return self._sha1
         # XXX Calculate sha1 of this object
 
     @staticmethod
