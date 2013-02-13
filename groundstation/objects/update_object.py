@@ -1,7 +1,7 @@
 import update_object_pb2
 
 class UpdateObject(object):
-    data_members = [parents, data]
+    data_members = ["parents", "data"]
     def __init__(self, parents, data):
         self.parents = parents
         self.data = data
