@@ -3,7 +3,6 @@ import root_object_pb2
 class RootObject(object):
     data_members = ["id", "channel", "protocol"]
     def __init__(self, id, channel, protocol):
-        super(RootObject, self).__init__()
         self.id = id
         self.channel = channel
         self.protocol = protocol
