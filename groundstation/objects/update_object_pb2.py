@@ -11,7 +11,7 @@ from google.protobuf import descriptor_pb2
 DESCRIPTOR = descriptor.FileDescriptor(
   name='groundstation/objects/update_object.proto',
   package='',
-  serialized_pb='\n)groundstation/objects/update_object.proto\",\n\x0cUpdateObject\x12\x0e\n\x06parent\x18\x01 \x03(\x0c\x12\x0c\n\x04\x64\x61ta\x18\x02 \x02(\x0c')
+  serialized_pb='\n)groundstation/objects/update_object.proto\"-\n\x0cUpdateObject\x12\x0f\n\x07parents\x18\x01 \x03(\x0c\x12\x0c\n\x04\x64\x61ta\x18\x02 \x02(\x0c')
 
 
 
@@ -24,7 +24,7 @@ _UPDATEOBJECT = descriptor.Descriptor(
   containing_type=None,
   fields=[
     descriptor.FieldDescriptor(
-      name='parent', full_name='UpdateObject.parent', index=0,
+      name='parents', full_name='UpdateObject.parents', index=0,
       number=1, type=12, cpp_type=9, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
@@ -47,7 +47,7 @@ _UPDATEOBJECT = descriptor.Descriptor(
   is_extendable=False,
   extension_ranges=[],
   serialized_start=45,
-  serialized_end=89,
+  serialized_end=90,
 )
 
 DESCRIPTOR.message_types_by_name['UpdateObject'] = _UPDATEOBJECT
