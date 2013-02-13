@@ -109,3 +109,11 @@ Presenting data will not be done with a single node, but rather with the tips
 of all divergent branches from a root object.
 
 Tie resolution is currently undefined.
+
+
+### Misc
+
+Important reminder for the forgetful:
+
+protobuf `string`s come out as python `unicode`s.
+protobuf `bytes`s come out as python `string`s (or bytearrays in python3)
