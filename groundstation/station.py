@@ -63,6 +63,14 @@ class Station(object):
         return self.store.__contains__(item)
     # End delegates to store
 
+    def update_gref(self, channel, identifier, tips, parents=[]):
+        # TODO This needs so much work.
+        gref = self.store.gref(channel, identifier)
+        for tip in tips:
+            gref.write_tip(tip, "")
+        for parent in parents:
+            gref.remove_tip(parent)
+
     def get_user(self, name):
         return User(name, self)
 
