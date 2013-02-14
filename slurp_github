@@ -11,9 +11,6 @@ from groundstation.node import Node
 from groundstation import logger
 log = logger.getLogger(__name__)
 
-from groundstation.objects.root_object import RootObject
-from groundstation.objects.update_object import UpdateObject
-
 from groundstation.protocols import github as github_protocol
 
 
@@ -32,6 +29,7 @@ def _create_station():
     station = Station(station_path, myself)
     return station
 
+
 def main(argv):
     if "GITHUB_TOKEN" not in os.environ:
         raise NoGithubToken()
@@ -45,7 +43,6 @@ def main(argv):
     repo = gh.get_repo(args.repo)
 
     adaptor = github_protocol.GithubAdaptor(station, repo)
-
 
     for issue in repo.get_issues():
         adaptor.write_issue(issue)
