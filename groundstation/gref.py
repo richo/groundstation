@@ -17,7 +17,9 @@ class Gref(object):
         return node_path
 
     def write_tip(self, tip, signature):
-        fh = open(self.tip_path(tip), 'r+')
+        tip_path = self.tip_path(tip)
+        open(tip_path, 'a').close()
+        fh = open(tip_path, 'r+')
         fh.seek(0)
         fh.write(signature)
         fh.truncate()
