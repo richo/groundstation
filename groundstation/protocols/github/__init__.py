@@ -12,13 +12,13 @@ from groundstation.objects.update_object import UpdateObject
 from groundstation import logger
 log = logger.getLogger(__name__)
 
-__doc__ = """\
-GithubAdaptor(station, gh)
 
-Accepts a station and a github repo object (from PyGithub)
-"""
 
 class GithubAdaptor(object):
+    """GithubAdaptor(station, gh)
+
+    Accepts a station and a github repo object (from PyGithub)
+    """
     protocol = _identifier_
 
     def __init__(self, station, repo):
