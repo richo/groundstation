@@ -37,6 +37,9 @@ class GithubReadAdaptor(AbstractGithubAdaptor):
     def repo_name(self):
         return self.repo
 
+    def get_issue(self, issue):
+        pass
+
 
 class GithubAdaptor(AbstractGithubAdaptor):
     """GithubAdaptor(station, gh)
@@ -47,7 +50,7 @@ class GithubAdaptor(AbstractGithubAdaptor):
 
     @property
     def repo_name(self):
-        return repo.full_name.replace("/", "_")
+        return self.repo.full_name.replace("/", "_")
 
     def write_issue(self, issue):
         # Stupid implementation, blindly write with no deduping or merge
