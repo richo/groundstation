@@ -16,4 +16,6 @@ GithubAdaptor Object Types
 ### comment
 - `type`: `comment`
 - `body`: `body of the comment`
-- `id`: `github's id`
+- `id`: None
+- `user`: `github username`
+* created and updated timestamps currently discarded
