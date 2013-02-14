@@ -1,6 +1,8 @@
 _version_ = "0.0.0"
 _identifier_ = "richo@psych0tik.net:github:%s" % (_version_)
 
+import json
+
 from groundstation.gref import Gref
 
 from groundstation.objects.root_object import RootObject
@@ -14,7 +16,6 @@ GithubAdaptor(station, gh)
 
 Accepts a station and a github repo object (from PyGithub)
 """
-
 
 class GithubAdaptor(object):
     protocol = _identifier_
@@ -54,3 +55,12 @@ class GithubAdaptor(object):
         self.station.update_gref(gref, [root_object_oid])
 
         # Write out the initial state
+        # Creating lots of tiny objects should make deduping easier later
+        title_payload = {
+                "type": "title",
+                "id": None,
+                "body": issue.title
+                }
+        update_object = UpdateObject([root_object_oid], json.dumps(title_payload))
+        update_object_oid = self.station.write(update_object.as_object())
+        self.station.update_gref(gref, [update_object_oid], [root_object_oid])
