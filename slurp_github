@@ -16,9 +16,8 @@ from groundstation.objects.update_object import UpdateObject
 
 from groundstation.protocols import github as github_protocol
 
-class NoGithubToken(Exception): pass
 
-class NoUserId(Exception): pass
+class NoGithubToken(Exception): pass
 
 
 def _create_option_parser():
@@ -37,31 +36,20 @@ def main(argv):
     if "GITHUB_TOKEN" not in os.environ:
         raise NoGithubToken()
 
-    if "USER_ID" not in os.environ:
-        raise NoUserId()
-
     parser = _create_option_parser()
     station = _create_station()
 
     args = parser.parse_args(argv[1:])
-    gh = github.Github(os.getenv("GITHUB_TOKEN"))
-    user = os.getenv("USER_ID")
 
+    gh = github.Github(os.getenv("GITHUB_TOKEN"))
     repo = gh.get_repo(args.repo)
 
-    for issue in repo.get_issues():
-        issue_id = "issues/%d" % (issue.number)
-        # XXX Is including a user token actually sane? github:user/repo ought to be uniquely identifying
-        channel = "%s:github:%s" % (user, args.repo)
-        protocol = github_protocol._identifier_
-        log.info(("Creating a new root_object with:\n" +
-                  "id: %s\n" +
-                  "channel: %s\n" +
-                  "protocol: %s") % (issue_id, channel, protocol))
+    adaptor = github_protocol.GithubAdaptor(station, repo)
 
-        root_object = RootObject(issue_id, channel, protocol)
-        root_object_oid = station.write(root_object.as_object())
-        station.update_gref(channel, issue_id, [root_object_oid])
+
+    for issue in repo.get_issues():
+        adaptor.write_issue(issue)
+        break
 
 if __name__ == "__main__":
     main(sys.argv)
