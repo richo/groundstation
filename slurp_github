@@ -42,7 +42,7 @@ def main(argv):
     gh = github.Github(os.getenv("GITHUB_TOKEN"))
     repo = gh.get_repo(args.repo)
 
-    adaptor = github_protocol.GithubAdaptor(station, repo)
+    adaptor = github_protocol.GithubWriteAdaptor(station, repo)
 
     for issue in repo.get_issues():
         adaptor.write_issue(issue)
