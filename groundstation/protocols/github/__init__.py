@@ -56,7 +56,7 @@ class GithubAdaptor(AbstractGithubAdaptor):
         # Stupid implementation, blindly write with no deduping or merge
         # resolution.
         parents = []
-        issue_id = self._issue_id(issue)
+        issue_id = self._issue_id(issue.number)
         gref = self.issue_gref(issue)
 
         def _write_new_tip(obj):
