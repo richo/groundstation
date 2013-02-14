@@ -21,6 +21,12 @@ class AbstractGithubAdaptor(object):
         self.repo = repo
         self.channel = "github:%s" % (repo.full_name)
 
+    def issue_gref(self, issue):
+        return Gref(self.station.store, self.channel, self._issue_id(issue))
+
+    def _issue_id(self, issue):
+        return self.issue_format % (issue)
+
 
 class GithubReadAdaptor(AbstractGithubAdaptor):
     """GithubReadAdaptor(station, repo_name)
@@ -39,15 +45,9 @@ class GithubAdaptor(AbstractGithubAdaptor):
     """
     protocol = _identifier_
 
-
-    def issue_gref(self, issue):
-        return Gref(self.station.store, self.channel, self._issue_id(issue))
     @property
     def repo_name(self):
         return repo.full_name.replace("/", "_")
-
-    def _issue_id(self, issue):
-        return self.issue_format % (issue.number)
 
     def write_issue(self, issue):
         # Stupid implementation, blindly write with no deduping or merge
