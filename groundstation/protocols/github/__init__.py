@@ -14,7 +14,7 @@ log = logger.getLogger(__name__)
 
 
 class AbstractGithubAdaptor(object):
-    issue_format = "issue/%d"
+    issue_format = "issues/%d"
 
     def __init__(self, station, repo):
         self.station = station
