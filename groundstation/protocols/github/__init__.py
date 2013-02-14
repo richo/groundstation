@@ -86,3 +86,14 @@ class GithubAdaptor(object):
                 }
         update_object = UpdateObject(_parents(), json.dumps(body_payload))
         _write_new_tip(update_object)
+
+        # Write out all of the comments
+        for comment in issue.get_comments():
+            comment_payload = {
+                    "type": "comment",
+                    "id": None,
+                    "body": comment.body,
+                    "user": comment.user.login
+                    }
+            update_object = UpdateObject(_parents(), json.dumps(comment_payload))
+            _write_new_tip(update_object)
