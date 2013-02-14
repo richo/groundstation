@@ -46,6 +46,12 @@ class Station(object):
             except StopIteration:
                 self.iterators.remove(i)
 
+    def channels(self):
+        return os.listdir(self.store.gref_path())
+        # channels = {}
+        # for channel in os.listdir(self.store.gref_path()):
+        #     channels["channel"] = Channel(self.store, channel)
+
     # Delegate some methods to the store
     def write(self, obj):
         log.info("Writing object to db")
