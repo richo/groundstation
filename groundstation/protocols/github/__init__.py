@@ -19,7 +19,7 @@ class AbstractGithubAdaptor(object):
     def __init__(self, station, repo):
         self.station = station
         self.repo = repo
-        self.channel = "github:%s" % (repo.full_name)
+        self.channel = "github:%s" % (self.repo_name)
 
     def issue_gref(self, issue):
         return Gref(self.station.store, self.channel, self._issue_id(issue))
