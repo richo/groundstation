@@ -40,6 +40,7 @@ class GithubAdaptor(object):
         # Bail out if we've already written:
         gref = self.issue_gref(issue)
         if gref.exists():
+            log.info("Not creating any objects, a gref already exists at: %s" % str(gref))
             return False
 
         # Write out a root object
