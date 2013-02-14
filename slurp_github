@@ -49,7 +49,6 @@ def main(argv):
 
     for issue in repo.get_issues():
         adaptor.write_issue(issue)
-        break
 
 if __name__ == "__main__":
     main(sys.argv)
