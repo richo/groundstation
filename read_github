@@ -1,0 +1,43 @@
+#!/usr/bin/env python
+import os
+import sys
+
+import argparse
+import github
+
+from groundstation.station import Station
+from groundstation.node import Node
+
+from groundstation import logger
+log = logger.getLogger(__name__)
+
+from groundstation.protocols import github as github_protocol
+
+
+def _create_option_parser():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--repo", dest='repo', action='store')
+    parser.add_argument("--issue", dest='issue', action='store', type=int)
+    return parser
+
+
+def _create_station():
+    station_path = os.path.expanduser("~/.groundstation")
+    myself = Node()
+    station = Station(station_path, myself)
+    return station
+
+
+def main(argv):
+    parser = _create_option_parser()
+    station = _create_station()
+
+    args = parser.parse_args(argv[1:])
+
+    adaptor = github_protocol.GithubReadAdaptor(station, args.repo)
+    adaptor.get_issue(args.issue)
+
+if __name__ == "__main__":
+    main(sys.argv)
+
+    # def __init__(self, id, channel, protocol):
