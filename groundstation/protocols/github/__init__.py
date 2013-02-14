@@ -15,7 +15,11 @@ log = logger.getLogger(__name__)
 
 class AbstractGithubAdaptor(object):
     issue_format = "issue/%d"
-    pass
+
+    def __init__(self, station, repo):
+        self.station = station
+        self.repo = repo
+        self.channel = "github:%s" % (repo.full_name)
 
 
 class GithubReadAdaptor(AbstractGithubAdaptor):
@@ -23,7 +27,9 @@ class GithubReadAdaptor(AbstractGithubAdaptor):
 
     Accepts a station and the name of a github repo, ie "richo/groundstation"
     """
-    pass
+    @property
+    def repo_name(self):
+        return self.repo
 
 
 class GithubAdaptor(AbstractGithubAdaptor):
@@ -33,14 +39,12 @@ class GithubAdaptor(AbstractGithubAdaptor):
     """
     protocol = _identifier_
 
-    def __init__(self, station, repo):
-        self.station = station
-        self.repo = repo
-        self.repo_name = repo.full_name.replace("/", "_")
-        self.channel = "github:%s" % (repo.full_name)
 
     def issue_gref(self, issue):
         return Gref(self.station.store, self.channel, self._issue_id(issue))
+    @property
+    def repo_name(self):
+        return repo.full_name.replace("/", "_")
 
     def _issue_id(self, issue):
         return self.issue_format % (issue.number)
