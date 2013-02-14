@@ -77,3 +77,12 @@ class GithubAdaptor(object):
                 }
         update_object = UpdateObject(_parents(), json.dumps(title_payload))
         _write_new_tip(update_object)
+
+        # Write out the body of the issue
+        body_payload = {
+                "type": "body",
+                "id": None,
+                "body": issue.body
+                }
+        update_object = UpdateObject(_parents(), json.dumps(body_payload))
+        _write_new_tip(update_object)
