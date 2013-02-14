@@ -6,15 +6,18 @@ class Gref(object):
         self.store = store
         self.channel = channel.replace("/", "_")
         self.identifier = identifier
-
-    def node_path(self):
-        node_path = os.path.join(self.store.gref_path(),
+        self._node_path = os.path.join(self.store.gref_path(),
                                  self.channel,
                                  self.identifier)
-        if not os.path.exists(node_path):
-            os.makedirs(node_path)
 
-        return node_path
+    def exists(self):
+        return os.path.exists(self._node_path)
+
+    def node_path(self):
+        if not self.exists():
+            os.makedirs(self._node_path)
+
+        return self._node_path
 
     def write_tip(self, tip, signature):
         tip_path = self.tip_path(tip)
