@@ -2,6 +2,7 @@ _version_ = "0.0.0"
 _identifier_ = "richo@psych0tik.net:github:%s" % (_version_)
 
 import json
+import copy
 
 from groundstation.gref import Gref
 
@@ -35,11 +36,25 @@ class GithubAdaptor(object):
     def write_issue(self, issue):
         # Stupid implementation, blindly write with no deduping or merge
         # resolution.
-
+        parents = []
         issue_id = self._issue_id(issue)
+        gref = self.issue_gref(issue)
+
+        def _write_new_tip(obj):
+            our_parents = []
+            while parents:
+                our_parents.append(parents.pop())
+            log.debug("Creating new object with parents: %s" % (str(our_parents)))
+
+            oid = self.station.write(obj.as_object())
+            self.station.update_gref(gref, [oid], our_parents)
+            parents.append(oid)
+            log.debug("Setting parents to: %s" % (str(parents)))
+
+        def _parents():
+            return copy.copy(parents)
 
         # Bail out if we've already written:
-        gref = self.issue_gref(issue)
         if gref.exists():
             log.info("Not creating any objects, a gref already exists at: %s" % str(gref))
             return False
@@ -51,8 +66,7 @@ class GithubAdaptor(object):
                   "protocol: %s") % (issue_id, self.channel, self.protocol))
 
         root_object = RootObject(issue_id, self.channel, self.protocol)
-        root_object_oid = self.station.write(root_object.as_object())
-        self.station.update_gref(gref, [root_object_oid])
+        _write_new_tip(root_object)
 
         # Write out the initial state
         # Creating lots of tiny objects should make deduping easier later
@@ -61,6 +75,5 @@ class GithubAdaptor(object):
                 "id": None,
                 "body": issue.title
                 }
-        update_object = UpdateObject([root_object_oid], json.dumps(title_payload))
-        update_object_oid = self.station.write(update_object.as_object())
-        self.station.update_gref(gref, [update_object_oid], [root_object_oid])
+        update_object = UpdateObject(_parents(), json.dumps(title_payload))
+        _write_new_tip(update_object)
