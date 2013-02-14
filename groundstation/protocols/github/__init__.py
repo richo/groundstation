@@ -51,6 +51,6 @@ class GithubAdaptor(object):
 
         root_object = RootObject(issue_id, self.channel, self.protocol)
         root_object_oid = self.station.write(root_object.as_object())
-        self.station.update_gref(self.channel, issue_id, [root_object_oid])
+        self.station.update_gref(gref, [root_object_oid])
 
         # Write out the initial state
