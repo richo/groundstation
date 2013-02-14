@@ -13,8 +13,20 @@ from groundstation import logger
 log = logger.getLogger(__name__)
 
 
+class AbstractGithubAdaptor(object):
+    issue_format = "issue/%d"
+    pass
 
-class GithubAdaptor(object):
+
+class GithubReadAdaptor(AbstractGithubAdaptor):
+    """GithubReadAdaptor(station, repo_name)
+
+    Accepts a station and the name of a github repo, ie "richo/groundstation"
+    """
+    pass
+
+
+class GithubAdaptor(AbstractGithubAdaptor):
     """GithubAdaptor(station, gh)
 
     Accepts a station and a github repo object (from PyGithub)
@@ -31,7 +43,7 @@ class GithubAdaptor(object):
         return Gref(self.station.store, self.channel, self._issue_id(issue))
 
     def _issue_id(self, issue):
-        return "issues/%d" % (issue.number)
+        return self.issue_format % (issue.number)
 
     def write_issue(self, issue):
         # Stupid implementation, blindly write with no deduping or merge
