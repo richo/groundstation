@@ -10,15 +10,7 @@ var ChannelTab = Backbone.View.extend({
 
   className: "channel-tab",
 
-  template: '<div class="tabbable">' +
-      '<ul class="nav nav-tabs">' +
-        '<li ng-repeat="pane in panes" ng-class="{active:pane.selected}">'+
-          '<a href="" ng-click="select(pane)">{{name}}</a>' +
-        '</li>' +
-      '</ul>' +
-      '<div class="tab-content" ng-transclude></div>' +
-    '</div>'
-  ,
+  template: '<li style="text-shadow: none;" class=""><a href="#" style="text-shadow: none;">{{name}}</a></li>',
 
   render: function() {
     this.$el.html(this.template.replace("{{name}}", this.model.attributes["name"]));
