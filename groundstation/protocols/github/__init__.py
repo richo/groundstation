@@ -73,7 +73,7 @@ class GithubReadAdaptor(AbstractGithubAdaptor):
         return issue_thread
 
 
-class GithubAdaptor(AbstractGithubAdaptor):
+class GithubWriteAdaptor(AbstractGithubAdaptor):
     """GithubAdaptor(station, gh)
 
     Accepts a station and a github repo object (from PyGithub)
