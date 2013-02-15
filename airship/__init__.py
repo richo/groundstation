@@ -1,5 +1,7 @@
 import os
-from flask import Flask, render_template
+import json
+
+from flask import Flask
 
 
 def make_airship(station):
@@ -10,11 +12,8 @@ def make_airship(station):
         return render_template("index.html",
                 channels=station.channels())
 
-    # class Index(flask.views.MethodView):
-    #     def get(self):
-    #         return 'GET'
-    #     def post(self):
-    #         return 'POST'
-    # app.add_url_rule('/', view_func=Index.as_view('index'))
+    @app.route("/channels")
+    def list_channels():
+        return json.dumps(station.channels())
 
     return app
