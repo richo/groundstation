@@ -35,7 +35,7 @@ def main(argv):
     args = parser.parse_args(argv[1:])
 
     adaptor = github_protocol.GithubReadAdaptor(station, args.repo)
-    adaptor.get_issue(args.issue)
+    print adaptor.get_issue(args.issue)
 
 if __name__ == "__main__":
     main(sys.argv)

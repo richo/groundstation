@@ -6,6 +6,8 @@ import copy
 
 from groundstation.gref import Gref
 
+import groundstation.objects.object_factory as object_factory
+
 from groundstation.objects.root_object import RootObject
 from groundstation.objects.update_object import UpdateObject
 
@@ -38,7 +40,37 @@ class GithubReadAdaptor(AbstractGithubAdaptor):
         return self.repo
 
     def get_issue(self, issue):
-        pass
+        gref = self.issue_gref(issue)
+        visited_nodes = []
+        root_nodes = []
+        issue_thread = []  # We'll treat this as a stack and pop the events off
+                           # int he right order
+
+        # Walk the tips backwards. To do this right, we should have kept
+        # timestamps and used that for ordering
+        def _process(node):
+            if node not in visited_nodes:
+                visited_nodes.append(node)
+                log.debug("node: %s" % node)
+                obj = object_factory.hydrate_object(self.station.store[node].data)
+                if isinstance(obj, RootObject): # We've reached the back of this tree
+                    root_nodes.append(obj)
+                    return
+                issue_thread.append(obj)
+                for tip in obj.parents:
+                    log.debug("Tip: %s" % tip)
+                    _process(tip)
+
+        for tip in gref:
+            log.debug("Descending into %s" % (tip))
+            _process(tip)
+
+        assert(len(root_nodes) == 1,
+            "Anything other than one root node and you've got a problem")
+
+        issue_thread.append(root_nodes.pop())
+
+        return issue_thread
 
 
 class GithubAdaptor(AbstractGithubAdaptor):
