@@ -8,11 +8,21 @@
     <link rel="stylesheet" href="/static/bootstrap.css">
     <title>groundstation.js</title>
     <script>
-      groundstation_channels.reset({{channels_json|safe}})
+      $(document).ready(function() {
+        groundstation_channels.reset({{channels_json|safe}});
+        _.each(groundstation_channels.models, function(channel) {
+          new ChannelTab({
+            model: channel,
+            id: channel.attributes["name"]
+          });
+        });
+      });
     </script>
   </head>
   <body>
-    <div id="content">
+    <div class="tab-pane">
+      <div id="content">
+      </div>
     </div>
   </body>
 </html>
