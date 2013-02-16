@@ -23,4 +23,9 @@ def make_airship(station):
     def list_channels():
         return channels_json(station)
 
+    @app.route("/grefs/<channel>")
+    def list_grefs(channel):
+        return
+
+
     return app
