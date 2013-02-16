@@ -54,17 +54,12 @@ def make_airship(station):
         thread = adaptor.get_issue(gref)
         root = thread.pop()
 
-        response = ""
+        response = []
 
         while thread:
             node = thread.pop()
             data = json.loads(node.data)
-            if data["type"] == "title":
-                response += "<h3>%s</h3>\n" % (data["body"])
-            elif data["type"] == "body":
-                response += "<p><pre>%s</pre></p>" % (data["body"])
-            elif data["type"] == "comment":
-                response += "<p><pre>%s</pre></p>" % (data["body"])
+            response.append(data)
         return jsonate({"content": response}, False)
 
     return app
