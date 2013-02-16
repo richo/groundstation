@@ -13,7 +13,9 @@ def handle_listallobjects(self):
         log.info("%s not up to date, issuing LISTALLOBJECTS" % (self.origin))
         #                                                                      Pass in the station for gizmo_factory in the constructor
         listobjects = groundstation.transfer.request.Request("LISTALLOBJECTS", station=self.station)
+        listchannels = groundstation.transfer.request.Request("LISTALLCHANNELS", station=self.station)
         self.stream.enqueue(listobjects)
+        self.stream.enqueue(listchannels)
     else:
         log.info("object cache for %s still valid" % (self.origin))
     log.info("Handling LISTALLOBJECTS")
