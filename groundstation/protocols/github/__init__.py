@@ -40,7 +40,11 @@ class GithubReadAdaptor(AbstractGithubAdaptor):
         return self.repo
 
     def get_issue(self, issue):
-        gref = self.issue_gref(issue)
+        if isinstance(issue, Gref):
+            gref = issue
+        else:
+            gref = self.issue_gref(issue)
+
         visited_nodes = []
         root_nodes = []
         issue_thread = []  # We'll treat this as a stack and pop the events off
