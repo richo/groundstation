@@ -59,7 +59,7 @@ var ChannelTab = Backbone.View.extend({
   },
 
   select: function() {
-    groundstation.active_grefs.url = '/channels/' + this.model.attributes["name"];
+    groundstation.active_grefs.url = '/grefs/' + this.model.attributes["name"];
     groundstation.active_grefs.fetch();
     $("#gref-container").show();
   },
