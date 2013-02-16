@@ -40,11 +40,12 @@ class Gref(object):
     def __iter__(self):
         return os.listdir(self.node_path()).__iter__()
 
-    def remove_tip(self, tip):
+    def remove_tip(self, tip, silent=False):
         try:
             os.unlink(os.path.join(self.tip_path(tip)))
         except:
-            raise
+            if not silent:
+                raise
 
     def as_dict(self):
         return {
