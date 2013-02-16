@@ -4,23 +4,6 @@ var Channels = Backbone.Collection.extend({
   model: Channel
 });
 
-var ActiveChannel = Backbone.View.extend({
-  tagName: "div",
-  className: "active-channel",
-  template: '<div class="container">{{content}}</div>',
-
-  render: function() {
-    this.$el.html(this.template.replace("{{content}}", this.model.attributes["data"]));
-    $("#main-data").first.html($this.$el.html);
-  },
-
-  initialize: function() {
-    this.listenTo(this.model, "change", this.render);
-    this.render();
-  }
-
-});
-
 var ChannelTab = Backbone.View.extend({
 
   tagName: "li",
