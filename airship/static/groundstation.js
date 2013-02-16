@@ -1,9 +1,14 @@
+var groundstation = {};
 var Channel = Backbone.Model.extend();
 
 var Channels = Backbone.Collection.extend({
   model: Channel
 });
 
+groundstation.channels = new Channels();
+groundstation.channels.url = '/channels';
+
+groundstation.active_grefs = new Grefs();
 var ChannelTab = Backbone.View.extend({
 
   tagName: "li",
@@ -37,5 +42,3 @@ var ChannelTab = Backbone.View.extend({
 
 });
 
-groundstation_channels = new Channels();
-groundstation_channels.url = '/channels';

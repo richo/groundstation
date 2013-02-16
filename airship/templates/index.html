@@ -9,8 +9,8 @@
     <title>groundstation.js</title>
     <script>
       $(document).ready(function() {
-        groundstation_channels.reset({{channels_json|safe}});
-        _.each(groundstation_channels.models, function(channel) {
+        groundstation.channels.reset({{channels_json|safe}});
+        _.each(groundstation.channels.models, function(channel) {
           new ChannelTab({
             model: channel,
             id: channel.attributes["name"]
