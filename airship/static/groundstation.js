@@ -43,7 +43,7 @@ var ChannelTab = Backbone.View.extend({
   },
 
   install: function() {
-    $('#content')[0].appendChild(this.el);
+    $('#channels-content')[0].appendChild(this.el);
   },
 
   initialize: function() {
