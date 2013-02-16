@@ -28,6 +28,13 @@ var GrefMenuItem = Backbone.View.extend({
   },
 
   select: function() {
+    var gref_location = "/gref/" + this.model.attributes["channel"] + "/" + this.model.attributes["identifier"];
+    rendered_gref.url = gref_location;
+    rendered_gref.fetch({
+      success: function(model, response, options) {
+        rendered_gref_content.render();
+      },
+    });
   },
 
   events: {
@@ -91,3 +98,24 @@ var ChannelTab = Backbone.View.extend({
 
 });
 
+var RenderedGref = Backbone.View.extend({
+
+  tagName: "div",
+  className: "",
+
+  render: function() {
+    this.$el.html(this.model.attributes["content"]);
+    return this;
+  },
+
+  install: function() {
+    $("#gref-content")[0].appendChild(this.el);
+  },
+
+  initialize: function() {
+    this.listenTo(this.model, "change", this.render);
+    this.install();
+  }
+});
+var rendered_gref = new Gref();
+var rendered_gref_content;

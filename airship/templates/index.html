@@ -16,6 +16,9 @@
             id: channel.attributes["name"]
           });
         });
+        rendered_gref_content = new RenderedGref({
+          model: rendered_gref
+        });
       });
     </script>
   </head>
@@ -50,6 +53,8 @@
             </div>
           </ul>
         </div>
+      </div>
+      <div class="span9" id="gref-content">
       </div>
     </div>
   </body>
