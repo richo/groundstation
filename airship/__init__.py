@@ -1,5 +1,6 @@
 import os
 import json
+import time
 
 from flask import Flask, render_template
 
@@ -26,7 +27,9 @@ def make_airship(station):
 
     @app.route("/")
     def index():
-        return render_template("index.html", channels_json=channels_json(station, True))
+        return render_template("index.html",
+                channels_json=channels_json(station, True),
+                current_time=time.time())
 
     @app.route("/channels")
     def list_channels():
