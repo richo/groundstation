@@ -1,0 +1,3 @@
+message ChannelList {
+  repeated string channelname = 1;
+}
