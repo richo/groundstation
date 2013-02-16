@@ -41,3 +41,10 @@ class Gref(object):
             os.unlink(os.path.join(self.tip_path(tip)))
         except:
             raise
+
+    def as_dict(self):
+        return {
+                "channel": self.channel,
+                "identifier": self.identifier,
+                "node_path": self._node_path
+                }

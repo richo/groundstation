@@ -17,7 +17,7 @@ def channels_json(station, escaped=False):
 
 
 def grefs_json(station, channel, escaped=False):
-    grefs = [{"name": gref} for gref in station.grefs(channel)]
+    grefs = [gref.as_dict() for gref in station.grefs(channel)]
     return jsonate(grefs, escaped)
 
 

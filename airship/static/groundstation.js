@@ -20,10 +20,10 @@ var GrefMenuItem = Backbone.View.extend({
   tagname: "li",
   className: "gref",
 
-  template: '<a class="select" href="#">{{name}}</a>',
+  template: '<a class="select" href="#">{{identifier}}</a>',
 
   render: function() {
-    this.$el.html(this.template.replace("{{name}}", this.model.attributes["name"]));
+    this.$el.html(this.template.replace("{{identifier}}", this.model.attributes["identifier"]));
     return this;
   },
 

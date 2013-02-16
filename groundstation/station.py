@@ -9,6 +9,7 @@ from user import User, NoSuchUser
 from packed_keys import PackedKeys, NoKeysRef
 from gizmo_factory import GizmoFactory, InvalidGizmoError
 from request_registry import RequestRegistry
+from groundstation.gref import Gref
 
 import groundstation.utils
 
@@ -58,11 +59,15 @@ class Station(object):
         # channels = {}
         # for channel in os.listdir(self.store.gref_path()):
         #     channels["channel"] = Channel(self.store, channel)
+
     def grefs(self, channel):
         channel_path = os.path.join(self.store.gref_path(), channel)
         if not groundstation.utils.is_dir(channel_path):
             raise NonExistantChannel()
-        return groundstation.utils.find_leaf_dirs(channel_path)
+        grefs = []
+        for id in groundstation.utils.find_leaf_dirs(channel_path, True):
+            grefs.append(Gref(self.store, channel, id))
+        return grefs
 
     # Delegate some methods to the store
     def write(self, obj):
