@@ -65,6 +65,6 @@ def make_airship(station):
                 response += "<p><pre>%s</pre></p>" % (data["body"])
             elif data["type"] == "comment":
                 response += "<p><pre>%s</pre></p>" % (data["body"])
-        return response
+        return jsonate({"content": response}, False)
 
     return app
