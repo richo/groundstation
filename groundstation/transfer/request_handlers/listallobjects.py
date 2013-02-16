@@ -1,16 +1,11 @@
 import groundstation.transfer.request
 import groundstation.proto.object_list_pb2
 
+import groundstation.utils
+
 from groundstation import settings
 from groundstation import logger
 log = logger.getLogger(__name__)
-
-
-def chunks(l, n):
-    """ Yield successive n-sized chunks from l.
-    """
-    for i in xrange(0, len(l), n):
-        yield l[i:i+n]
 
 
 def handle_listallobjects(self):
@@ -28,7 +23,7 @@ def handle_listallobjects(self):
 
         @self.station.register_iter
         def iterator():
-            for chunk in chunks(payload, settings.LISTALLOBJECTS_CHUNK_THRESHOLD):
+            for chunk in groundstation.utils.chunks(payload, settings.LISTALLOBJECTS_CHUNK_THRESHOLD):
                 this_chunk = groundstation.proto.object_list_pb2.ObjectList()
                 for obj in chunk:
                     this_chunk.objectname.append(obj)
