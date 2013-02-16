@@ -23,11 +23,11 @@ var ActiveChannel = Backbone.View.extend({
 
 var ChannelTab = Backbone.View.extend({
 
-  tagName: "div",
+  tagName: "li",
 
-  className: "channel-tab",
+  className: "",
 
-  template: '<li style="text-shadow: none;" class=""><a href="#" style="text-shadow: none;">{{name}}</a></li>',
+  template: '<a href="#">{{name}}</a>',
 
   render: function() {
     this.$el.html(this.template.replace("{{name}}", this.model.attributes["name"]));
