@@ -27,7 +27,7 @@ var ChannelTab = Backbone.View.extend({
 
   className: "",
 
-  template: '<a href="#">{{name}}</a>',
+  template: '<a class="select" href="#">{{name}}</a>',
 
   render: function() {
     this.$el.html(this.template.replace("{{name}}", this.model.attributes["name"]));
@@ -39,7 +39,7 @@ var ChannelTab = Backbone.View.extend({
   },
 
   events: {
-    "click .nav":          "select"
+    "click .select":          "select"
   },
 
   install: function() {
