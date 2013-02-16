@@ -25,3 +25,14 @@ class TestUtilsLeafDirs(unittest.TestCase):
         self.assertNotIn(os.path.join(self.tmpdir, "foo", "bar"), leaves)
         self.assertNotIn(os.path.join(self.tmpdir, "foo"), leaves)
         self.assertNotIn(os.path.join(self.tmpdir, "foo", "test", "test"), leaves)
+
+    def test_find_leaf_dirs_as_idents(self):
+        leaves = utils.find_leaf_dirs(self.tmpdir, True)
+
+        self.assertIn(os.path.join("foo", "bar", "baz"), leaves)
+        self.assertIn(os.path.join("foo", "borp"), leaves)
+        self.assertIn(os.path.join("foo", "test", "test", "test"), leaves)
+
+        self.assertNotIn(os.path.join("foo", "bar"), leaves)
+        self.assertNotIn(os.path.join("foo"), leaves)
+        self.assertNotIn(os.path.join("foo", "test", "test"), leaves)

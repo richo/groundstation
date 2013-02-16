@@ -5,7 +5,7 @@ def is_dir(path):
     return (040000 & (os.stat(path).st_mode)) > 0
 
 
-def find_leaf_dirs(d):
+def find_leaf_dirs(root, ident_format=False):
     leafs = []
 
     def _find_leafs(d):
@@ -14,6 +14,8 @@ def find_leaf_dirs(d):
             if sum(1 if is_dir(os.path.join(this_path, n)) else 0 for n in os.listdir(this_path)) > 0:
                 _find_leafs(this_path)
             else:
+                if ident_format:
+                    this_path = this_path.replace(root+"/", "")
                 leafs.append(this_path)
-    _find_leafs(d)
+    _find_leafs(root)
     return leafs
