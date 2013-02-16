@@ -4,12 +4,21 @@ import json
 from flask import Flask, render_template
 
 
-def channels_json(station, escaped=False):
-    channels = [{"name": channel} for channel in station.channels()]
-    jsonbody = json.dumps(channels)
+def jsonate(obj, escaped):
+    jsonbody = json.dumps(obj)
     if escaped:
         jsonbody = jsonbody.replace("</", "<\\/")
     return jsonbody
+
+
+def channels_json(station, escaped=False):
+    channels = [{"name": channel} for channel in station.channels()]
+    return jsonate(channels, escaped)
+
+
+def grefs_json(station, channel, escaped=False):
+    grefs = [{"name": gref} for gref in station.grefs(channel)]
+    return jsonate(grefs, escaped)
 
 
 def make_airship(station):
@@ -25,7 +34,6 @@ def make_airship(station):
 
     @app.route("/grefs/<channel>")
     def list_grefs(channel):
-        return
-
+        return grefs_json(station, channel)
 
     return app
