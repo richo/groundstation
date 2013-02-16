@@ -9,11 +9,15 @@ class Gref(object):
         self._node_path = os.path.join(self.store.gref_path(),
                                  self.channel,
                                  self.identifier)
+
     def __str__(self):
         return "%s/%s" % (self.channel, self.identifier)
 
     def exists(self):
         return os.path.exists(self._node_path)
+
+    def tips(self):
+        return os.listdir(self._node_path)
 
     def node_path(self):
         if not self.exists():
