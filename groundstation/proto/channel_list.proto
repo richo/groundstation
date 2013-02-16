@@ -1,3 +1,11 @@
 message ChannelList {
-  repeated string channelname = 1;
+  message ChannelDescription {
+     message ChannelGrefDescription {
+       required string tip = 1;
+       optional string signature = 2;
+     };
+     required string channelname = 1;
+     repeated ChannelGrefDescription grefs = 2;
+  };
+  repeated ChannelDescription channels = 1;
 }
