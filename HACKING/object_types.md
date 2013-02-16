@@ -1,8 +1,10 @@
 RootObject
 ==========
 
-This is the root object of a thread. It contains:
+NB: See [protocol](/groundstation/objects/root_object.proto) and [implementation](/groundstation/objects/root_object.py)
 
+This is the root object of a thread. It contains:
+- SHA1: This is the hash of the object as stored in the objdb, as used for checksumming.
 - ID: This should be reproducable if it's from upstream
     - github:richo/groundstation/issues/15 for example
     - They will be identifiable by the sha1 of the id
@@ -17,6 +19,9 @@ This is the root object of a thread. It contains:
 ObjectUpdate
 ============
 
+NB: See [protocol](/groundstation/objects/update_object.proto) and [implementation](/groundstation/objects/update_object.py)
+
 These represent the updates to an object. The format of the payload member is dependent on the value of Protocol on the root object, but should include:
 
-* TODO
+- parent: This shall be an array of ID's of parents. Note that this is the SHA hashes and not the stringified ID.
+- data: An a protocol (as specified on the rootObject) specific payload used by the adaptor to render the content.

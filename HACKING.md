@@ -75,6 +75,13 @@ Once the rindex is resolved, a search for `f` will return `g`, which in turn
 includes `d` and `e` which have nothing to do with `f`. Notation for branching
 and resolution will need to be created.
 
+### Writing data out
+
+Updates to refs that are recieved from a peer should be accompanied by a valid
+signature. All objects should be accepted (unless the signature is actually
+invalid, not just untrusted), but only objects that are signed by a trusted
+party should be included into the rindex for consideration for rendering.
+
 ### Traversing
 
 To find the forward ancestors of a given object, simply grep over
@@ -110,6 +117,49 @@ of all divergent branches from a root object.
 
 Tie resolution is currently undefined.
 
+updating refs
+-------------
+
+Unlike in git, a ref doesn't point ot a single commit, instead it points to all
+the valid tips of a commit.
+
+As such, the process for updating a ref should be:
+
+1. Create a directory for the ref in `grefs/$refname`, respecting slashes as
+though they were native to the fs.
+
+2. Inside this ref directory, create a file for each tip that now exists on the
+ref. This file should contain the signature for the update to that ref (this is
+a TODO)
+
+3. Any previously existing files should be unlinked, AFTER each child ref is
+written.
+
+
+Therefore, a state transformation for an update might look like:
+
+```
+grefs/richo@psych0tik.net:foobar/baz ::
+
+a--b--c--d
+       \
+         e
+```
+
+Currently, the `grefs` directory contains two files, `d` and `e`, each
+theoretically with a valid signature.
+
+
+```
+grefs/richo@psych0tik.net:foobar/baz ::
+
+a--b--c--d--f
+       \   /
+         e
+```
+
+After this, `f` is written out with a new signature, and then `d` and `e` are
+unlinked.
 
 ### Misc
 

@@ -1,10 +1,15 @@
 import os
 import logging
+import binascii
 
 if "GROUNDSTATION_DEBUG" in os.environ:
     LEVEL = getattr(logging, os.getenv("GROUNDSTATION_DEBUG"))
 else:
     LEVEL = logging.DEBUG
+
+
+def fix_oid(oid):
+    return binascii.hexlify(oid)
 
 
 def _get_formatter():
