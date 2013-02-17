@@ -65,6 +65,7 @@ def make_airship(station):
         while thread:
             node = thread.pop()
             data = json.loads(node.data)
+            data["parents"] = list(node.parents)
             response.append(data)
         return jsonate({"content": response}, False)
 
