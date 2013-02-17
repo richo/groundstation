@@ -1,5 +1,6 @@
 import unittest
 import tempfile
+import shutil
 
 import groundstation.node
 import groundstation.transfer.response
@@ -26,6 +27,9 @@ class MockStation(object):
     def _Response(self, *args, **kwargs):
         kwargs['station'] = self.station
         return groundstation.transfer.response.Response(*args, **kwargs)
+
+    def __del__(self):
+        shutil.rmtree(self.tmpdir)
 
     @property
     def id(self):
