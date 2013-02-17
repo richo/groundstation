@@ -1,4 +1,11 @@
 import os
+import groundstation.objects.object_factory as object_factory
+
+from groundstation.objects.update_object import UpdateObject
+from groundstation.objects.root_object import RootObject
+
+import logger
+log = logger.getLogger(__name__)
 
 
 class Gref(object):
@@ -46,6 +53,22 @@ class Gref(object):
         except:
             if not silent:
                 raise
+
+    def parents(self, tips=None):
+        """Return all ancestors of `tip`, in an undefined order"""
+        # XXX This will asplode the stack at some point
+        parents = []
+        for tip in (tips or self.tips()):
+            obj = object_factory.hydrate_object(self.store[tip].data)
+            if isinstance(obj, UpdateObject):
+                for tip in obj.parents:
+                    parents.append(tip)
+                    parents.extend(self.parents([tip]))
+            elif isinstance(obj, RootObject):
+                return []
+            else:
+                raise "Unknown object hydrated %s" % (str(type(obj)))
+        return parents
 
     def as_dict(self):
         return {
