@@ -1,4 +1,4 @@
-from handler_fixture import StationHandlerTestCast
+from handler_fixture import StationHandlerTestCase
 
 from groundstation.transfer.request_handlers import handle_listallchannels
 from groundstation.gref import Gref
@@ -7,7 +7,7 @@ from groundstation.proto.channel_list_pb2 import ChannelList
 
 
 
-class TestHandlerListAllChannels(StationHandlerTestCast):
+class TestHandlerListAllChannels(StationHandlerTestCase):
     def test_handle_listallchannels(self):
         test_id = u"tests/1"
         test_channel = u"test_channel"

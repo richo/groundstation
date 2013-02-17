@@ -36,6 +36,6 @@ class MockStation(object):
         return "test_station"
 
 
-class StationHandlerTestCast(unittest.TestCase):
+class StationHandlerTestCase(unittest.TestCase):
     def setUp(self):
         self.station = MockStation()
