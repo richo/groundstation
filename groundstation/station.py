@@ -89,8 +89,10 @@ class Station(object):
     def update_gref(self, gref, tips, parents=[]):
         for tip in tips:
             gref.write_tip(tip, "")
+        if parents is True:
+            parents = gref.parents(tips)
         for parent in parents:
-            gref.remove_tip(parent)
+            gref.remove_tip(parent, True)
 
     def get_user(self, name):
         return User(name, self)

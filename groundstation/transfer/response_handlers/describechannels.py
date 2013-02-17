@@ -17,4 +17,4 @@ def handle_describechannels(self):
             _gref = Gref(self.station.store, channel.channelname, gref.identifier)
             # Create a tip object to avoid upsetting fileutils
             tips = [tip.tip for tip in gref.tips]
-            self.station.update_gref(_gref, tips)
+            self.station.update_gref(_gref, tips, True)
