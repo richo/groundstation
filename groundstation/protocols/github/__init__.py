@@ -93,8 +93,19 @@ class GithubWriteAdaptor(AbstractGithubAdaptor):
         # resolution.
         parents = []
         old_tips = []
+        fresh_nodes = []
         issue_id = self._issue_id(issue.number)
         gref = self.issue_gref(issue.number)
+
+        # Bail out if we've already written:
+        if gref.exists():
+            if force:
+                __tips = gref.tips()
+                log.info("Gref exists, unlinking: %s" % (__tips))
+                old_tips.extend(__tips)
+            else:
+                log.info("Not creating any objects, a gref already exists at: %s" % str(gref))
+                return False
 
         def _write_new_tip(obj):
             our_parents = []
@@ -105,19 +116,11 @@ class GithubWriteAdaptor(AbstractGithubAdaptor):
             oid = self.station.write(obj.as_object())
             self.station.update_gref(gref, [oid], our_parents)
             parents.append(oid)
+            fresh_nodes.append(oid)
             log.debug("Setting parents to: %s" % (str(parents)))
 
         def _parents():
             return copy.copy(parents)
-
-        # Bail out if we've already written:
-        if gref.exists():
-            if force:
-                log.info("Gref exists, unlinking")
-                old_tips.extend(gref.tips())
-            else:
-                log.info("Not creating any objects, a gref already exists at: %s" % str(gref))
-                return False
 
         # Write out a root object
         log.info(("Creating a new root_object with:\n" +
@@ -160,4 +163,8 @@ class GithubWriteAdaptor(AbstractGithubAdaptor):
         if old_tips:
             log.info("Unlinking old tips")
             for tip in old_tips:
-                gref.remove_tip(tip, True)
+                if tip not in fresh_nodes:
+                    log.info("Unlinking %s : %s -> %s" % (gref.channel, gref.identifier, tip))
+                    gref.remove_tip(tip, True)
+                else:
+                    log.info("Not deleting referenced node")
