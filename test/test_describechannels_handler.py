@@ -34,6 +34,18 @@ class TestHandlerDescribeChannels(StationHandlerTestCase):
 
         root_obj = RootObject(test_id, test_channel, test_protocol)
         root_oid = self.station.station.write(root_obj.as_object())
+        current_oid = [root_oid]
+
+        for i in xrange(10):
+            update_obj = UpdateObject([current_oid.pop()], "loldata")
+            current_oid.append(self.station.station.write(update_obj.as_object()))
+        self.station.station.update_gref(gref, [root_oid])
+        self.assertEqual([root_oid], gref.tips())
+        current_oid = current_oid.pop()
+
+        self.station.payload = _payload(update_obj, gref, [current_oid])
+        handle_describechannels(self.station)
+        self.assertEqual([current_oid], gref.tips())
         current_oid = root_oid
         for i in xrange(10):
             update_obj = UpdateObject([current_oid], "loldata")
