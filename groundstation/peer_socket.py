@@ -37,7 +37,7 @@ class PeerSocket(StreamSocket):
 
     def recv(self, *args, **kwargs):
         try:
-            return super(PeerSocket, self).send(*args, **kwargs)
+            return super(PeerSocket, self).recv(*args, **kwargs)
         except socket.error as e:
             raise PeerSocketClosedException(e)
 
