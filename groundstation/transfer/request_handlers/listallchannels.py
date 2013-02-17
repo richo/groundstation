@@ -12,6 +12,7 @@ def handle_listallchannels(self):
     for channel in payload:
         log.debug("serializing channel: %s" % (channel))
         description = chunk.channels.add()
+        description.channelname = channel
         grefs = self.station.grefs(channel)
         for gref in grefs:
             log.debug("- serializing gref: %s" % (gref))
