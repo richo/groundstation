@@ -49,7 +49,9 @@ class Gref(object):
 
     def remove_tip(self, tip, silent=False):
         try:
-            os.unlink(os.path.join(self.tip_path(tip)))
+            path = os.path.join(self.tip_path(tip))
+            log.info("Unlinking tip at %s" % (path))
+            os.unlink(path)
         except:
             if not silent:
                 raise
