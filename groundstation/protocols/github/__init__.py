@@ -88,10 +88,11 @@ class GithubWriteAdaptor(AbstractGithubAdaptor):
     def repo_name(self):
         return self.repo.full_name.replace("/", "_")
 
-    def write_issue(self, issue):
+    def write_issue(self, issue, force=False):
         # Stupid implementation, blindly write with no deduping or merge
         # resolution.
         parents = []
+        old_tips = []
         issue_id = self._issue_id(issue.number)
         gref = self.issue_gref(issue.number)
 
@@ -111,8 +112,12 @@ class GithubWriteAdaptor(AbstractGithubAdaptor):
 
         # Bail out if we've already written:
         if gref.exists():
-            log.info("Not creating any objects, a gref already exists at: %s" % str(gref))
-            return False
+            if force:
+                log.info("Gref exists, unlinking")
+                old_tips.extend(gref.tips())
+            else:
+                log.info("Not creating any objects, a gref already exists at: %s" % str(gref))
+                return False
 
         # Write out a root object
         log.info(("Creating a new root_object with:\n" +
@@ -152,3 +157,7 @@ class GithubWriteAdaptor(AbstractGithubAdaptor):
                     }
             update_object = UpdateObject(_parents(), json.dumps(comment_payload))
             _write_new_tip(update_object)
+        if old_tips:
+            log.info("Unlinking old tips")
+            for tip in old_tips:
+                gref.remove_tip(tip, True)
