@@ -5,6 +5,7 @@ import unittest
 from groundstation.node import Node
 from groundstation.station import Station
 
+
 class StationTestCase(unittest.TestCase):
     def setUp(self):
         self.node = Node()
