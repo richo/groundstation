@@ -17,7 +17,7 @@ def handle_listallchannels(self):
         for gref in grefs:
             log.debug("- serializing gref: %s" % (gref))
             _gref = description.grefs.add()
-            _gref.name = gref.identifier
+            _gref.identifier = gref.identifier
             for tip in gref:
                 log.debug("-- serializing tip: %s" % (tip))
                 _tip = _gref.tips.add()

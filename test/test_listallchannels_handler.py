@@ -27,5 +27,5 @@ class TestHandlerListAllChannels(StationHandlerTestCase):
         channel_description = ChannelList()
         channel_description.ParseFromString(response.payload)
         self.assertEqual(channel_description.channels[0].channelname, test_channel)
-        self.assertEqual(channel_description.channels[0].grefs[0].name, test_id)
+        self.assertEqual(channel_description.channels[0].grefs[0].identifier, test_id)
         self.assertEqual(channel_description.channels[0].grefs[0].tips[0].tip, oid)

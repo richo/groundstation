@@ -11,7 +11,7 @@ from google.protobuf import descriptor_pb2
 DESCRIPTOR = descriptor.FileDescriptor(
   name='groundstation/proto/channel_list.proto',
   package='',
-  serialized_pb='\n&groundstation/proto/channel_list.proto\"\xd5\x02\n\x0b\x43hannelList\x12\x31\n\x08\x63hannels\x18\x01 \x03(\x0b\x32\x1f.ChannelList.ChannelDescription\x1a\x92\x02\n\x12\x43hannelDescription\x12\x13\n\x0b\x63hannelname\x18\x01 \x02(\t\x12\x45\n\x05grefs\x18\x02 \x03(\x0b\x32\x36.ChannelList.ChannelDescription.ChannelGrefDescription\x1a\x9f\x01\n\x16\x43hannelGrefDescription\x12\x0c\n\x04name\x18\x01 \x02(\t\x12L\n\x04tips\x18\x02 \x03(\x0b\x32>.ChannelList.ChannelDescription.ChannelGrefDescription.GrefTip\x1a)\n\x07GrefTip\x12\x0b\n\x03tip\x18\x01 \x02(\x0c\x12\x11\n\tsignature\x18\x02 \x01(\x0c')
+  serialized_pb='\n&groundstation/proto/channel_list.proto\"\xdb\x02\n\x0b\x43hannelList\x12\x31\n\x08\x63hannels\x18\x01 \x03(\x0b\x32\x1f.ChannelList.ChannelDescription\x1a\x98\x02\n\x12\x43hannelDescription\x12\x13\n\x0b\x63hannelname\x18\x01 \x02(\t\x12\x45\n\x05grefs\x18\x02 \x03(\x0b\x32\x36.ChannelList.ChannelDescription.ChannelGrefDescription\x1a\xa5\x01\n\x16\x43hannelGrefDescription\x12\x12\n\nidentifier\x18\x01 \x02(\t\x12L\n\x04tips\x18\x02 \x03(\x0b\x32>.ChannelList.ChannelDescription.ChannelGrefDescription.GrefTip\x1a)\n\x07GrefTip\x12\x0b\n\x03tip\x18\x01 \x02(\x0c\x12\x11\n\tsignature\x18\x02 \x01(\x0c')
 
 
 
@@ -46,8 +46,8 @@ _CHANNELLIST_CHANNELDESCRIPTION_CHANNELGREFDESCRIPTION_GREFTIP = descriptor.Desc
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=343,
-  serialized_end=384,
+  serialized_start=349,
+  serialized_end=390,
 )
 
 _CHANNELLIST_CHANNELDESCRIPTION_CHANNELGREFDESCRIPTION = descriptor.Descriptor(
@@ -58,7 +58,7 @@ _CHANNELLIST_CHANNELDESCRIPTION_CHANNELGREFDESCRIPTION = descriptor.Descriptor(
   containing_type=None,
   fields=[
     descriptor.FieldDescriptor(
-      name='name', full_name='ChannelList.ChannelDescription.ChannelGrefDescription.name', index=0,
+      name='identifier', full_name='ChannelList.ChannelDescription.ChannelGrefDescription.identifier', index=0,
       number=1, type=9, cpp_type=9, label=2,
       has_default_value=False, default_value=unicode("", "utf-8"),
       message_type=None, enum_type=None, containing_type=None,
@@ -81,7 +81,7 @@ _CHANNELLIST_CHANNELDESCRIPTION_CHANNELGREFDESCRIPTION = descriptor.Descriptor(
   is_extendable=False,
   extension_ranges=[],
   serialized_start=225,
-  serialized_end=384,
+  serialized_end=390,
 )
 
 _CHANNELLIST_CHANNELDESCRIPTION = descriptor.Descriptor(
@@ -115,7 +115,7 @@ _CHANNELLIST_CHANNELDESCRIPTION = descriptor.Descriptor(
   is_extendable=False,
   extension_ranges=[],
   serialized_start=110,
-  serialized_end=384,
+  serialized_end=390,
 )
 
 _CHANNELLIST = descriptor.Descriptor(
@@ -142,7 +142,7 @@ _CHANNELLIST = descriptor.Descriptor(
   is_extendable=False,
   extension_ranges=[],
   serialized_start=43,
-  serialized_end=384,
+  serialized_end=390,
 )
 
 _CHANNELLIST_CHANNELDESCRIPTION_CHANNELGREFDESCRIPTION_GREFTIP.containing_type = _CHANNELLIST_CHANNELDESCRIPTION_CHANNELGREFDESCRIPTION;
