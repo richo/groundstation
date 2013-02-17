@@ -87,6 +87,7 @@ class Station(object):
     # End delegates to store
 
     def update_gref(self, gref, tips, parents=[]):
+        log.debug("updating %s - %s => %s" % (gref.channel, gref.identifier, tips))
         for tip in tips:
             gref.write_tip(tip, "")
         if parents is True:
