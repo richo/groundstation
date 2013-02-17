@@ -93,7 +93,7 @@ class GithubWriteAdaptor(AbstractGithubAdaptor):
         # resolution.
         parents = []
         issue_id = self._issue_id(issue.number)
-        gref = self.issue_gref(issue)
+        gref = self.issue_gref(issue.number)
 
         def _write_new_tip(obj):
             our_parents = []
