@@ -48,7 +48,6 @@ class TestHandlerDescribeChannels(StationHandlerTestCase):
         self.station.payload = _payload(update_obj, gref, [current_oid])
         handle_describechannels(self.station)
         self.assertEqual([current_oid], gref.tips())
-        current_oid = root_oid
 
     # XXX Disabled for now, successully throws keyerrors when writing out invalid refs though
     def handle_describechannels_for_missing_tip(self):
