@@ -1,4 +1,5 @@
 import unittest
+import tempfile
 
 import shutil
 
@@ -7,8 +8,7 @@ from groundstation.objects.update_object import UpdateObject
 
 
 def random_path():
-    # TODO
-    return "/tmp/groundstation"
+    return tempfile.mkdtemp()
 
 
 class StoreTestCase(unittest.TestCase):
