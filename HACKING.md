@@ -160,3 +160,10 @@ a--b--c--d--f
 
 After this, `f` is written out with a new signature, and then `d` and `e` are
 unlinked.
+
+### Misc
+
+Important reminder for the forgetful:
+
+protobuf `string`s come out as python `unicode`s.
+protobuf `bytes`s come out as python `string`s (or bytearrays in python3)

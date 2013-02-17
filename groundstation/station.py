@@ -9,10 +9,18 @@ from user import User, NoSuchUser
 from packed_keys import PackedKeys, NoKeysRef
 from gizmo_factory import GizmoFactory, InvalidGizmoError
 from request_registry import RequestRegistry
+from groundstation.gref import Gref
+
+import groundstation.utils
 
 import store
 
 import settings
+
+
+class NonExistantChannel(Exception):
+    pass
+
 
 class Station(object):
     def __init__(self, path, identity):
@@ -46,7 +54,28 @@ class Station(object):
             except StopIteration:
                 self.iterators.remove(i)
 
+    def channels(self):
+        return os.listdir(self.store.gref_path())
+        # channels = {}
+        # for channel in os.listdir(self.store.gref_path()):
+        #     channels["channel"] = Channel(self.store, channel)
+
+    def grefs(self, channel):
+        channel_path = os.path.join(self.store.gref_path(), channel)
+        if not groundstation.utils.is_dir(channel_path):
+            raise NonExistantChannel()
+        grefs = []
+        for id in groundstation.utils.find_leaf_dirs(channel_path, True):
+            grefs.append(Gref(self.store, channel, id))
+        return grefs
+
     # Delegate some methods to the store
+    def write(self, obj):
+        log.info("Writing object to db")
+        oid = self.store.create_blob(obj)
+        log.info("Wrote object %s" % oid)
+        return oid
+
     def objects(self):
         return self.store.objects()
 
@@ -56,6 +85,15 @@ class Station(object):
     def __contains__(self, item):
         return self.store.__contains__(item)
     # End delegates to store
+
+    def update_gref(self, gref, tips, parents=[]):
+        log.debug("updating %s - %s => %s" % (gref.channel, gref.identifier, tips))
+        for tip in tips:
+            gref.write_tip(tip, "")
+        if parents is True:
+            parents = gref.parents(tips)
+        for parent in parents:
+            gref.remove_tip(parent, True)
 
     def get_user(self, name):
         return User(name, self)

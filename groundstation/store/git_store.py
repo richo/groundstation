@@ -1,10 +1,15 @@
 import os
 import pygit2
 
+from groundstation.gref import Gref
+
 import groundstation.logger
 log = groundstation.logger.getLogger(__name__)
 
+
 class GitStore(object):
+    required_dirs = ("rindex", "grefs")
+
     def __init__(self, path):
         # TODO path should probably be a resource, ie redis url etc.
         self.path = path
@@ -12,6 +17,7 @@ class GitStore(object):
             log.info("initializing database in %s" % (path))
             pygit2.init_repository(path, True)
         self.repo = pygit2.Repository(path)
+        self.check_repo_sanity()
 
     def objects(self):
         return list(self.repo)
@@ -37,3 +43,18 @@ class GitStore(object):
     @staticmethod
     def _format_id(obj_id):
         return "".join(["%02x" % ord(i) for i in obj_id])
+
+    def gref(self, channel, identifier):
+        return Gref(self, channel, identifier)
+
+    def gref_path(self):
+        return os.path.join(self.repo.path, "grefs")
+
+    def rindex_path(self, path):
+        return os.path.join(self.repo.path, "reindex", path)
+
+    def check_repo_sanity(self):
+        for path in self.required_dirs:
+            nr_path = os.path.join(self.repo.path, path)
+            if not os.path.exists(nr_path):
+                os.makedirs(nr_path)

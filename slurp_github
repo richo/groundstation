@@ -1,0 +1,54 @@
+#!/usr/bin/env python
+import os
+import sys
+
+import argparse
+import github
+
+from groundstation.station import Station
+from groundstation.node import Node
+
+from groundstation import logger
+log = logger.getLogger(__name__)
+
+from groundstation.protocols import github as github_protocol
+
+
+class NoGithubToken(Exception): pass
+
+
+def _create_option_parser():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--repo", dest='repo', action='store')
+    parser.add_argument("--force", dest='force', action='store_true', default=False)
+    return parser
+
+
+def _create_station():
+    station_path = os.path.expanduser("~/.groundstation")
+    myself = Node()
+    station = Station(station_path, myself)
+    return station
+
+
+def main(argv):
+    if "GITHUB_TOKEN" not in os.environ:
+        raise NoGithubToken()
+
+    parser = _create_option_parser()
+    station = _create_station()
+
+    args = parser.parse_args(argv[1:])
+
+    gh = github.Github(os.getenv("GITHUB_TOKEN"))
+    repo = gh.get_repo(args.repo)
+
+    adaptor = github_protocol.GithubWriteAdaptor(station, repo)
+
+    for issue in repo.get_issues():
+        adaptor.write_issue(issue, args.force)
+
+if __name__ == "__main__":
+    main(sys.argv)
+
+    # def __init__(self, id, channel, protocol):

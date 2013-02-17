@@ -1,0 +1,5 @@
+message RootObject {
+    required string id = 1;
+    required string channel = 2;
+    required string protocol = 3;
+}

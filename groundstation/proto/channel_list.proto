@@ -1,0 +1,15 @@
+message ChannelList {
+  message ChannelDescription {
+     message ChannelGrefDescription {
+       message GrefTip {
+         required bytes tip = 1;
+         optional bytes signature =2;
+       }
+       required string identifier = 1;
+       repeated GrefTip tips = 2;
+     };
+     required string channelname = 1;
+     repeated ChannelGrefDescription grefs = 2;
+  };
+  repeated ChannelDescription channels = 1;
+}

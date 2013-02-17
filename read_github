@@ -1,0 +1,89 @@
+#!/usr/bin/env python
+import os
+import sys
+
+import argparse
+import json
+
+from groundstation.station import Station
+from groundstation.node import Node
+
+from groundstation import logger
+log = logger.getLogger(__name__)
+
+from groundstation.protocols import github as github_protocol
+
+
+def _write_header(output):
+    for tag in ("<html>",
+     "<head>",
+       "<title>Test Issue</title>",
+     "</head>",
+     "<body>",
+     ):
+        output.write(tag)
+        output.write("\n")
+
+
+def _write_root(root, output):
+    output.write("<h1>%s :: %s</h1>\n" % (root.channel, root.id))
+
+
+def _write_title(obj, output):
+    output.write("<h3>%s</h3>\n" % (obj["body"]))
+
+
+def _write_body(obj, output):
+    output.write("<p><pre>%s</pre></p>" % (obj["body"]))
+
+
+def _write_comment(obj, output):
+    output.write("<p><pre>%s</pre></p>" % (obj["body"]))
+
+
+def _create_option_parser():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--repo", dest='repo', action='store')
+    parser.add_argument("--issue", dest='issue', action='store', type=int)
+    parser.add_argument("--output", dest='output', action='store')
+    return parser
+
+
+def _create_station():
+    station_path = os.path.expanduser("~/.groundstation")
+    myself = Node()
+    station = Station(station_path, myself)
+    return station
+
+
+def main(argv):
+    parser = _create_option_parser()
+    station = _create_station()
+
+    args = parser.parse_args(argv[1:])
+
+    adaptor = github_protocol.GithubReadAdaptor(station, args.repo)
+    if args.output:
+        output = open(args.output, 'w')
+    else:
+        output = sys.stdout
+    issue = adaptor.get_issue(args.issue)
+    root = issue.pop()
+
+    _write_header(output)
+    _write_root(root, output)
+
+    while issue:
+        obj = issue.pop()
+        data = json.loads(obj.data)
+        if data["type"] == "title":
+            _write_title(data, output)
+        elif data["type"] == "body":
+            _write_body(data, output)
+        elif data["type"] == "comment":
+            _write_comment(data, output)
+
+if __name__ == "__main__":
+    main(sys.argv)
+
+    # def __init__(self, id, channel, protocol):

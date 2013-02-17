@@ -1,0 +1,14 @@
+#!/usr/bin/env python
+import airship
+
+import os
+
+from groundstation.node import Node
+from groundstation.station import Station
+
+myself = Node()
+station_path = os.path.expanduser("~/.groundstation")
+station = Station(station_path, myself)
+
+app = airship.make_airship(station)
+app.run(None, 9005, True)

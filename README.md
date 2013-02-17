@@ -19,6 +19,19 @@ features that it depends on have not landed in a stable release yet.
 For this reason, you'll need to build and install the latest [libgit2](1) and
 [pygit2](2) from source.
 
+protocol support
+----------------
+
+groundstation hinges on the notion of protocols internally- groundstation core
+provides you with content addressable storage, but it's up to you to work out
+what to actually do with that data.
+
+That said, groundstation does ship with some protocol adaptors. Adaptors take
+the form `name@domain:adaptor-version`, and until such time as a release is
+already, everything that ships with groundstation will be released with
+`richo@psych0tik.net` as the email.
+
+
 development
 -----------
 

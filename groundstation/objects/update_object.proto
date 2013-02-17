@@ -1,0 +1,4 @@
+message UpdateObject {
+    repeated bytes parents = 1;
+    required bytes data = 2;
+}
