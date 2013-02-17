@@ -11,6 +11,9 @@ log = logger.getLogger(__name__)
 from groundstation.protocols import github as github_protocol
 from groundstation.gref import Gref
 
+import pygit2
+from groundstation.utils import oid2hex
+
 def jsonate(obj, escaped):
     jsonbody = json.dumps(obj)
     if escaped:
@@ -59,6 +62,8 @@ def make_airship(station):
         while thread:
             node = thread.pop()
             data = json.loads(node.data)
+            data["parents"] = list(node.parents)
+            data["hash"] = oid2hex(pygit2.hash(node.as_object()))
             response.append(data)
         return jsonate({"content": response}, False)
 
