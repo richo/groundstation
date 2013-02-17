@@ -1,3 +1,4 @@
 from describeobjects import handle_describeobjects
+from describechannels import handle_describechannels
 from transfer import handle_transfer
 from terminate import handle_terminate

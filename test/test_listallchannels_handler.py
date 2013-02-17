@@ -6,7 +6,6 @@ from groundstation.objects.root_object import RootObject
 from groundstation.proto.channel_list_pb2 import ChannelList
 
 
-
 class TestHandlerListAllChannels(StationHandlerTestCase):
     def test_handle_listallchannels(self):
         test_id = u"tests/1"
