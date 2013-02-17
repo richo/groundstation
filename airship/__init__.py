@@ -37,6 +37,12 @@ def make_airship(station):
                 channels_json=channels_json(station, True),
                 current_time=time.time())
 
+    @app.route("/debug")
+    def index():
+        return render_template("debug.html",
+                channels_json=channels_json(station, True),
+                current_time=time.time())
+
     @app.route("/channels")
     def list_channels():
         return channels_json(station)
