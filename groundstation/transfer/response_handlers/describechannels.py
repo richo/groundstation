@@ -15,8 +15,6 @@ def handle_describechannels(self):
     for channel in proto_channels.channels:
         for gref in channel.grefs:
             _gref = Gref(self.station.store, channel.channelname, gref.identifier)
-            self.station.update_gref(_gref, _gref.tips())
-
-
-
-
+            # Create a tip object to avoid upsetting fileutils
+            tips = [tip.tip for tip in gref.tips]
+            self.station.update_gref(_gref, tips)

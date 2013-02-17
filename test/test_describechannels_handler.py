@@ -7,6 +7,10 @@ from groundstation.gref import Gref
 from groundstation.objects.root_object import RootObject
 from groundstation.objects.update_object import UpdateObject
 
+import pygit2
+
+from groundstation import logger
+log = logger.getLogger(__name__)
 
 def _payload(obj, gref, tips):
     chunk = ChannelList()
