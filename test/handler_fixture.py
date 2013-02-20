@@ -4,6 +4,7 @@ import shutil
 
 import groundstation.node
 import groundstation.transfer.response
+import groundstation.transfer.request
 from groundstation.station import Station
 
 
@@ -27,6 +28,10 @@ class MockStation(object):
     def _Response(self, *args, **kwargs):
         kwargs['station'] = self.station
         return groundstation.transfer.response.Response(*args, **kwargs)
+
+    def _Request(self, *args, **kwargs):
+        kwargs['station'] = self.station
+        return groundstation.transfer.request.Request(*args, **kwargs)
 
     def __del__(self):
         shutil.rmtree(self.tmpdir)
