@@ -33,7 +33,7 @@ var GrefMenuItem = Backbone.View.extend({
     rendered_gref.fetch({
       success: function(model, response, options) {
         rendered_gref_content.render();
-      },
+      }
     });
   },
 
@@ -72,7 +72,7 @@ var ChannelTab = Backbone.View.extend({
     groundstation.active_grefs.fetch({
       success: function(collection, response, options) {
         $("#gref-container").show();
-        _.each(visible_grefs, function(el) { el.remove() });
+        _.each(visible_grefs, function(el) { el.remove(); });
         _.each(collection.models, function(gref) {
           visible_grefs.push(new GrefMenuItem({
             model: gref
@@ -105,7 +105,7 @@ var RenderedGref = Backbone.View.extend({
 
   render: function() {
     var self = this;
-    _.each(this.$el.children(), function(el) { el.remove() })
+    _.each(this.$el.children(), function(el) { el.remove(); });
     _.each(this.model.attributes["content"], function(item) {
       var el;
       if (item.type == "title") {
