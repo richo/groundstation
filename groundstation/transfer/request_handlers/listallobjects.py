@@ -38,8 +38,7 @@ def handle_listallobjects(self):
     else:
         log.info("Sending %i object descriptions" % (len(payload)))
         chunk = groundstation.proto.object_list_pb2.ObjectList()
-        for obj in payload:
-            chunk.objectname.append(payload)
+        chunk.objectname.extend(payload)
         response = self._Response(self.id, "DESCRIBEOBJECTS",
                                 chunk.SerializeToString())
         self.stream.enqueue(response)
