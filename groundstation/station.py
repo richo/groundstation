@@ -121,11 +121,15 @@ class Station(object):
         Returns False if you should query them."""
         val = str(identity)
         if val not in self.identity_cache:
-            self.identity_cache[identity] = time.time()
+            self.mark_queried(identity)
             return False
         else:
-            if self.identity_cache[identity] + settings.DEFAULT_CACHE_LIFETIME > time.time():
+            if self.identity_cache[val] + settings.DEFAULT_CACHE_LIFETIME > time.time():
                 return True
             else:
-                self.identity_cache[identity] = time.time()
+                self.mark_queried(identity)
                 return False
+
+    def mark_queried(self, identity):
+        val = str(identity)
+        self.identity_cache[val] = time.time()
