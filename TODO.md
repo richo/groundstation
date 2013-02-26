@@ -5,3 +5,7 @@
 * LISTALLOBJECTS actually sends the objects in the response, instead of a list..
 * Work out the station semantics for gizmo_factory. Not having globals is all well and good but this is getting retarded.
 * Manage a state table for all requests (honouring TERMINATE) and end connections when all requests are fulfilled.
+* Elaborate on TERMINATE to include a reason, ie
+    - Request succesfully completed
+    - Something went sideways
+    - You requested something stupid
