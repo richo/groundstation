@@ -98,6 +98,27 @@ var ChannelTab = Backbone.View.extend({
 
 });
 
+function buildCommentBox(div) {
+  var input, submit;
+
+  input = document.createElement("p");
+  input.className = "github-issue-comment";
+  input.contentEditable = true;
+  input.id = "new-comment-body";
+
+  submit = document.createElement("button");
+  submit.className = "btn";
+  submit.id = "new-comment-submit";
+  submit.innerText = "Submit";
+
+  $(submit).on('click', function(ev) {
+    console.log("Sending new comment to groundstation");
+  });
+
+  div.appendChild(input);
+  div.appendChild(submit);
+}
+
 var RenderedGref = Backbone.View.extend({
 
   tagName: "div",
@@ -128,6 +149,7 @@ var RenderedGref = Backbone.View.extend({
         self.el.appendChild(el);
       }
     });
+    buildCommentBox(self.el);
     return this;
   },
 
