@@ -1,6 +1,7 @@
 import unittest
 import tempfile
 import shutil
+import uuid
 
 import groundstation.node
 import groundstation.transfer.response
@@ -18,12 +19,16 @@ def MockTERMINATE():
 
 
 class MockStation(object):
-    def __init__(self):
+    def __init__(self, **kwargs):
         self.tmpdir = tempfile.mkdtemp()
         self.node = groundstation.node.Node()
         self.station = Station(self.tmpdir, self.node)
         self.stream = MockStream()
         self.TERMINATE = MockTERMINATE
+        if 'origin' in kwargs:
+            self.origin = kwargs['origin']
+        else:
+            self.origin = uuid.uuid1()
 
     def _Response(self, *args, **kwargs):
         kwargs['station'] = self.station
