@@ -14,6 +14,8 @@ from groundstation.gref import Gref
 import pygit2
 from groundstation.utils import oid2hex
 
+from groundstation.objects.update_object import UpdateObject
+
 def jsonate(obj, escaped):
     jsonbody = json.dumps(obj)
     if escaped:
@@ -66,5 +68,22 @@ def make_airship(station):
             data["hash"] = oid2hex(pygit2.hash(node.as_object()))
             response.append(data)
         return jsonate({"content": response}, False)
+
+    @app.route("/gref/<channel>/<path:identifier>", methods=['POST'])
+    def update_gref(channel, identifier):
+        # adaptor = github_protocol.GithubWriteAdaptor(station, channel)
+        gref = Gref(station.store, channel, identifier)
+        user = request.args.get('user', "Anonymous Coward", type=str)
+        body = request.args["body"]
+        parent = request.args["parent"]
+        payload = {
+                "type": "comment",
+                "id": None,
+                "body": body,
+                "user": user
+                }
+        update_object = UpdateObject([parent], json.dumps(payload))
+        oid = station.write(update_object)
+        station.update_gref(gref, [oid], [parent])
 
     return app
