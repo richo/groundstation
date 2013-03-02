@@ -2,7 +2,7 @@ import os
 import json
 import time
 
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 
 from groundstation import logger
 log = logger.getLogger(__name__)
@@ -73,9 +73,10 @@ def make_airship(station):
     def update_gref(channel, identifier):
         # adaptor = github_protocol.GithubWriteAdaptor(station, channel)
         gref = Gref(station.store, channel, identifier)
-        user = request.args.get('user', "Anonymous Coward", type=str)
-        body = request.args["body"]
-        parent = request.args["parent"]
+        # Ugly type coercion
+        user = request.form.get('user', "Anonymous Coward", type=str)
+        body = request.form["body"]
+        parent = str(request.form["parent"])
         payload = {
                 "type": "comment",
                 "id": None,
@@ -83,7 +84,8 @@ def make_airship(station):
                 "user": user
                 }
         update_object = UpdateObject([parent], json.dumps(payload))
-        oid = station.write(update_object)
+        oid = station.write(update_object.as_object())
         station.update_gref(gref, [oid], [parent])
+        return jsonate({"response": "ok"}, False)
 
     return app

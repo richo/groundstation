@@ -22,14 +22,17 @@ var GrefMenuItem = Backbone.View.extend({
 
   template: '<a class="select" href="#">{{identifier}}</a>',
 
+  getUrl: function() {
+    return "/gref/" + this.model.attributes["channel"] + "/" + this.model.attributes["identifier"];
+  },
+
   render: function() {
     this.$el.html(this.template.replace("{{identifier}}", this.model.attributes["identifier"]));
     return this;
   },
 
   select: function() {
-    var gref_location = "/gref/" + this.model.attributes["channel"] + "/" + this.model.attributes["identifier"];
-    rendered_gref.url = gref_location;
+    rendered_gref.url = this.getUrl();
     rendered_gref.fetch({
       success: function(model, response, options) {
         rendered_gref_content.render();
@@ -98,7 +101,7 @@ var ChannelTab = Backbone.View.extend({
 
 });
 
-function buildCommentBox(div) {
+function buildCommentBox(div, model) {
   var input, submit;
 
   input = document.createElement("p");
@@ -112,6 +115,18 @@ function buildCommentBox(div) {
   submit.innerText = "Submit";
 
   $(submit).on('click', function(ev) {
+    $.ajax({
+        type: "POST",
+        url: model.url,
+        data: {
+            body: input.innerHTML,
+            "parent": _.last(model.attributes.content).hash
+        },
+        success: function(data, st, xhr) {
+            rendered_gref.fetch();
+            console.log("Successfully updated groundstation");
+        }
+    });
     console.log("Sending new comment to groundstation");
   });
 
@@ -149,7 +164,7 @@ var RenderedGref = Backbone.View.extend({
         self.el.appendChild(el);
       }
     });
-    buildCommentBox(self.el);
+    buildCommentBox(self.el, self.model);
     return this;
   },
 
