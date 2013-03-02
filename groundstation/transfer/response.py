@@ -50,6 +50,7 @@ class Response(object):
     VALID_RESPONSES = {
             "TRANSFER": response_handlers.handle_transfer,
             "DESCRIBEOBJECTS": response_handlers.handle_describeobjects,
+            "DESCRIBECHANNELS": response_handlers.handle_describechannels,
             "TERMINATE": response_handlers.handle_terminate,
     }
 
