@@ -21,6 +21,15 @@
         rendered_gref_content = new RenderedGref({
           model: rendered_gref
         });
+        // Wire up user switching
+        // TODO Currently not stored because I haven't decided where it should live. PRobably git-config(5)
+
+        $("#current-user-name").html(groundstation.username);
+        $("#current-user-name").on('click', function() {
+          var username = prompt("Username for committing:");
+          groundstation.username = username;
+          $("#current-user-name").html(groundstation.username);
+        });
       });
     </script>
   </head>
@@ -32,6 +41,11 @@
           <ul class="nav">
             <li class="">
             <a href="/">Home</a>
+            </li>
+          </ul>
+          <ul class="nav pull-right">
+            <li class="">
+            <a id="current-user-name" href="#">richo</a>
             </li>
           </ul>
         </div>

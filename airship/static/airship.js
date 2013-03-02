@@ -13,6 +13,7 @@ var Grefs = Backbone.Collection.extend({
 
 groundstation.channels = new Channels();
 groundstation.channels.url = '/channels';
+groundstation.username = "Anonymous Coward";
 
 groundstation.active_grefs = new Grefs();
 
@@ -120,7 +121,8 @@ function buildCommentBox(div, model) {
         url: model.url,
         data: {
             body: input.innerHTML,
-            "parent": _.last(model.attributes.content).hash
+            "parent": _.last(model.attributes.content).hash,
+            user: groundstation.username
         },
         success: function(data, st, xhr) {
             rendered_gref.fetch();
@@ -140,6 +142,7 @@ var RenderedGref = Backbone.View.extend({
   className: "",
 
   render: function() {
+    console.log("Rendering new refs");
     var self = this;
     _.each(this.$el.children(), function(el) { el.remove(); });
     _.each(this.model.attributes["content"], function(item) {
