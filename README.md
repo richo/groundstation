@@ -16,8 +16,8 @@ pygit2
 groundstation uses pygit2 under the hood for its git interactions, and some
 features that it depends on have not landed in a stable release yet.
 
-For this reason, you'll need to build and install the latest [libgit2](1) and
-[pygit2](2) from source.
+For this reason, you'll need to build and install the latest [libgit2][1] and
+[pygit2][2] from source.
 
 protocol support
 ----------------
