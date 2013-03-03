@@ -121,8 +121,9 @@ function buildCommentBox(div, model) {
         url: model.url,
         data: {
             body: input.innerHTML,
-            "parent": _.last(model.attributes.content).hash,
+            parents: JSON.stringify([_.last(model.attributes.content).hash]),
             user: groundstation.username
+
         },
         success: function(data, st, xhr) {
             rendered_gref.fetch();

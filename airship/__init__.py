@@ -76,16 +76,16 @@ def make_airship(station):
         # Ugly type coercion
         user = request.form["user"]
         body = request.form["body"]
-        parent = str(request.form["parent"])
+        parents = map(str, json.loads(request.form["parents"]))
         payload = {
                 "type": "comment",
                 "id": None,
                 "body": body,
                 "user": user
                 }
-        update_object = UpdateObject([parent], json.dumps(payload))
+        update_object = UpdateObject(parents, json.dumps(payload))
         oid = station.write(update_object.as_object())
-        station.update_gref(gref, [oid], [parent])
+        station.update_gref(gref, [oid], parents)
         return jsonate({"response": "ok"}, False)
 
     return app
