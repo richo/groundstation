@@ -7,7 +7,7 @@ log = logger.getLogger(__name__)
 def handle_listallchannels(self):
     log.info("Handling LISTALLCHANNELS")
     payload = self.station.channels()
-    log.info("Sending %i object descriptions" % (len(payload)))
+    log.info("Sending %i channel descriptions" % (len(payload)))
     chunk = groundstation.proto.channel_list_pb2.ChannelList()
     for channel in payload:
         log.debug("serializing channel: %s" % (channel))
