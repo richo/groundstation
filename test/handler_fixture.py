@@ -50,12 +50,9 @@ class MockStation(object):
         self.id = uuid.uuid1()
 
     def set_real_terminate(self, value):
-        sys.stderr.write("mockterminatesetter")
         if value:
-            sys.stderr.write("Setting real terminate")
             self.TERMINATE = lambda: groundstation.transfer.request.TERMINATE(self)
         else:
-            sys.stderr.write("Using mock terminate")
             self.TERMINATE = MockTERMINATE
 
     def set_real_register(self, value):

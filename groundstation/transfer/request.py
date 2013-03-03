@@ -10,7 +10,6 @@ log = logger.getLogger(__name__)
 
 
 def TERMINATE(self):
-    sys.stderr.write("TERMIANTE CALLED")
     terminate = self._Response(self.id, "TERMINATE", None)
     self.stream.enqueue(terminate)
 
