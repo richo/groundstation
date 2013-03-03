@@ -106,6 +106,7 @@ class Station(object):
 
     def update_gref(self, gref, tips, parents=[]):
         log.debug("updating %s - %s => %s" % (gref.channel, gref.identifier, tips))
+        node_path = gref.node_path()
         for tip in tips:
             gref.write_tip(tip, "")
         if parents is True:
