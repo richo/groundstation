@@ -33,9 +33,8 @@ class Station(object):
         self.deferreds = []
 
     def register_request(self, request):
-        log.debug("NOT Registering request %s" % (str(request.id)))
-        if False:
-            self.registry.register(request)
+        log.debug("Registering request %s" % (str(request.id)))
+        self.registry.register(request)
 
     def free_request(self, request):
         log.debug("Freeing request %s" % (str(request.id)))

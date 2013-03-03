@@ -5,6 +5,10 @@ class RequestRegistry(object):
     def __init__(self):
         self._reg = {}
 
+    @property
+    def contents(self):
+        return self._reg
+
     def __contains__(self, other):
         return str(other) in self._reg
 

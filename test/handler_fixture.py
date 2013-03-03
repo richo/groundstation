@@ -25,6 +25,8 @@ class MockStation(object):
         self.station = Station(self.tmpdir, self.node)
         self.stream = MockStream()
         self.TERMINATE = MockTERMINATE
+        self.id = "test_station"
+
         if 'origin' in kwargs:
             self.origin = kwargs['origin']
         else:
@@ -40,10 +42,6 @@ class MockStation(object):
 
     def __del__(self):
         shutil.rmtree(self.tmpdir)
-
-    @property
-    def id(self):
-        return "test_station"
 
 
 class StationHandlerTestCase(unittest.TestCase):
