@@ -126,6 +126,8 @@ def handler_for(thing):
 
 
 while True:
+    log.info("Current status :: Iterators: %i Deferreds: %i" %
+            (len(station.iterators), len(station.deferreds)))
     if time.time() > (last_beacon + BEACON_TIMEOUT):
         last_beacon = time.time()
         try:
