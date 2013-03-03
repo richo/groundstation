@@ -74,7 +74,7 @@ def make_airship(station):
         # adaptor = github_protocol.GithubWriteAdaptor(station, channel)
         gref = Gref(station.store, channel, identifier)
         # Ugly type coercion
-        user = request.form.get('user', "Anonymous Coward", type=str)
+        user = request.form["user"]
         body = request.form["body"]
         parent = str(request.form["parent"])
         payload = {
