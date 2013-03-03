@@ -110,6 +110,10 @@ def handle_iterators():
     station.handle_iters()
 
 
+def handle_deferreds():
+    station.handle_deferreds()
+
+
 def handler_for(thing):
     if thing == discoverer:
         return handle_discoverer_event
@@ -144,5 +148,8 @@ while True:
     # Deal with iterators last, this way if they queue up network stuff it'll be processed immediately.
     if station.has_ready_iterators():
         handle_iterators()
+
+    if station.has_ready_deferreds():
+        handle_deferreds()
 
         # else: # Right now that's the only socket
