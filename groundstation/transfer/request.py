@@ -62,6 +62,10 @@ class Request(object):
         terminate = self._Response(self.id, "TERMINATE", None)
         self.stream.enqueue(terminate)
 
+    def teardown(self):
+        """Stub method for cleaning up after a request"""
+        pass
+
     # Boilerplate to appease protobuf
     @property
     def payload(self):
@@ -69,4 +73,3 @@ class Request(object):
     @payload.setter
     def payload(self, value):
         self._payload = str(value)
-
