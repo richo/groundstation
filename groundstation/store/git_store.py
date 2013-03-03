@@ -6,6 +6,8 @@ from groundstation.gref import Gref
 import groundstation.logger
 log = groundstation.logger.getLogger(__name__)
 
+import groundstation.store
+
 
 class GitStore(object):
     required_dirs = ("rindex", "grefs")
@@ -23,6 +25,8 @@ class GitStore(object):
         return list(self.repo)
 
     def __getitem__(self, key):
+        if unicode(key) not in self.repo:
+            raise groundstation.store.NoSuchObject()
         return self.repo[unicode(key)]
 
     def __contains__(self, item):
