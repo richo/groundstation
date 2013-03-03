@@ -22,8 +22,7 @@ class RequestRegistry(object):
             log.warn("%s (id: %s) not registered in %s" % (repr(req), repr(req.id), repr(self)))
             return False
         else:
-            del self._reg[str(req.id)]
-            return True
+            return self._reg.pop(str(req.id))
 
     def __getitem__(self, key):
         return self._reg[str(key)]
