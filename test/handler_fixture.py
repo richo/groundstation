@@ -56,7 +56,7 @@ class MockStation(object):
             self.TERMINATE = MockTERMINATE
 
     def set_real_register(self, value):
-        self.station.station.registry.register(self.station)
+        self.station.registry.register(self)
 
 class StationHandlerTestCase(unittest.TestCase):
     def setUp(self):
