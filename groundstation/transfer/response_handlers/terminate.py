@@ -3,6 +3,7 @@ log = logger.getLogger(__name__)
 
 
 def handle_terminate(self):
-    log.warn("Attempting to free request %s"
-            % (str(self.id)))
-    self.station.free_request(self)
+    if self.station.free_request(self):
+        log.info("Freed request %s" % (str(self.id)))
+    else:
+        log.info("Failed to free request %s" % (str(self.id)))

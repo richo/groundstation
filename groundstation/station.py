@@ -38,7 +38,7 @@ class Station(object):
 
     def free_request(self, request):
         log.debug("Freeing request %s" % (str(request.id)))
-        self.registry.free(request)
+        return self.registry.free(request)
 
     def register_iter(self, iterator):
         log.info("Registering iterator %s" % (repr(iterator)))
