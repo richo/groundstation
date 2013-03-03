@@ -1,4 +1,3 @@
-import uuid
 from handler_fixture import StationHandlerTestCase
 
 from groundstation.transfer.request_handlers import handle_fetchobject
@@ -8,9 +7,9 @@ from groundstation.transfer.response_handlers import handle_terminate
 class TestHandlerTerminate(StationHandlerTestCase):
     def test_handle_terminate(self):
         # Write an object into the station
+        self.station.set_real_id(True)
         oid = self.station.station.write("butts lol")
         self.station.payload = oid
-        self.station.id = uuid.uuid1()
 
         self.assertEqual(len(self.station.station.registry.contents), 0)
 

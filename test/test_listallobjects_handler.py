@@ -1,6 +1,7 @@
 from handler_fixture import StationHandlerTestCase
 
 from groundstation.transfer.request_handlers import handle_listallobjects
+from groundstation.transfer.response_handlers import handle_terminate
 import groundstation.transfer.response as response
 
 from groundstation.proto.object_list_pb2 import ObjectList
@@ -25,17 +26,38 @@ class TestHandlerListAllObjects(StationHandlerTestCase):
         for i in objects.objectname:
             self.assertIn(i, oids)
 
+    def test_follows_up_on_channels(self):
+        self.station.set_real_terminate(True)
+        self.station.set_real_id(True)
+        self.station.set_real_register(True)
+        handle_listallobjects(self.station)
+        req1 = self.station.stream.pop(0)
+        self.assertEqual(req1.verb, "LISTALLOBJECTS")
+
+        while self.station.stream:
+            resp = self.station.stream.pop(0)
+            if resp.verb == "TERMINATE":
+                break
+            self.assertEqual(resp.verb, "DESCRIBEOBJECTS")
+
+
+        self.assertEqual(len(self.station.stream), 0)
+        resp.stream = self.station.stream
+        handle_terminate(resp)
+
+        req2 = self.station.stream.pop(0)
+        self.assertEqual(req2.verb, "LISTALLCHANNELS")
+
 
 class TestHandlerListAllObjectsCached(StationHandlerTestCase):
     def test_has_cache(self):
         handle_listallobjects(self.station)
         req1 = self.station.stream.pop(0)
         self.assertEqual(req1.verb, "LISTALLOBJECTS")
-        req2 = self.station.stream.pop(0)
-        self.assertEqual(req2.verb, "LISTALLCHANNELS")
 
         while self.station.stream:
-            self.station.stream.pop()
+            resp = self.station.stream.pop()
+            self.assertEqual(resp.verb, "DESCRIBEOBJECTS")
 
         handle_listallobjects(self.station)
         resp = self.station.stream.pop(0)
