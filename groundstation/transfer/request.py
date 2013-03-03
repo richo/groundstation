@@ -9,6 +9,12 @@ from groundstation import logger
 log = logger.getLogger(__name__)
 
 
+def TERMINATE(self):
+    sys.stderr.write("TERMIANTE CALLED")
+    terminate = self._Response(self.id, "TERMINATE", None)
+    self.stream.enqueue(terminate)
+
+
 class InvalidRequest(Exception):
     pass
 
@@ -59,8 +65,7 @@ class Request(object):
         self.VALID_REQUESTS[self.verb](self)
 
     def TERMINATE(self):
-        terminate = self._Response(self.id, "TERMINATE", None)
-        self.stream.enqueue(terminate)
+        TERMINATE(self)
 
     def teardown(self):
         """Stub method for cleaning up after a request"""
