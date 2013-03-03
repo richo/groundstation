@@ -6,7 +6,7 @@ log = logger.getLogger(__name__)
 
 def handle_describeobjects(self):
     if not self.payload:
-        log.info("station %s sent empty DESCRIVEOBJECTS payload - new database?" % (str(self.origin)))
+        log.info("station %s sent empty DESCRIBEOBJECTS payload - new database?" % (str(self.origin)))
         return
     objects = groundstation.proto.object_list_pb2.ObjectList()
     objects.ParseFromString(self.payload)
