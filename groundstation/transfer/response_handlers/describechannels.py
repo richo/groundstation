@@ -9,6 +9,8 @@ from groundstation.gref import Gref
 
 from groundstation.store import NoSuchObject
 
+from groundstation.deferred import Deferred
+
 
 def handle_describechannels(self):
     if not self.payload:
@@ -34,6 +36,7 @@ def handle_describechannels(self):
                         listchannels = groundstation.transfer.request.Request("LISTALLCHANNELS", station=self.station)
                         self.stream.enqueue(listchannels)
                     retry_at = time.time() + settings.LISTALLCHANNELS_RETRY_TIMEOUT
-                    self.station.register_deferred(retry_at, thunk)
+                    deferred = Deferred(retry_at, thunk)
+                    self.station.register_deferred(deferred)
                 else:
                     log.info("Retry already queued")
