@@ -30,6 +30,7 @@ class Station(object):
         self.identity_cache = {}
         self.registry = RequestRegistry()
         self.iterators = []
+        self.deferreds = []
 
     def register_request(self, request):
         log.debug("NOT Registering request %s" % (str(request.id)))
@@ -44,8 +45,19 @@ class Station(object):
         log.info("Registering iterator %s" % (repr(iterator)))
         self.iterators.append(iterator())
 
+    def register_deferred(self, deferred):
+        log.info("Registering deferred %s" % (repr(deferred)))
+        self.deferreds.append(deferred)
+
     def has_ready_iterators(self):
         return len(self.iterators) > 0
+
+    def has_ready_deferreds(self):
+        now = time.time()
+        for i in self.deferreds:
+            if i.at < now:
+                return True
+        return False
 
     def handle_iters(self):
         for i in self.iterators:
@@ -53,6 +65,12 @@ class Station(object):
                 i.next()
             except StopIteration:
                 self.iterators.remove(i)
+
+    def handle_deferreds(self):
+        now = time.time()
+        for i in self.deferreds:
+            if i.at < now:
+                i.run()
 
     def channels(self):
         return os.listdir(self.store.gref_path())
