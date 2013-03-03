@@ -18,8 +18,14 @@ class TestHandlerTerminate(StationHandlerTestCase):
         self.assertEqual(len(self.station.station.registry.contents), 1)
 
         handle_fetchobject(self.station)
+        ret = [0]
+
+        def _teardown():
+            ret[0] += 1
+        self.station.teardown = _teardown
 
         term = self.station.stream.pop()
         handle_terminate(term)
 
         self.assertEqual(len(self.station.station.registry.contents), 0)
+        self.assertEqual(ret[0], 1)
