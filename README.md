@@ -40,5 +40,8 @@ development
 3. ???????
 4. profit!
 
+You'll almost certainly want to have a read of the [hacking document](HACKING.md),
+and checkout the other [misc hacking docs](HACKING/).
+
 [1]:http://libgit2.github.com/
 [2]:https://github.com/libgit2/pygit2#building-on-nix-including-os-x
