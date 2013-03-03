@@ -43,6 +43,9 @@ class MockStation(object):
     def __del__(self):
         shutil.rmtree(self.tmpdir)
 
+    def teardown(self):
+        pass
+
 
 class StationHandlerTestCase(unittest.TestCase):
     def setUp(self):
