@@ -68,7 +68,11 @@ class Request(object):
 
     def teardown(self):
         """Stub method for cleaning up after a request"""
-        pass
+        if self.verb == "LISTALLOBJECTS":
+            log.info("LISTALLOBJECTS teardown called")
+            listchannels = groundstation.transfer.request.Request("LISTALLCHANNELS", station=self.station)
+            self.station.register_request(listchannels)
+            self.stream.enqueue(listchannels)
 
     # Boilerplate to appease protobuf
     @property

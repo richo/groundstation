@@ -7,6 +7,7 @@ import groundstation.logger
 log = groundstation.logger.getLogger(__name__)
 
 import groundstation.store
+from groundstation.utils import oid2hex
 
 
 class GitStore(object):
@@ -36,17 +37,13 @@ class GitStore(object):
         return self.repo.lookup_reference(ref)
 
     def write(self, typ, data):
-        return self._format_id(self.repo.write(typ, data))
+        return oid2hex(self.repo.write(typ, data))
 
     def create_blob(self, data):
-        return self._format_id(self.repo.create_blob(data))
+        return self.write(pygit2.GIT_OBJ_BLOB, data)
 
     def create_reference(self, ref, data):
         return self.repo.create_reference(ref, data)
-
-    @staticmethod
-    def _format_id(obj_id):
-        return "".join(["%02x" % ord(i) for i in obj_id])
 
     def gref(self, channel, identifier):
         return Gref(self, channel, identifier)

@@ -9,16 +9,12 @@ log = logger.getLogger(__name__)
 
 
 def handle_listallobjects(self):
-    def teardown():
-        listchannels = groundstation.transfer.request.Request("LISTALLCHANNELS", station=self.station)
-        self.stream.enqueue(listchannels)
-
     if not self.station.recently_queried(self.origin):
         log.info("%s not up to date, issuing LISTALLOBJECTS" % (self.origin))
         #                                                                      Pass in the station for gizmo_factory in the constructor
-        listobjects = groundstation.transfer.request.Request("LISTALLOBJECTS", station=self.station)
+        listobjects = groundstation.transfer.request.Request("LISTALLOBJECTS", station=self.station, stream=self.stream)
+        self.station.register_request(listobjects)
         self.stream.enqueue(listobjects)
-        self.teardown = teardown
     else:
         log.info("object cache for %s still valid" % (self.origin))
     log.info("Handling LISTALLOBJECTS")
