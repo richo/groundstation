@@ -35,6 +35,10 @@ already, everything that ships with groundstation will be released with
 development
 -----------
 
+groundstation uses [babashka][3] for managing it's dependencies. If you have it installed, you should be able to do something like:
+
+`babashka groundstation_dev` and wind up with a working environment. Maybe.
+
 1. install development libgit2 (on OSX this is streamlined by `brew install --HEAD libgit2`)
 2. `pip install -r requirements.txt`
 3. ???????
@@ -45,3 +49,4 @@ and checkout the other [misc hacking docs](HACKING/).
 
 [1]:http://libgit2.github.com/
 [2]:https://github.com/libgit2/pygit2#building-on-nix-including-os-x
+[3]:https://github.com/richo/babashka
