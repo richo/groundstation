@@ -5,6 +5,7 @@ import groundstation.transfer.response
 
 from groundstation.transfer import request_handlers
 
+from groundstation import settings
 from groundstation import logger
 log = logger.getLogger(__name__)
 
@@ -73,6 +74,12 @@ class Request(object):
             listchannels = groundstation.transfer.request.Request("LISTALLCHANNELS", station=self.station)
             self.station.register_request(listchannels)
             self.stream.enqueue(listchannels)
+            log.info("Registering deferred to check sync")
+
+            def thunk():
+                listobjects = groundstation.transfer.request.Request("LISTALLOBJECTS", station=self.station)
+                self.station.register_request(listobjects)
+            self.station.register_deferred(settings.DEFAULT_CACHE_LIFETIME, thunk)
 
     # Boilerplate to appease protobuf
     @property

@@ -1,7 +1,7 @@
 PORT=1248 # Port to listen on (udp+tcp)
 BEACON_TIMEOUT=5 # 5 second timeout between beacons
 DEFAULT_BUFSIZE=8192 # 8k bytes
-DEFAULT_CACHE_LIFETIME=900 # 15 minutes
+DEFAULT_CACHE_LIFETIME=30 # 30 Seconds
 STORAGE_BACKEND="git"
 
 LISTALLOBJECTS_CHUNK_THRESHOLD=1024
