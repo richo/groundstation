@@ -43,7 +43,7 @@ class TestHandlerListAllObjects(StationHandlerTestCase):
 
         self.assertEqual(len(self.station.stream), 0)
         resp.stream = self.station.stream
-        handle_terminate(resp)
+        handle_terminate(req1)
 
         req2 = self.station.stream.pop(0)
         self.assertEqual(req2.verb, "LISTALLCHANNELS")
