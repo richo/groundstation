@@ -1,13 +1,16 @@
+import time
 import uuid
 
 from groundstation.proto.gizmo_pb2 import Gizmo
 import groundstation.transfer.response
+import groundstation.deferred
 
 from groundstation.transfer import request_handlers
 
 from groundstation import settings
 from groundstation import logger
 log = logger.getLogger(__name__)
+
 
 
 def TERMINATE(self):
@@ -76,10 +79,11 @@ class Request(object):
             self.stream.enqueue(listchannels)
             log.info("Registering deferred to check sync")
 
-            def thunk():
+            @groundstation.deferred.defer_until(time.time() + settings.DEFAULT_CACHE_LIFETIME)
+            def deferred():
                 listobjects = groundstation.transfer.request.Request("LISTALLOBJECTS", station=self.station)
                 self.station.register_request(listobjects)
-            self.station.register_deferred(settings.DEFAULT_CACHE_LIFETIME, thunk)
+            self.station.register_deferred(deferred)
 
     # Boilerplate to appease protobuf
     @property
