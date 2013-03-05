@@ -1,5 +1,17 @@
 groundstation_dev() {
+    requires "libgit2_dev"
     requires "pip_packages_installed"
+    process
+}
+
+libgit2_dev() {
+    function is_met() {
+        echo "main() { return 0; }" | gcc -x c /dev/stdin -lgit2 -o /dev/null
+    }
+    function meet {
+        ( [ "`uname -s`" == "Darwin" ] && which brew >/dev/null ) || unmeetable "Only supported on osx"
+        brew install --HEAD libgit2
+    }
     process
 }
 
