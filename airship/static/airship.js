@@ -152,6 +152,9 @@ var RenderedGref = Backbone.View.extend({
     if (root.protocol.search("richo@psych0tik.net:github:") === 0) {
       // Github issue
       render_github_issue(content, root, self.el);
+    } else if (root.protocol.search("richo@psych0tik.net:jira:") === 0) {
+      // Jira is currently github compatible
+      render_github_issue(content, root, self.el);
     } else {
       console.log("Unhandled protocol: " + root.protocol);
       return this;
