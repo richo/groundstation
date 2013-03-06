@@ -49,8 +49,12 @@ def main(argv):
     for repo in repos:
         adaptor = github_protocol.GithubWriteAdaptor(station, repo)
         log.info("fetching %s" % (repo.name))
-        for issue in repo.get_issues():
-            adaptor.write_issue(issue)
+        try:
+            for issue in repo.get_issues():
+                adaptor.write_issue(issue)
+        except github.GithubException: # XXX Overzealous
+            log.warn("Issues disabled for %s" % (repo.name))
+            continue
 
 if __name__ == "__main__":
     main(sys.argv)
