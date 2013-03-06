@@ -58,7 +58,8 @@ def main(argv):
 
     issues = jira.search_issues(
             'project=%s and (status=OPEN or status=CLOSED)' % args.project,
-            maxResults=MAX_ISSUES
+            maxResults=MAX_ISSUES,
+            fields='summary,comment,reporter,description'
             )
 
     for issue in issues:
