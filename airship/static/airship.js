@@ -142,53 +142,20 @@ var RenderedGref = Backbone.View.extend({
   tagName: "div",
   className: "",
 
-  classFor: function(ev) {
-    if (ev == "reopened")
-      return "alert alert-success";
-    else if (ev == "closed")
-      return "alert alert-error";
-    else
-      return "alert";
-  },
-
   render: function() {
     console.log("Rendering new refs");
     var self = this;
+    var content = this.model.attributes["content"];
+    var root = this.model.attributes["root"];
+
     _.each(this.$el.children(), function(el) { el.remove(); });
-    _.each(this.model.attributes["content"], function(item) {
-      var el;
-      if (item.type == "title") {
-        el = document.createElement("div");
-
-        op = document.createElement("div");
-        op.className = "alert alert-info";
-        op.innerText = "opened by " + item.user;
-        el.appendChild(op);
-
-        ti = document.createElement("h2");
-        ti.innerHTML = item.body;
-        el.appendChild(ti);
-      } else if (item.type == "body") {
-        el = document.createElement("p");
-        el.innerHTML = markdown.toHTML(item.body);
-      } else if (item.type == "comment") {
-        el = document.createElement("p");
-        el.className = "github-issue-comment";
-        el.setAttribute("data-author", item.user);
-        el.setAttribute("data-hash", item.hash);
-        el.innerHTML = markdown.toHTML(item.body);
-      } else if (item.type == "event") {
-        el = document.createElement("div");
-        el.className = self.classFor(item.state);
-        el.innerText = item.state + " by " + item.user;
-        el.setAttribute("data-hash", item.hash);
-      } else {
-        console.log("Unhandled node of type: " + item.type);
-      }
-      if (el !== undefined) {
-        self.el.appendChild(el);
-      }
-    });
+    if (root.protocol.search("richo@psych0tik.net:github:" === 0)) {
+      // Github issue
+      render_github_issue(content, root, self.el);
+    } else {
+      console.log("Unhandled protocol: " + root.protocol);
+      return this;
+    }
     buildCommentBox(self.el, self.model);
     return this;
   },
