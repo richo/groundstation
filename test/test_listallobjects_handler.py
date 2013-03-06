@@ -62,3 +62,17 @@ class TestHandlerListAllObjectsCached(StationHandlerTestCase):
         handle_listallobjects(self.station)
         resp = self.station.stream.pop(0)
         self.assertIsInstance(resp, response.Response)
+
+
+class TestHandlerQueuesDeferredRetry(StationHandlerTestCase):
+    def test_queues_retry(self):
+        self.station.set_real_terminate(True)
+        self.station.set_real_id(True)
+        self.station.set_real_register(True)
+        self.assertFalse(self.station.station.has_ready_deferreds())
+
+        self.assertEqual(len(self.station.station.deferreds), 0)
+        handle_listallobjects(self.station)
+        req1 = self.station.stream.pop(0)
+        handle_terminate(req1)
+        self.assertEqual(len(self.station.station.deferreds), 1)
