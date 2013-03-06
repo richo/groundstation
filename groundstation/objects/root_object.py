@@ -1,7 +1,9 @@
 import root_object_pb2
 
+
 class RootObject(object):
     data_members = ["id", "channel", "protocol"]
+
     def __init__(self, id, channel, protocol):
         self.id = id
         self.channel = channel
@@ -28,3 +30,10 @@ class RootObject(object):
         for member in self.data_members:
             setattr(protobuf, member, getattr(self, member))
         return protobuf.SerializeToString()
+
+    def as_json(self):
+        return {
+                "id": self.id,
+                "channel": self.channel,
+                "protocol": self.protocol
+                }

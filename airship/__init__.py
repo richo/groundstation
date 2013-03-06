@@ -57,7 +57,7 @@ def make_airship(station):
         log.info("Trying to fetch channel: %s identifier: %s" %
                 (channel, identifier))
         thread = adaptor.get_issue(gref)
-        root = thread.pop()
+        root = thread.pop().as_json()
 
         response = []
 
@@ -67,7 +67,7 @@ def make_airship(station):
             data["parents"] = list(node.parents)
             data["hash"] = oid2hex(pygit2.hash(node.as_object()))
             response.append(data)
-        return jsonate({"content": response}, False)
+        return jsonate({"content": response, "root": root}, False)
 
     @app.route("/gref/<channel>/<path:identifier>", methods=['POST'])
     def update_gref(channel, identifier):
