@@ -168,12 +168,12 @@ var RenderedGref = Backbone.View.extend({
         el.className = "github-issue-comment";
         el.setAttribute("data-author", item.user);
         el.setAttribute("data-hash", item.hash);
-        // el.setAttribute("data-author", item.user);
         el.innerHTML = markdown.toHTML(item.body);
       } else if (item.type == "event") {
         el = document.createElement("div");
         el.className = self.classFor(item.state);
         el.innerText = item.state + " by " + item.user;
+        el.setAttribute("data-hash", item.hash);
       } else {
         console.log("Unhandled node of type: " + item.type);
       }
