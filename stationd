@@ -79,7 +79,7 @@ def handle_discoverer_event():
                         client.begin_handshake(station)
                 else: # XXX This should check if we have open transactions.
                     if not station.recently_queried(event.payload):
-                        client = peer_sockets(peer[0])
+                        client = peer_sockets[peer[0]]
                         client.begin_handshake(station)
 
             else:
