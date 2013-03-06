@@ -17,6 +17,9 @@ from groundstation.protocols import github as github_protocol
 class NoGithubToken(Exception): pass
 
 
+class InvalidOptions(Exception): pass
+
+
 def _create_option_parser():
     parser = argparse.ArgumentParser()
     parser.add_argument("--repo", dest='repo', action='store')
@@ -44,6 +47,8 @@ def main(argv):
     if args.all:
         repos = gh.get_user().get_repos()
     else:
+        if not args.repo:
+            raise InvalidOptions("Requires --all or --repo <repo>")
         repos = [gh.get_repo(args.repo)]
 
     for repo in repos:
