@@ -4,6 +4,8 @@ _identifier_ = "richo@psych0tik.net:github:%s" % (_version_)
 import json
 import copy
 
+import github
+
 from groundstation.gref import Gref
 
 import groundstation.objects.object_factory as object_factory
@@ -142,13 +144,28 @@ class GithubWriteAdaptor(AbstractGithubAdaptor):
         update_object = UpdateObject(_parents(), json.dumps(body_payload))
         _write_new_tip(update_object)
 
-        # Write out all of the comments
-        for comment in issue.get_comments():
-            comment_payload = {
-                    "type": "comment",
-                    "id": None,
-                    "body": comment.body,
-                    "user": comment.user.login
-                    }
-            update_object = UpdateObject(_parents(), json.dumps(comment_payload))
+        # Write out all of the comments and events
+        everything = []
+        everything.extend(issue.get_comments())
+        everything.extend(issue.get_events())
+        everything.sort(key=lambda x: x.created_at)
+        for item in everything:
+            if isinstance(item, github.IssueComment.IssueComment):
+                payload = {
+                        "type": "comment",
+                        "id": item.id,
+                        "body": item.body,
+                        "user": item.user.login
+                        }
+            elif isinstance(item, github.IssueEvent.IssueEvent):
+                payload = {
+                        "type": "event",
+                        "id": item.id,
+                        "state": item.event,
+                        "user": item.actor.login
+                        }
+            else:
+                raise Exception("Unhandled item %s" % (repr(item)))
+
+            update_object = UpdateObject(_parents(), json.dumps(payload))
             _write_new_tip(update_object)
