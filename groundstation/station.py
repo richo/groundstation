@@ -69,6 +69,7 @@ class Station(object):
         now = time.time()
         for i in self.deferreds:
             if i.at < now:
+                self.deferreds.remove(i)
                 i.run()
 
     def channels(self):
