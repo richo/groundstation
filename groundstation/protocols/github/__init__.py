@@ -69,8 +69,8 @@ class GithubReadAdaptor(AbstractGithubAdaptor):
             log.debug("Descending into %s" % (tip))
             _process(tip)
 
-        assert(len(root_nodes) == 1,
-            "Anything other than one root node and you've got a problem")
+        assert len(root_nodes) == 1, \
+            "Anything other than one root node and you've got a problem"
 
         issue_thread.append(root_nodes.pop())
 
