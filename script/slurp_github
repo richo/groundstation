@@ -20,6 +20,7 @@ class NoGithubToken(Exception): pass
 def _create_option_parser():
     parser = argparse.ArgumentParser()
     parser.add_argument("--repo", dest='repo', action='store')
+    parser.add_argument("--all", dest='all', action='store_true', default=False)
     return parser
 
 
@@ -40,12 +41,16 @@ def main(argv):
     args = parser.parse_args(argv[1:])
 
     gh = github.Github(os.getenv("GITHUB_TOKEN"))
-    repo = gh.get_repo(args.repo)
+    if args.all:
+        repos = gh.get_user().get_repos()
+    else:
+        repos = [gh.get_repo(args.repo)]
 
-    adaptor = github_protocol.GithubWriteAdaptor(station, repo)
-
-    for issue in repo.get_issues():
-        adaptor.write_issue(issue)
+    for repo in repos:
+        adaptor = github_protocol.GithubWriteAdaptor(station, repo)
+        log.info("fetching %s" % (repo.name))
+        for issue in repo.get_issues():
+            adaptor.write_issue(issue)
 
 if __name__ == "__main__":
     main(sys.argv)
