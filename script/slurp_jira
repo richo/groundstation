@@ -1,0 +1,68 @@
+#!/usr/bin/env python
+
+import os
+import sys
+import argparse
+
+from jira.client import JIRA
+
+from groundstation.station import Station
+from groundstation.node import Node
+
+from groundstation.protocols import jira as jira_protocol
+
+
+MAX_ISSUES = 15
+
+
+class MissingCredential(Exception): pass
+class MissingOption(Exception): pass
+
+
+def _create_option_parser():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--project", dest='project', action='store')
+    return parser
+
+
+def _create_station():
+    station_path = os.path.expanduser("~/.groundstation")
+    myself = Node()
+    station = Station(station_path, myself)
+    return station
+
+
+def main(argv):
+    parser = _create_option_parser()
+    station = _create_station()
+
+    args = parser.parse_args(argv[1:])
+
+    if "JIRA_USERNAME" not in os.environ:
+        raise MissingCredential("No JIRA_USERNAME")
+    if "JIRA_PASSWORD" not in os.environ:
+        raise MissingCredential("No JIRA_PASSWORD")
+    if "JIRA_SERVER" not in os.environ:
+        raise MissingCredential("No JIRA_SERVER")
+    if not args.project:
+        raise MissingOption("Must give --project <project>")
+
+    adaptor = jira_protocol.JiraWriteAdaptor(station, args.project)
+
+    jira = JIRA(
+            basic_auth=(
+                os.getenv("JIRA_USERNAME"),
+                os.getenv("JIRA_PASSWORD")
+                ),
+            options={'server': os.getenv("JIRA_SERVER")})
+
+    issues = jira.search_issues(
+            'project=%s and (status=OPEN or status=CLOSED)' % args.project,
+            maxResults=MAX_ISSUES
+            )
+
+    for issue in issues:
+        adaptor.write_issue(issue)
+
+if __name__ == "__main__":
+    main(sys.argv)
