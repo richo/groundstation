@@ -1,2 +1,4 @@
 -e git+git://github.com/libgit2/pygit2.git#egg=pygit2
-protobuf
+protobuf==2.5.0
+Flask==0.9
+PyGithub==1.12.2
