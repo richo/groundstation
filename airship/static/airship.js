@@ -142,6 +142,15 @@ var RenderedGref = Backbone.View.extend({
   tagName: "div",
   className: "",
 
+  classFor: function(ev) {
+    if (ev == "reopened")
+      return "alert alert-success";
+    else if (ev == "closed")
+      return "alert alert-error";
+    else
+      return "alert";
+  },
+
   render: function() {
     console.log("Rendering new refs");
     var self = this;
@@ -161,6 +170,10 @@ var RenderedGref = Backbone.View.extend({
         el.setAttribute("data-hash", item.hash);
         // el.setAttribute("data-author", item.user);
         el.innerHTML = markdown.toHTML(item.body);
+      } else if (item.type == "event") {
+        el = document.createElement("div");
+        el.className = self.classFor(item.state);
+        el.innerText = item.state + " by " + item.user;
       } else {
         console.log("Unhandled node of type: " + item.type);
       }
