@@ -21,8 +21,10 @@ function render_github_issue(content, root, div) {
       ti.innerHTML = item.body;
       el.appendChild(ti);
     } else if (item.type == "body") {
-      el = document.createElement("p");
-      el.innerHTML = markdown.toHTML(item.body);
+      if (item.body !== null) {
+        el = document.createElement("p");
+        el.innerHTML = markdown.toHTML(item.body);
+      }
     } else if (item.type == "comment") {
       el = document.createElement("p");
       el.className = "github-issue-comment";
