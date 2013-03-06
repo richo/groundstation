@@ -63,11 +63,15 @@ class JiraWriteAdaptor(AbstractJiraAdaptor):
 
         # Write out the initial state
         # Creating lots of tiny objects should make deduping easier later
+        if issue.fields.reporter:
+            reporter = issue.fields.reporter.name
+        else:
+            reporter = "Anonymous"
         title_payload = {
                 "type": "title",
                 "id": None,
                 "body": issue.fields.summary,
-                "user": issue.fields.reporter.name
+                "user": reporter
                 }
         update_object = UpdateObject(_parents(), json.dumps(title_payload))
         _write_new_tip(update_object)
