@@ -12,7 +12,7 @@ from groundstation.node import Node
 from groundstation.protocols import jira as jira_protocol
 
 
-MAX_ISSUES = 15
+MAX_ISSUES = 9005
 
 
 class MissingCredential(Exception): pass
