@@ -158,8 +158,16 @@ var RenderedGref = Backbone.View.extend({
     _.each(this.model.attributes["content"], function(item) {
       var el;
       if (item.type == "title") {
-        el = document.createElement("h2");
-        el.innerHTML = item.body;
+        el = document.createElement("div");
+
+        op = document.createElement("div");
+        op.className = "alert alert-info";
+        op.innerText = "opened by " + item.user;
+        el.appendChild(op);
+
+        ti = document.createElement("h2");
+        ti.innerHTML = item.body;
+        el.appendChild(ti);
       } else if (item.type == "body") {
         el = document.createElement("p");
         el.innerHTML = markdown.toHTML(item.body);

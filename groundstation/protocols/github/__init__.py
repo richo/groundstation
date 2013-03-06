@@ -130,7 +130,8 @@ class GithubWriteAdaptor(AbstractGithubAdaptor):
         title_payload = {
                 "type": "title",
                 "id": None,
-                "body": issue.title
+                "body": issue.title,
+                "user": issue.user.login
                 }
         update_object = UpdateObject(_parents(), json.dumps(title_payload))
         _write_new_tip(update_object)
