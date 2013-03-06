@@ -2,7 +2,7 @@ import time
 
 from station_fixture import StationTestCase
 
-from groundstation.deferred import Deferred
+from groundstation.deferred import Deferred, defer_until
 
 
 class TestStationDeferreds(StationTestCase):
@@ -24,12 +24,17 @@ class TestStationDeferreds(StationTestCase):
         now = time.time()
         ret = [0]
 
-        def thunk():
-            ret[0] += 1
+        for i in xrange(10):
+            import sys
+            # sys.stderr.write("Registering deferred %i" % i)
+            @self.station.register_deferred
+            @defer_until(now - 30)
+            def thunk():
+                ret[0] += 1
 
-        deferred = Deferred(now - 10, thunk)
-        self.station.register_deferred(deferred)
-        self.station.register_deferred(deferred)
-        self.station.register_deferred(deferred)
+        self.assertEqual(len(self.station.deferreds), 10)
+
         self.station.handle_deferreds()
-        self.assertEqual(ret[0], 3)
+
+        self.assertEqual(len(self.station.deferreds), 0)
+        self.assertEqual(ret[0], 10)

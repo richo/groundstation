@@ -67,10 +67,16 @@ class Station(object):
 
     def handle_deferreds(self):
         now = time.time()
-        for i in self.deferreds:
+        new_deferreds = []
+        while self.deferreds:
+            i = self.deferreds.pop(0)
             if i.at < now:
-                self.deferreds.remove(i)
                 i.run()
+            else:
+                new_deferreds.append(i)
+                import sys
+                sys.stderr.write("NOTREADY")
+        self.deferreds = new_deferreds
 
     def channels(self):
         return os.listdir(self.store.gref_path())
