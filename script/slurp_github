@@ -55,7 +55,7 @@ def main(argv):
         adaptor = github_protocol.GithubWriteAdaptor(station, repo)
         log.info("fetching %s" % (repo.name))
         try:
-            for issue in repo.get_issues():
+            for issue in repo.get_issues(state="open,closed"):
                 adaptor.write_issue(issue)
         except github.GithubException: # XXX Overzealous
             log.warn("Issues disabled for %s" % (repo.name))
