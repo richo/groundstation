@@ -30,9 +30,13 @@
         $("#current-user-name").on('click', function() {
           var username = prompt("Username for committing:");
           if (username !== null) {
-            localStorage.setItem("airship.committer", username);
             groundstation.username = username;
             $("#current-user-name").html(groundstation.username);
+            try {
+              localStorage.setItem("airship.committer", username);
+            } catch (e) {
+              console.log("Not setting committer name in localStorage");
+            }
           }
         });
       });
