@@ -29,8 +29,11 @@
         $("#current-user-name").html(groundstation.username);
         $("#current-user-name").on('click', function() {
           var username = prompt("Username for committing:");
-          groundstation.username = username;
-          $("#current-user-name").html(groundstation.username);
+          if (username !== null) {
+            localStorage.setItem("airship.committer", username);
+            groundstation.username = username;
+            $("#current-user-name").html(groundstation.username);
+          }
         });
       });
     </script>

@@ -13,7 +13,7 @@ var Grefs = Backbone.Collection.extend({
 
 groundstation.channels = new Channels();
 groundstation.channels.url = '/channels';
-groundstation.username = "Anonymous Coward";
+groundstation.username = localStorage.getItem("airship.committer") || "Anonymous Coward";
 
 groundstation.active_grefs = new Grefs();
 
