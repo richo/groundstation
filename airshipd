@@ -2,6 +2,8 @@
 import airship
 
 import os
+import sys
+import argparse
 
 from groundstation.node import Node
 from groundstation.station import Station
@@ -10,5 +12,18 @@ myself = Node()
 station_path = os.path.expanduser("~/.groundstation")
 station = Station(station_path, myself)
 
-app = airship.make_airship(station)
-app.run(None, 9005, True)
+
+def _create_option_parser():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--host", dest='host', action='store')
+    return parser
+
+
+def main(argv):
+    parser = _create_option_parser()
+    args = parser.parse_args(argv[1:])
+    app = airship.make_airship(station)
+    app.run(args.host, 9005, True)
+
+if __name__ == "__main__":
+    main(sys.argv)
