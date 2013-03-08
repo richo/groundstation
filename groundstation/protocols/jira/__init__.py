@@ -85,13 +85,33 @@ class JiraWriteAdaptor(AbstractJiraAdaptor):
         update_object = UpdateObject(_parents(), json.dumps(body_payload))
         _write_new_tip(update_object)
 
-        # Write out comments
+        everything = []
         for comment in issue.fields.comment.comments:
-            payload = {
-                    "type": "comment",
-                    "id": int(comment.id),
-                    "body": comment.body,
-                    "user": comment.author.name
-                    }
+            comment.type = "comment"
+            everything.append(comment)
+        for history in issue.changelog.histories:
+            history.type = "event"
+            everything.append(history)
+        everything.sort(key=lambda x: x.created)
+        for item in everything:
+            if item.type == "comment":
+                payload = {
+                        "type": "comment",
+                        "id": int(item.id),
+                        "body": item.body,
+                        "user": item.author.name
+                        }
+            elif item.type == "event":
+                stateChange = ", ".join(["%s from %s to %s" %
+                    (x.field, x.fromString, x.toString) for x in item.items])
+                payload = {
+                        "type": "event",
+                        "id": item.id,
+                        "state": stateChange,
+                        "user": item.author.name
+                        }
+            else:
+                raise Exception("Unhandled type")
+
             update_object = UpdateObject(_parents(), json.dumps(payload))
             _write_new_tip(update_object)
