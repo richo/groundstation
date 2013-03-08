@@ -13,6 +13,7 @@ from groundstation.protocols import jira as jira_protocol
 
 
 MAX_ISSUES = 9005
+JIRA_FIELDS = 'summary,comment,reporter,description'
 
 
 class MissingCredential(Exception): pass
@@ -22,6 +23,7 @@ class MissingOption(Exception): pass
 def _create_option_parser():
     parser = argparse.ArgumentParser()
     parser.add_argument("--project", dest='project', action='store')
+    parser.add_argument("--issue", dest='issue', action='store')
     return parser
 
 
@@ -44,8 +46,6 @@ def main(argv):
         raise MissingCredential("No JIRA_PASSWORD")
     if "JIRA_SERVER" not in os.environ:
         raise MissingCredential("No JIRA_SERVER")
-    if not args.project:
-        raise MissingOption("Must give --project <project>")
 
     adaptor = jira_protocol.JiraWriteAdaptor(station, args.project)
 
@@ -56,11 +56,18 @@ def main(argv):
                 ),
             options={'server': os.getenv("JIRA_SERVER")})
 
-    issues = jira.search_issues(
-            'project=%s and (status=OPEN or status=CLOSED)' % args.project,
-            maxResults=MAX_ISSUES,
-            fields='summary,comment,reporter,description'
-            )
+    if args.issue:
+        issues = []
+        issues.append(jira.issue(args.issue, fields=JIRA_FIELDS))
+
+    elif args.project:
+        issues = jira.search_issues(
+                'project=%s and (status=OPEN or status=CLOSED)' % args.project,
+                maxResults=MAX_ISSUES,
+                fields=JIRA_FIELDS
+                )
+    else:
+        raise MissingOption("Must give --issue <issue> or --all and --project <project>")
 
     for issue in issues:
         adaptor.write_issue(issue)
