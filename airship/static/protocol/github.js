@@ -40,6 +40,8 @@ function render_github_issue(content, root, div) {
       console.log("Unhandled node of type: " + item.type);
     }
     if (el !== undefined) {
+      // TODO This needs to be generalised so it's not purely a github concern.
+      el.setAttribute("id", item.hash);
       div.appendChild(el);
     }
   });
