@@ -18,7 +18,7 @@ groundstation.username = "Anonymous Coward";
 groundstation.active_grefs = new Grefs();
 
 var GrefMenuItem = Backbone.View.extend({
-  tagname: "li",
+  tagName: "li",
   className: "gref",
 
   template: '<a class="select" href="#">{{identifier}}</a>',
