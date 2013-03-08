@@ -152,8 +152,11 @@ var RenderedGref = Backbone.View.extend({
     var root = this.model.attributes["root"];
 
     _.each(this.$el.children(), function(el) { el.remove(); });
-    if (root.protocol.search("richo@psych0tik.net:github:" === 0)) {
+    if (root.protocol.search("richo@psych0tik.net:github:") === 0) {
       // Github issue
+      render_github_issue(content, root, self.el);
+    } else if (root.protocol.search("richo@psych0tik.net:jira:") === 0) {
+      // Jira is currently github compatible
       render_github_issue(content, root, self.el);
     } else {
       console.log("Unhandled protocol: " + root.protocol);
