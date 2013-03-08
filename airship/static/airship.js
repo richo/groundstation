@@ -33,6 +33,8 @@ var GrefMenuItem = Backbone.View.extend({
   },
 
   select: function() {
+    $(this.el.parentElement.children).removeClass("active");
+    $(this.el).addClass("active");
     rendered_gref.url = this.getUrl();
     rendered_gref.fetch({
       success: function(model, response, options) {
