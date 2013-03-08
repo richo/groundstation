@@ -9,15 +9,16 @@ from groundstation.gref import Gref
 from groundstation.objects.root_object import RootObject
 from groundstation.objects.update_object import UpdateObject
 
+from groundstation.protocols import BaseProtocol
+
 from groundstation import logger
 log = logger.getLogger(__name__)
 
 
-class AbstractJiraAdaptor(object):
-    def __init__(self, station, repo):
-        self.station = station
-        self.repo = repo
-        self.channel = "jira:%s" % (self.repo)
+class AbstractJiraAdaptor(BaseProtocol):
+    @property
+    def channel(self):
+        return "jira:%s" % (self.repo)
 
     def issue_gref(self, issue):
         return Gref(self.station.store, self.channel, self._issue_id(issue))

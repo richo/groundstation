@@ -13,17 +13,18 @@ import groundstation.objects.object_factory as object_factory
 from groundstation.objects.root_object import RootObject
 from groundstation.objects.update_object import UpdateObject
 
+from groundstation.protocols import BaseProtocol
+
 from groundstation import logger
 log = logger.getLogger(__name__)
 
 
-class AbstractGithubAdaptor(object):
+class AbstractGithubAdaptor(BaseProtocol):
     issue_format = "issues/%d"
 
-    def __init__(self, station, repo):
-        self.station = station
-        self.repo = repo
-        self.channel = "github:%s" % (self.repo_name)
+    @property
+    def channel(self):
+        return "github:%s" % (self.repo_name)
 
     def issue_gref(self, issue):
         return Gref(self.station.store, self.channel, self._issue_id(issue))
