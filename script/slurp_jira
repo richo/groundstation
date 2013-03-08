@@ -14,6 +14,7 @@ from groundstation.protocols import jira as jira_protocol
 
 MAX_ISSUES = 9005
 JIRA_FIELDS = 'summary,comment,reporter,description'
+JIRA_EXPAND = 'changelog'
 
 
 class MissingCredential(Exception): pass
@@ -58,13 +59,14 @@ def main(argv):
 
     if args.issue:
         issues = []
-        issues.append(jira.issue(args.issue, fields=JIRA_FIELDS))
+        issues.append(jira.issue(args.issue, fields=JIRA_FIELDS, expand=JIRA_EXPAND))
 
     elif args.project:
         issues = jira.search_issues(
                 'project=%s and (status=OPEN or status=CLOSED)' % args.project,
                 maxResults=MAX_ISSUES,
-                fields=JIRA_FIELDS
+                fields=JIRA_FIELDS,
+                expand=JIRA_EXPAND
                 )
     else:
         raise MissingOption("Must give --issue <issue> or --all and --project <project>")
