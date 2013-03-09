@@ -34,9 +34,6 @@ def main(argv):
     channel = args.channel.pop()
     identifier = args.identifier.pop()
 
-    def _print_tip(tip, indent):
-        print "%s*\t%s" % (indent * "| ", tip)
-
     gref = Gref(station.store, channel, identifier)
     roots = []
     processed = []
@@ -57,6 +54,11 @@ def main(argv):
                 roots.append(tip)
         else:
             tips.extend(parents)
+
+    outdent = len(roots)
+
+    def _print_tip(tip, indent):
+        print "%s*%s\t%s" % (indent * "| ", (outdent - indent) * "  ", tip)
 
     indent = 0
     while roots:
