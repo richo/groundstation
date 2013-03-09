@@ -1,0 +1,81 @@
+#!/usr/bin/env python
+
+import os
+import sys
+import argparse
+
+from groundstation import logger
+log = logger.getLogger(__name__)
+
+from groundstation.gref import Gref
+
+from groundstation.station import Station
+
+from collections import OrderedDict
+
+station_path = os.path.expanduser("~/.groundstation")
+station = Station(station_path, None)
+
+
+def _create_option_parser():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("channel", nargs=1)
+    parser.add_argument("identifier", nargs=1)
+    return parser
+
+
+def main(argv):
+    parser = _create_option_parser()
+    args = parser.parse_args(sys.argv[1:])
+
+    children = OrderedDict()
+    graph_tips = OrderedDict()
+
+    channel = args.channel.pop()
+    identifier = args.identifier.pop()
+
+    def _print_tip(tip, indent):
+        print "%s*\t%s" % (indent * "| ", tip)
+
+    gref = Gref(station.store, channel, identifier)
+    roots = []
+    processed = []
+    tips = gref.tips()
+    while tips:
+        tip = tips.pop(0)
+        if tip in processed:
+            continue
+        processed.append(tip)
+        parents = gref.direct_parents(tip)
+        for parent in parents:
+            try:
+                children[parent].append(tip)
+            except KeyError:
+                children[parent] = [tip]
+        if parents == []:
+            if tip not in roots:
+                roots.append(tip)
+        else:
+            tips.extend(parents)
+
+    indent = 0
+    while roots:
+        root = roots.pop()
+        graph_tips[root] = [indent]
+        indent += 1
+
+    while graph_tips:
+        k, v = graph_tips.popitem(False)
+        indent = v[0]
+        _print_tip(k, indent)
+        if k in graph_tips:
+            continue
+        if k not in children:
+            continue
+        for i in children[k]:
+            graph_tips[i] = [indent]
+            indent += 1
+
+
+if __name__ == "__main__":
+    main(sys.argv)
