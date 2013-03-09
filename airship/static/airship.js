@@ -164,6 +164,13 @@ var RenderedGref = Backbone.View.extend({
       return this;
     }
 
+    // Stick the root object in the DOM to make parent linking sane.
+    (function() {
+      var el = document.createElement("div");
+      el.setAttribute("id", root.hash);
+      self.el.appendChild(el);
+    })();
+
     _.each(content, function(item) {
       var el = issue_renderer(item);
       el.setAttribute("id", item.hash);
