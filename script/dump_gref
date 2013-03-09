@@ -56,8 +56,9 @@ def main(argv):
         else:
             tips.extend(parents)
 
+    buf = []
     def _print_tip(tip, lane, chr="* "):
-        print "%s%s%s\t%s" % ("".join(lanes[0:lane]), chr, "".join(lanes[lane+1:]), tip)
+        buf.append("%s%s%s\t%s" % ("".join(lanes[0:lane]), chr, "".join(lanes[lane+1:]), tip))
 
     lane = 0
     lanes.append("| ")
@@ -74,7 +75,7 @@ def main(argv):
         if k in graph_tips:
             continue
         if k not in children:
-            _print_tip("", lane, "\\ ")
+            _print_tip("", lane, "/ ")
             lanes[lane] = "  "
             continue
         for i in children[k]:
@@ -82,6 +83,8 @@ def main(argv):
             graph_tips[i] = [lane]
             lane += 1
 
+    while buf:
+        print buf.pop()
 
 if __name__ == "__main__":
     main(sys.argv)
