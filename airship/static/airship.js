@@ -150,18 +150,27 @@ var RenderedGref = Backbone.View.extend({
     var self = this;
     var content = this.model.attributes["content"];
     var root = this.model.attributes["root"];
+    var issue_renderer = null;
 
     $(this.$el).children().remove();
     if (root.protocol.search("richo@psych0tik.net:github:") === 0) {
       // Github issue
-      render_github_issue(content, root, self.el);
+      issue_renderer = create_github_update_object;
     } else if (root.protocol.search("richo@psych0tik.net:jira:") === 0) {
       // Jira is currently github compatible
-      render_github_issue(content, root, self.el);
+      issue_renderer = create_github_update_object;
     } else {
       console.log("Unhandled protocol: " + root.protocol);
       return this;
     }
+
+    _.each(content, function(item) {
+      var el = issue_renderer(item);
+      el.setAttribute("id", item.hash);
+      if (el) {
+        self.el.appendChild(el);
+      }
+    });
     buildCommentBox(self.el, self.model);
     return this;
   },

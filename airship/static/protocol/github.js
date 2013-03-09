@@ -1,4 +1,4 @@
-function render_github_issue(content, root, div) {
+function create_github_update_object(item) {
   var classFor = function(ev) {
     if (ev == "reopened")
       return "alert alert-success";
@@ -7,43 +7,36 @@ function render_github_issue(content, root, div) {
     else
       return "alert";
   };
-  _.each(content, function(item) {
-    var el;
-    if (item.type == "title") {
-      el = document.createElement("div");
+  var el;
+  if (item.type == "title") {
+    el = document.createElement("div");
 
-      op = document.createElement("div");
-      op.className = "alert alert-info";
-      op.innerText = "opened by " + item.user;
-      el.appendChild(op);
+    op = document.createElement("div");
+    op.className = "alert alert-info";
+    op.innerText = "opened by " + item.user;
+    el.appendChild(op);
 
-      ti = document.createElement("h2");
-      ti.innerHTML = item.body;
-      el.appendChild(ti);
-    } else if (item.type == "body") {
-      if (item.body !== null) {
-        el = document.createElement("p");
-        el.innerHTML = markdown.toHTML(item.body);
-      }
-    } else if (item.type == "comment") {
+    ti = document.createElement("h2");
+    ti.innerHTML = item.body;
+    el.appendChild(ti);
+  } else if (item.type == "body") {
+    if (item.body !== null) {
       el = document.createElement("p");
-      el.className = "github-issue-comment";
-      el.setAttribute("data-author", item.user);
-      el.setAttribute("data-hash", item.hash);
       el.innerHTML = markdown.toHTML(item.body);
-    } else if (item.type == "event") {
-      el = document.createElement("div");
-      el.className = classFor(item.state);
-      el.innerText = item.state + " by " + item.user;
-      el.setAttribute("data-hash", item.hash);
-    } else {
-      console.log("Unhandled node of type: " + item.type);
     }
-    if (el !== undefined) {
-      // TODO This needs to be generalised so it's not purely a github concern.
-      el.setAttribute("id", item.hash);
-      div.appendChild(el);
-    }
-  });
-
+  } else if (item.type == "comment") {
+    el = document.createElement("p");
+    el.className = "github-issue-comment";
+    el.setAttribute("data-author", item.user);
+    el.setAttribute("data-hash", item.hash);
+    el.innerHTML = markdown.toHTML(item.body);
+  } else if (item.type == "event") {
+    el = document.createElement("div");
+    el.className = classFor(item.state);
+    el.innerText = item.state + " by " + item.user;
+    el.setAttribute("data-hash", item.hash);
+  } else {
+    console.log("Unhandled node of type: " + item.type);
+  }
+  return el;
 }
