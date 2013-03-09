@@ -39,3 +39,20 @@ class TestGitGref(store_fixture.StoreTestCase):
         our_parents = gref.parents()
         for parent in our_parents:
             self.assertIn(parent, parents)
+
+    def test_direct_parents(self):
+        gref = Gref(self.repo, "testchannel", "test_write_tip")
+        root = self.create_root_object(gref)
+        root_oid = self.repo.create_blob(root.as_object())
+
+        first_tier = []
+        for i in xrange(5):
+            obj = self.create_update_object([root_oid], "test_%i")
+            oid = self.repo.create_blob(obj.as_object())
+            first_tier.append(oid)
+
+        final = self.create_update_object(first_tier, "final object")
+        final_oid = self.repo.create_blob(final.as_object())
+
+        gref.write_tip(final_oid, "")
+        self.assertEqual(gref.direct_parents(final_oid), first_tier)

@@ -54,6 +54,18 @@ class Gref(object):
             if not silent:
                 raise
 
+    def direct_parents(self, tip):
+        """Return all parents of `tip` in the order they're written into the
+        object"""
+        obj = object_factory.hydrate_object(self.store[tip].data)
+        if isinstance(obj, RootObject):
+            # Roots can't have parents
+            return []
+        elif isinstance(obj, UpdateObject):
+            return obj.parents
+        else:
+            raise "Unknown object hydrated %s" % (str(type(obj)))
+
     def parents(self, tips=None):
         """Return all ancestors of `tip`, in an undefined order"""
         # XXX This will asplode the stack at some point
