@@ -57,7 +57,9 @@ def make_airship(station):
         log.info("Trying to fetch channel: %s identifier: %s" %
                 (channel, identifier))
         thread = adaptor.get_issue(gref)
-        root = thread.pop().as_json()
+        root_obj = thread.pop()
+        root = root_obj.as_json()
+        root["hash"] = oid2hex(pygit2.hash(root_obj.as_object()))
 
         response = []
 
