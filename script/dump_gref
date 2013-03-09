@@ -38,6 +38,7 @@ def main(argv):
     roots = []
     processed = []
     tips = gref.tips()
+    lanes = []
     while tips:
         tip = tips.pop(0)
         if tip in processed:
@@ -55,28 +56,31 @@ def main(argv):
         else:
             tips.extend(parents)
 
-    outdent = len(roots)
+    def _print_tip(tip, lane, chr="* "):
+        print "%s%s%s\t%s" % ("".join(lanes[0:lane]), chr, "".join(lanes[lane+1:]), tip)
 
-    def _print_tip(tip, indent):
-        print "%s*%s\t%s" % (indent * "| ", (outdent - indent) * "  ", tip)
-
-    indent = 0
+    lane = 0
+    lanes.append("| ")
     while roots:
         root = roots.pop()
-        graph_tips[root] = [indent]
-        indent += 1
+        graph_tips[root] = [lane]
+        lanes.append("  ")
+        lane += 1
 
     while graph_tips:
         k, v = graph_tips.popitem(False)
-        indent = v[0]
-        _print_tip(k, indent)
+        lane = v[0]
+        _print_tip(k, lane)
         if k in graph_tips:
             continue
         if k not in children:
+            _print_tip("", lane, "\\ ")
+            lanes[lane] = "  "
             continue
         for i in children[k]:
-            graph_tips[i] = [indent]
-            indent += 1
+            lanes[lane] = "| "
+            graph_tips[i] = [lane]
+            lane += 1
 
 
 if __name__ == "__main__":
