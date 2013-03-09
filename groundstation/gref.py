@@ -69,17 +69,13 @@ class Gref(object):
     def parents(self, tips=None):
         """Return all ancestors of `tip`, in an undefined order"""
         # XXX This will asplode the stack at some point
-        parents = []
-        for tip in (tips or self.tips()):
-            obj = object_factory.hydrate_object(self.store[tip].data)
-            if isinstance(obj, UpdateObject):
-                for tip in obj.parents:
-                    parents.append(tip)
-                    parents.extend(self.parents([tip]))
-            elif isinstance(obj, RootObject):
-                return []
-            else:
-                raise "Unknown object hydrated %s" % (str(type(obj)))
+        parents = set()
+        this_iter = (tips or self.tips())
+        while this_iter:
+            tip = this_iter.pop()
+            tips_parents = self.direct_parents(tip)
+            parents = parents.union(set(tips_parents))
+            this_iter.extend(tips_parents)
         return parents
 
     def as_dict(self):
