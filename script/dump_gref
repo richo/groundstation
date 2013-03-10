@@ -81,6 +81,9 @@ def main(argv):
             lanes[lane] = "  "
             continue
         for i in children[k]:
+            if lanes[lane] != "| ":
+                _print_tip("", lane, "/ ")
+
             lanes[lane] = "| "
             graph_tips[i] = [lane]
             lane += 1
