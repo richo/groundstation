@@ -60,6 +60,8 @@ def main(argv):
     def _print_tip(tip, lane, chr="* "):
         buf.append("%s%s%s\t%s" % ("".join(lanes[0:lane]), chr, "".join(lanes[lane+1:]), tip))
 
+    print("Roots: %s" % (repr(roots)))
+
     lane = 0
     lanes.append("| ")
     while roots:
