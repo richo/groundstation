@@ -58,14 +58,13 @@ def main(argv):
 
     buf = []
     def _print_tip(tip, lane, chr="* "):
+        if tip in roots:
+            tip = "%s (root)" % (tip)
         buf.append("%s%s%s\t%s" % ("".join(lanes[0:lane]), chr, "".join(lanes[lane+1:]), tip))
-
-    print("Roots: %s" % (repr(roots)))
 
     lane = 0
     lanes.append("| ")
-    while roots:
-        root = roots.pop()
+    for root in reversed(roots):
         graph_tips[root] = [lane]
         lanes.append("  ")
         lane += 1
