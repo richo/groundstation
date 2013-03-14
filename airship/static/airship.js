@@ -34,6 +34,37 @@ function init_airship(groundstation) {
       }
     }
   });
+  var new_gref = {
+    title: $("#new-gref-title").html(),
+    body: $("#new-gref-body").html(),
+  };
+
+  $("#new-gref").on('click', function() {
+    $("#new-gref-title").html(new_gref.title);
+    $("#new-gref-body").html(new_gref.body);
+    var modal = $("#new-gref-modal");
+    modal.modal();
+  });
+  $("#new-gref-cancel").on('click', function() {
+    $("#new-gref-modal").modal('hide');
+  });
+  $("#new-gref-create").on('click', function() {
+    $.ajax({
+      type: "POST",
+      url: groundstation.active_grefs.url,
+      data: {
+        title: $("#new-gref-title").html(),
+        body: $("#new-gref-body").html(),
+        protocol: "richo@psych0tik.net:airship:0.0.0",
+
+        user: groundstation.username
+
+      },
+      success: function(data, st, xhr) {
+        console.log("Successfully updated groundstation");
+      }
+    });
+  });
 }
 
 var Channel = Backbone.Model.extend();
