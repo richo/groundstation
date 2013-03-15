@@ -1,3 +1,31 @@
+function init_airship(groundstation) {
+  _.each(groundstation.channels.models, function(channel) {
+    new ChannelTab({
+      model: channel,
+        id: channel.attributes["name"]
+    });
+  });
+  rendered_gref_content = new RenderedGref({
+    model: rendered_gref
+  });
+  // Wire up user switching
+  // TODO Currently not stored because I haven't decided where it should live. PRobably git-config(5)
+
+  $("#current-user-name").html(groundstation.username);
+  $("#current-user-name").on('click', function() {
+    var username = prompt("Username for committing:");
+    if (username !== null) {
+      groundstation.username = username;
+      $("#current-user-name").html(groundstation.username);
+      try {
+        localStorage.setItem("airship.committer", username);
+      } catch (e) {
+        console.log("Not setting committer name in localStorage");
+      }
+    }
+  });
+}
+
 var groundstation = {};
 var Channel = Backbone.Model.extend();
 
