@@ -5,6 +5,8 @@ function Groundstation() {
   this.active_grefs = new Grefs();
 
   this.username = localStorage.getItem("airship.committer") || "Anonymous Coward";
+
+  this.renderers = {};
 }
 function init_airship(groundstation) {
   _.each(groundstation.channels.models, function(channel) {
@@ -179,16 +181,18 @@ var RenderedGref = Backbone.View.extend({
     var self = this;
     var content = this.model.attributes["content"];
     var root = this.model.attributes["root"];
-    var issue_renderer = null;
+    var renderer = null;
 
     $(this.$el).children().remove();
-    if (root.protocol.search("richo@psych0tik.net:github:") === 0) {
-      // Github issue
-      issue_renderer = create_github_update_object;
-    } else if (root.protocol.search("richo@psych0tik.net:jira:") === 0) {
-      // Jira is currently github compatible
-      issue_renderer = create_github_update_object;
-    } else {
+    renderer = (function() {
+      for (var renderer in groundstation.renderers) {
+        if (groundstation.renderers.hasOwnProperty(renderer)) {
+          if (root.protocol.search(renderer) === 0)
+            return groundstation.renderers[renderer];
+        }
+      }
+    })();
+    if (renderer === null) {
       console.log("Unhandled protocol: " + root.protocol);
       return this;
     }
@@ -201,7 +205,7 @@ var RenderedGref = Backbone.View.extend({
     })();
 
     _.each(content, function(item) {
-      var el = issue_renderer(item);
+      var el = renderer(item);
       el.setAttribute("id", item.hash);
       if (el) {
         self.el.appendChild(el);

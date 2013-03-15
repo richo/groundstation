@@ -6,7 +6,6 @@
     <script src="/static/backbone-0.9.9.js"></script>
     <script src="/static/bootstrap-dropdown.js"></script>
     <script src="/static/airship.js?bust={{current_time}}"></script>
-    <script src="/static/protocol/github.js?bust={{current_time}}"></script>
     <script src="/static/markdown.js"></script>
     <link rel="stylesheet" href="/static/bootstrap.css">
     <link rel="stylesheet" href="/static/groundstation.css">
@@ -18,6 +17,8 @@
         init_airship(groundstation);
       });
     </script>
+    <!-- For stupid reasons, load order matters. -->
+    <script src="/static/protocol/github.js?bust={{current_time}}"></script>
   </head>
   <body>
     <div class="navbar navbar-inverse">

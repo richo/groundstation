@@ -1,4 +1,4 @@
-function create_github_update_object(item) {
+groundstation.renderers["richo@psych0tik.net:github:"] = function (item) {
   var classFor = function(ev) {
     if (ev == "reopened")
       return "alert alert-success";
@@ -39,4 +39,4 @@ function create_github_update_object(item) {
     console.log("Unhandled node of type: " + item.type);
   }
   return el;
-}
+};
