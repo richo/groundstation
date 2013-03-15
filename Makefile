@@ -1,6 +1,6 @@
 all: proto
 
-.PHONY: proto
+.PHONY: proto test
 
 proto: groundstation/proto/gizmo_pb2.py \
 	groundstation/proto/git_object_pb2.py \
@@ -32,7 +32,7 @@ groundstation/objects/update_object_pb2.py: groundstation/objects/update_object.
 clean:
 	find ./ -iname "*.pyc" -delete
 
-_test:
-
-test: _test
+groundstation_test:
 	GROUNDSTATION_DEBUG=WARN python -m unittest discover test
+
+test: groundstation_test
