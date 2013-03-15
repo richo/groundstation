@@ -1,3 +1,11 @@
+function Groundstation() {
+  this.channels = new Channels();
+  this.channels.url = '/channels';
+
+  this.active_grefs = new Grefs();
+
+  this.username = localStorage.getItem("airship.committer") || "Anonymous Coward";
+}
 function init_airship(groundstation) {
   _.each(groundstation.channels.models, function(channel) {
     new ChannelTab({
@@ -26,24 +34,17 @@ function init_airship(groundstation) {
   });
 }
 
-var groundstation = {};
 var Channel = Backbone.Model.extend();
-
 var Channels = Backbone.Collection.extend({
   model: Channel
 });
 
-var Gref = Backbone.Model.extend();
 
+var Gref = Backbone.Model.extend();
 var Grefs = Backbone.Collection.extend({
   model: Gref
 });
 
-groundstation.channels = new Channels();
-groundstation.channels.url = '/channels';
-groundstation.username = localStorage.getItem("airship.committer") || "Anonymous Coward";
-
-groundstation.active_grefs = new Grefs();
 
 var GrefMenuItem = Backbone.View.extend({
   tagName: "li",
