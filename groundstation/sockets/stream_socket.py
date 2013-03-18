@@ -121,7 +121,13 @@ class StreamSocket(object):
             return payload
 
     def recv_to_buffer(self):
-        data = self.socket.recv(settings.DEFAULT_BUFSIZE)
+        try:
+            data = self.socket.recv(settings.DEFAULT_BUFSIZE)
+        except socket.error as e:
+            if e.errno == errno.ECONNRESET:
+                data = None
+            else:
+                raise e
         if not data:
             self.socket.close()
             raise SocketClosedException(self, self.peer)
