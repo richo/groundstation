@@ -43,9 +43,9 @@ class StreamSocket(object):
         payload = self.write_queue.pop()
         if isinstance(payload, str):
             data = self.serialize(payload)
-            data = ("%i%s%s" % (len(data), chr(0), data))
+            return "%i%s%s" % (len(data), chr(0), data)
         elif isinstance(payload, tuple):
-            data = payload[0]
+            return payload[0]
         else:
             raise Exception("Invalid type: %s" % (type(payload)))
 
