@@ -69,6 +69,7 @@ class StreamSocket(object):
                 break
             # Keep the unmolested buffer
             segment_length, _, payload_buffer = tmp_buffer.partition(chr(0))
+            assert _, "No NULL in payload_buffer"
             segment_length = int(segment_length)
             if len(payload_buffer) >= segment_length:
                 iterations += 1
