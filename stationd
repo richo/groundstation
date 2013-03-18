@@ -142,10 +142,16 @@ while True:
         handler_for(i)()
 
     for i in swrite:
-        if isinstance(i, PeerSocket) or isinstance(i, StreamClient):
+        if not (isinstance(i, PeerSocket) or isinstance(i, StreamClient)):
+            log.warn("%s wants to do IO" % (type(i)))
+            continue
+
+        try:
             i.send()
-        else:
-            log.warn("Something that isn't PeerSocket or StreamClient wants to do IO")
+        except SocketClosedException as e:
+            log.info("Removing %s from clients" % (str(e.peer)))
+            peer_sockets.remove(e.peer)
+
 
     # Deal with iterators last, this way if they queue up network stuff it'll be processed immediately.
     if station.has_ready_iterators():
