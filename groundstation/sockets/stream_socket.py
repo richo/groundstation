@@ -124,5 +124,5 @@ class StreamSocket(object):
         data = self.socket.recv(settings.DEFAULT_BUFSIZE)
         if not data:
             self.socket.close()
-            raise SocketClosedException(self)
+            raise SocketClosedException(self, self.peer)
         self.buffer = self.buffer + data

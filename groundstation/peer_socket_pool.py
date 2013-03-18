@@ -8,6 +8,13 @@ class PeerSocketPool(list):
     Correctly replies to PeerSocket in Pool
     """
 
+    def remove(self, other):
+        for idx, i in enumerate(self):
+            if i.peer == other:
+                return self.pop(idx)
+        raise AttributeError("%s has no attribute %s" %
+                    (type(self), repr(other)))
+
     def __contains__(self, other):
         for i in self:
             if i.peer == other:
