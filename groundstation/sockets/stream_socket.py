@@ -59,9 +59,15 @@ class StreamSocket(object):
                     # Put the remaining bytes back on the stack for the next
                     # run through the event loop
                     self.write_queue.append(data[idx:])
+                    if idx == 0:
+                        log.warn("Didn't send any data inside a send() call")
+                    else:
+                        log.warn("Send %i bytes" % idx)
+
                     return False
                 else:
                     raise
+        log.warn("sent all bytes")
 
 
     def has_data_ready(self):
