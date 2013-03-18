@@ -39,12 +39,22 @@ class StreamSocket(object):
             data = data.SerializeToString()
         self.write_queue.insert(0, data)
 
+    def _dequeue(self):
+        payload = self.write_queue.pop()
+        if isinstance(payload, str):
+            data = self.serialize(payload)
+            return "%i%s%s" % (len(data), chr(0), data)
+        elif isinstance(payload, tuple):
+            return payload[0]
+        else:
+            raise Exception("Invalid type: %s" % (type(payload)))
+
     def send(self):
         """Send some data that's presently in the queue"""
         assert self.has_data_ready(), "Attempt to send without data ready"
-        data = self.serialize(self.write_queue.pop())
+        data = self._dequeue()
         len_data = len(data)
-        data = ("%i%s%s" % (len_data, chr(0), data))
+
         log.debug("SEND %i bytes to %s" %
                 # XXX Ignore warnings, subclasses implement self.peer
                 (len_data, self.peer))
@@ -58,10 +68,11 @@ class StreamSocket(object):
                 if e.errno == errno.EWOULDBLOCK:
                     # Put the remaining bytes back on the stack for the next
                     # run through the event loop
-                    self.write_queue.append(data[idx:])
+                    self.write_queue.append((data[idx:],))
                     return False
                 else:
                     raise
+        return True
 
 
     def has_data_ready(self):
