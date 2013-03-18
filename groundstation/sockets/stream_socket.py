@@ -1,4 +1,5 @@
 import socket
+import errno
 from groundstation import settings
 from groundstation.transfer.response import Response
 from socket_closed_exception import SocketClosedException
@@ -51,7 +52,16 @@ class StreamSocket(object):
         # TODO Buffer this out to amke sure that we don't block.
         idx = 0
         while idx < len_data:
-            idx += self.socket.send(data[idx:])
+            try:
+                idx += self.socket.send(data[idx:])
+            except socket.error as e:
+                if e.errno == errno.EWOULDBLOCK:
+                    # Put the remaining bytes back on the stack for the next
+                    # run through the event loop
+                    self.write_queue.append(data[idx:])
+                    return False
+                else:
+                    raise
 
 
     def has_data_ready(self):
