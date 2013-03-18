@@ -29,5 +29,7 @@ class BroadcastAnnouncer(BroadcastSocket):
         except socket.error as e:
             if e.errno == 65:  # No route to host
                 raise BroadcastUnrouteable(e)
+            else:
+                raise e
         if transmitted != len(self.broadcast_payload):
             log.warning("ping wasn't successfully broadcast")
