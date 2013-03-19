@@ -97,7 +97,7 @@ class Gref(object):
                 return
             for tip in obj.parents:
                 _process(tip)
-                thread.insert(0, obj)
+            thread.insert(0, obj)
 
         for tip in self:
             tips.append(tip)
