@@ -33,3 +33,7 @@
   padding: 0px 5px;
   font-size: 10px;
 }
+
+#active-channel {
+  color: #cccccc;
+}
