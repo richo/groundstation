@@ -48,35 +48,12 @@ class GithubReadAdaptor(AbstractGithubAdaptor):
         else:
             gref = self.issue_gref(issue)
 
-        issue_thread = []
-        root_nodes = []
-        visited_nodes = set()
+        marshalled_gref = gref.marshall()
 
-        # TODO Big issues will smash the stack
-        def _process(node):
-            # Start at tips and walk backwards
-            log.debug("node: %s" % node)
-            obj = object_factory.hydrate_object(self.station.store[node].data)
-            if node in visited_nodes:
-                return
-            visited_nodes.add(node)
-            if isinstance(obj, RootObject):  # We've found a root
-                root_nodes.append(obj)
-                issue_thread.insert(0, obj)
-                return
-            for tip in obj.parents:
-                visited_nodes.add(node)
-                _process(tip)
-                issue_thread.insert(0, obj)
-
-        for tip in gref:
-            log.debug("Descending into %s" % (tip))
-            _process(tip)
-
-        assert len(root_nodes) == 1, \
+        assert len(marshalled_gref["roots"]) == 1, \
             "Anything other than one root node and you've got a problem"
 
-        return issue_thread
+        return marshalled_gref
 
 
 class GithubWriteAdaptor(AbstractGithubAdaptor):

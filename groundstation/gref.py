@@ -78,6 +78,38 @@ class Gref(object):
             this_iter.extend(tips_parents)
         return parents
 
+    def marshall(self):
+        thread = []
+        root_nodes = []
+        visited_nodes = set()
+        tips = []
+
+        # TODO Big issues will smash the stack
+        def _process(node):
+            # Start at tips and walk backwards
+            log.debug("node: %s" % node)
+            obj = object_factory.hydrate_object(self.store[node].data)
+            if node in visited_nodes:
+                return
+            visited_nodes.add(node)
+            if isinstance(obj, RootObject):  # We've found a root
+                root_nodes.append(obj)
+                return
+            for tip in obj.parents:
+                visited_nodes.add(node)
+                _process(tip)
+                thread.insert(0, obj)
+
+        for tip in self:
+            tips.append(tip)
+            log.debug("Descending into %s" % (tip))
+            _process(tip)
+        return {
+                "thread": thread,
+                "roots": root_nodes,
+                "tips": tips
+                }
+
     def as_dict(self):
         return {
                 "channel": self.channel,

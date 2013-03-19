@@ -159,7 +159,7 @@ function buildCommentBox(div, model) {
         url: model.url,
         data: {
             body: input.innerText,
-            parents: JSON.stringify([_.last(model.attributes.content).hash]),
+            parents: JSON.stringify(model.attributes["tips"]),
             user: groundstation.username
 
         },
