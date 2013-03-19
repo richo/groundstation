@@ -110,7 +110,6 @@ class Gref(object):
                 "tips": tips
                 }
 
-
     def as_dict(self):
         return {
                 "channel": self.channel,
