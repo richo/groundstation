@@ -86,17 +86,16 @@ class Gref(object):
 
         # TODO Big issues will smash the stack
         def _process(node):
-            # Start at tips and walk backwards
-            log.debug("node: %s" % node)
-            obj = object_factory.hydrate_object(self.store[node].data)
             if node in visited_nodes:
+                log.warn("Bailing on visited node: %s" % (node))
                 return
             visited_nodes.add(node)
+
+            obj = object_factory.hydrate_object(self.store[node].data)
             if isinstance(obj, RootObject):  # We've found a root
                 root_nodes.append(obj)
                 return
             for tip in obj.parents:
-                visited_nodes.add(node)
                 _process(tip)
                 thread.insert(0, obj)
 
