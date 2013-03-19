@@ -35,7 +35,7 @@ already, everything that ships with groundstation will be released with
 development
 -----------
 
-groundstation uses [babashka][3] for managing it's dependencies. If you have it installed, you should be able to do something like:
+groundstation uses [babashka][3] for managing its dependencies. If you have it installed, you should be able to do something like:
 
 `babashka groundstation_dev` and wind up with a working environment. Maybe.
 
