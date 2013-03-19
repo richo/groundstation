@@ -48,25 +48,26 @@ class GithubReadAdaptor(AbstractGithubAdaptor):
         else:
             gref = self.issue_gref(issue)
 
-        visited_nodes = []
+        issue_thread = []
         root_nodes = []
-        issue_thread = []  # We'll treat this as a stack and pop the events off
-                           # int he right order
+        visited_nodes = set()
 
-        # Walk the tips backwards. To do this right, we should have kept
-        # timestamps and used that for ordering
+        # TODO Big issues will smash the stack
         def _process(node):
-            if node not in visited_nodes:
-                visited_nodes.append(node)
-                log.debug("node: %s" % node)
-                obj = object_factory.hydrate_object(self.station.store[node].data)
-                if isinstance(obj, RootObject): # We've reached the back of this tree
-                    root_nodes.append(obj)
-                    return
-                issue_thread.append(obj)
-                for tip in obj.parents:
-                    log.debug("Tip: %s" % tip)
-                    _process(tip)
+            # Start at tips and walk backwards
+            log.debug("node: %s" % node)
+            obj = object_factory.hydrate_object(self.station.store[node].data)
+            if node in visited_nodes:
+                return
+            visited_nodes.add(node)
+            if isinstance(obj, RootObject):  # We've found a root
+                root_nodes.append(obj)
+                issue_thread.insert(0, obj)
+                return
+            for tip in obj.parents:
+                visited_nodes.add(node)
+                _process(tip)
+                issue_thread.insert(0, obj)
 
         for tip in gref:
             log.debug("Descending into %s" % (tip))
@@ -74,8 +75,6 @@ class GithubReadAdaptor(AbstractGithubAdaptor):
 
         assert len(root_nodes) == 1, \
             "Anything other than one root node and you've got a problem"
-
-        issue_thread.append(root_nodes.pop())
 
         return issue_thread
 
