@@ -7,6 +7,8 @@ function Groundstation() {
   this.username = localStorage.getItem("airship.committer") || "Anonymous Coward";
 
   this.renderers = {};
+
+  this.plumbers = [];
 }
 function init_airship(groundstation) {
   _.each(groundstation.channels.models, function(channel) {
@@ -47,27 +49,6 @@ var Grefs = Backbone.Collection.extend({
   model: Gref
 });
 
-var get_anchor = (function (){
-    var anchors = {
-        0: {
-            connector:"StateMachine",
-            paintStyle:{lineWidth:3,strokeStyle:"#056"},
-            endpoint:"Blank",
-            anchor:[[1, 0, 1, 0], [1, 1, 1, 0]],
-            overlays:[ ["PlainArrow", {location:1, width:7, length:3} ]]
-            },
-        1: {
-            connector:"StateMachine",
-            paintStyle:{lineWidth:3,strokeStyle:"#056"},
-            endpoint:"Blank",
-            anchor:[[0, 0, 1, 0], [0, 1, 1, 0]],
-            overlays:[ ["PlainArrow", {location:1, width:7, length:3} ]]
-            }
-    };
-    return function(side) {
-        return anchors[side % 2];
-    };
-})();
 
 var GrefMenuItem = Backbone.View.extend({
   tagName: "li",
@@ -234,29 +215,10 @@ var RenderedGref = Backbone.View.extend({
         self.el.appendChild(el);
       }
     });
-
-    var links = {};
-    var side = 0;
-    _.each(content, function(item) {
-      _.each(item.parents, function(parent_id) {
-        if (links[parent_id] === undefined)
-          links[parent_id] = [parent_id];
-        else {
-          links[parent_id].push(parent_id);
-          side++;
-        }
-
-        if ($("#" + parent_id).length > 0) {
-          console.log("Creating links");
-          item.connections.push(jsPlumb.connect({
-            source:item.hash,
-            target:parent_id
-          }, get_anchor(side)));
-        } else {
-          console.log("Not creating links, pretty sure it's a root node");
-        }
-      });
+    _.each(groundstation.plumbers, function(plumber) {
+        plumber(content);
     });
+
     buildCommentBox(self.el, self.model);
     return this;
   },
