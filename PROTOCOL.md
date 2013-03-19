@@ -59,7 +59,7 @@ Protocol Specification for groundstation
 
 ### Request Types
 
-Currently supported are
+Currently supported are:
 
 #### LISTALLOBJECTS
 
