@@ -87,7 +87,7 @@ class Gref(object):
         # TODO Big issues will smash the stack
         def _process(node):
             if node in visited_nodes:
-                log.warn("Bailing on visited node: %s" % (node))
+                log.debug("Bailing on visited node: %s" % (node))
                 return
             visited_nodes.add(node)
 
