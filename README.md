@@ -16,8 +16,8 @@ pygit2
 groundstation uses pygit2 under the hood for its git interactions, and some
 features that it depends on have not landed in a stable release yet.
 
-For this reason, you'll need to build and install the latest [libgit2][1] and
-[pygit2][2] from source.
+For this reason, you'll need to build and install the latest [libgit2][1] from
+source.
 
 protocol support
 ----------------
@@ -43,6 +43,13 @@ groundstation uses [babashka][3] for managing its dependencies. If you have it i
 2. `pip install -r requirements.txt`
 3. ???????
 4. profit!
+
+If not, you need:
+
+1. libgit2 from source. (OSX `brew install --HEAD libgit2`)
+2. groundstations's requirements, (`pip install -r requirements`).
+
+You probably want to install those requirements in a virtualenv.
 
 You'll almost certainly want to have a read of the [hacking document](HACKING.md),
 and checkout the other [misc hacking docs](HACKING/).
