@@ -37,11 +37,13 @@ function init_airship(groundstation) {
   var new_gref = {
     title: $("#new-gref-title").html(),
     body: $("#new-gref-body").html(),
+    name: $("#new-gref-name").html()
   };
 
   $("#new-gref").on('click', function() {
     $("#new-gref-title").html(new_gref.title);
     $("#new-gref-body").html(new_gref.body);
+    $("#new-gref-name").html(new_gref.name);
     var modal = $("#new-gref-modal");
     modal.modal();
   });
@@ -55,6 +57,7 @@ function init_airship(groundstation) {
       data: {
         title: $("#new-gref-title").html(),
         body: $("#new-gref-body").html(),
+        name: $("#new-gref-name").html(),
         protocol: "richo@psych0tik.net:airship:0.0.0",
 
         user: groundstation.username
