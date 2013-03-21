@@ -1,17 +1,14 @@
+import base_object
 import update_object_pb2
 
-class UpdateObject(object):
+
+class UpdateObject(base_object.BaseObject):
     data_members = ["parents", "data"]
+
     def __init__(self, parents, data):
         self.parents = parents
         self.data = data
         self._sha1 = None
-
-    @property
-    def sha1(self):
-        if self._sha1:
-            return self._sha1
-        # XXX Calculate sha1 of this object
 
     @staticmethod
     def from_object(obj):

@@ -1,7 +1,8 @@
+import base_object
 import root_object_pb2
 
 
-class RootObject(object):
+class RootObject(base_object.BaseObject):
     data_members = ["id", "channel", "protocol"]
 
     def __init__(self, id, channel, protocol):
@@ -9,12 +10,6 @@ class RootObject(object):
         self.channel = channel
         self.protocol = protocol
         self._sha1 = None
-
-    @property
-    def sha1(self):
-        if self._sha1:
-            return self._sha1
-        # XXX Calculate sha1 of this object
 
     @staticmethod
     def from_object(obj):

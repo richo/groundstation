@@ -25,3 +25,22 @@ class TestGrefMarshall(store_fixture.StoreTestCase):
 
         for i in objects:
             self.assertIn(i, marshalled["tips"])
+
+    def test_marshalls_roots(self):
+        gref = Gref(self.repo, "testchannel", "test_write_root")
+        roots = []
+        for i in xrange(5):
+            root = root_object("test", "test_channel", "test%i" % i)
+            root_oid = self.repo.create_blob(root.as_object())
+            root.sha1 = root_oid
+            roots.append(root_oid)
+        # Create an update object for valid tip
+        update = update_object("test %i" % i, roots)
+        update_oid = self.repo.create_blob(update.as_object())
+        gref.write_tip(update_oid, "")
+
+        marshalled = gref.marshall()
+        root_hashes = [i.sha1 for i in marshalled["roots"]]
+
+        for i in roots:
+            self.assertIn(i, root_hashes)
