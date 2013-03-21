@@ -79,6 +79,14 @@ class Gref(object):
         return parents
 
     def marshall(self):
+        """Marshalls the gref into something renderable:
+        {
+            "thread": An ordered thread of UpdateObjects. Ordering is
+                      arbitraryish.
+            "roots": The root nodes of this gref.
+            "tips": The string names of the tips used to marshall
+        }
+        """
         thread = []
         root_nodes = []
         visited_nodes = set()
