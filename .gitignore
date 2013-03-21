@@ -1,1 +1,4 @@
 /env
+/groundstation.egg-info
+/.coverage
+/dist
