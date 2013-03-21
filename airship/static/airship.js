@@ -58,7 +58,7 @@ function init_airship(groundstation) {
         title: $("#new-gref-title").html(),
         body: $("#new-gref-body").html(),
         name: $("#new-gref-name").html(),
-        protocol: "richo@psych0tik.net:airship:0.0.0",
+        protocol: $("#new-gref-protocol").html(),
 
         user: groundstation.username
 
