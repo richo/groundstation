@@ -35,4 +35,7 @@ clean:
 groundstation_test:
 	GROUNDSTATION_DEBUG=WARN python -m unittest discover test
 
-test: groundstation_test
+airship_test:
+	cd airship; ../node_modules/mocha/bin/mocha
+
+test: groundstation_test airship_test
