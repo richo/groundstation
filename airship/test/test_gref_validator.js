@@ -5,7 +5,7 @@ var groundstation = {
 };
 
 // Oh yes.
-eval(fs.readFileSync("static/airship-gref-validation.js", {encoding: 'utf8'}));
+eval(fs.readFileSync("static/airship-gref-validation.js", {encoding: 'ascii'}));
 
 describe('groundstation.validators.gref', function(){
   it('should return false if spaces in name', function(){
