@@ -12,14 +12,14 @@
     <title>airship.js</title>
     <script>
       var groundstation = new Groundstation();
-      $(document).ready(function() {
-        groundstation.channels.reset({{channels_json|safe}});
-        init_airship(groundstation);
-      });
+      groundstation.channels.reset({{channels_json|safe}});
     </script>
     <!-- For stupid reasons, load order matters. -->
     <script src="/static/protocol/github.js?bust={{current_time}}"></script>
     <script src="/static/protocol/jira.js?bust={{current_time}}"></script>
+    <!-- init the app -->
+    <script data-main="/static/main.js" src="static/require.js"></script>
+
   </head>
   <body>
     <div class="navbar navbar-inverse">
