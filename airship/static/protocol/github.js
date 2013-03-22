@@ -38,5 +38,11 @@ groundstation.renderers["richo@psych0tik.net:github:"] = function (item) {
   } else {
     console.log("Unhandled node of type: " + item.type);
   }
+  if (el !== undefined) {
+    // TODO This needs to be generalised so it's not purely a github concern.
+    el.setAttribute("id", item.hash);
+    // Draw the graph, assume it's parents have already been rendered by this point.
+    item.connections = [];
+  }
   return el;
 };

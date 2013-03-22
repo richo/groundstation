@@ -7,6 +7,8 @@ function Groundstation() {
   this.username = localStorage.getItem("airship.committer") || "Anonymous Coward";
 
   this.renderers = {};
+
+  this.plumbers = [];
 }
 function init_airship(groundstation) {
   _.each(groundstation.channels.models, function(channel) {
@@ -213,6 +215,10 @@ var RenderedGref = Backbone.View.extend({
         self.el.appendChild(el);
       }
     });
+    _.each(groundstation.plumbers, function(plumber) {
+        plumber(content);
+    });
+
     buildCommentBox(self.el, self.model);
     return this;
   },
