@@ -39,6 +39,7 @@ function init_airship(groundstation) {
     body: $("#new-gref-body").html(),
     name: $("#new-gref-name").html()
   };
+  var new_gref_validator = groundstation.validators.gref(name, title, body);
 
   $("#new-gref").on('click', function() {
     $("#new-gref-title").html(new_gref.title);

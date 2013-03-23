@@ -8,8 +8,9 @@ var groundstation = {
 eval(fs.readFileSync("static/airship-gref-validation.js").toString());
 
 describe('groundstation.validators.gref', function(){
+  var gref_validator = groundstation.validators.gref("defaultname", "defaulttitle", "defaultbody");
   describe('name', function(){
-    var validator = groundstation.validators.gref.valid_name_p;
+    var validator = gref_validator.valid_name_p;
     it('should return false for non strings', function(){
       assert.equal(false, validator(123));
     });
@@ -22,23 +23,32 @@ describe('groundstation.validators.gref', function(){
     it('should return true for short valid names', function(){
       assert.equal(true, validator("buttslol"));
     });
+    it('should return false for the default name', function(){
+      assert.equal(false, validator("defaultname"));
+    });
   });
   describe('title', function(){
-    var validator = groundstation.validators.gref.valid_title_p;
+    var validator = gref_validator.valid_title_p;
     it('should return false for non strings', function(){
       assert.equal(false, validator(123));
     });
     it ('should return false for empty strings', function(){
       assert.equal(false, validator(""));
+    });
+    it('should return false for the default title', function(){
+      assert.equal(false, validator("defaulttitle"));
     });
   });
   describe('body', function(){
-    var validator = groundstation.validators.gref.valid_body_p;
+    var validator = gref_validator.valid_body_p;
     it('should return false for non strings', function(){
       assert.equal(false, validator(123));
     });
     it ('should return false for empty strings', function(){
       assert.equal(false, validator(""));
+    });
+    it('should return false for the default body', function(){
+      assert.equal(false, validator("defaultbody"));
     });
   });
 });
