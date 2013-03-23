@@ -39,4 +39,7 @@ class RSAAdaptor(object):
         keyset = a dict of identifiers to public keys to test signatures
                  against
         """
-        pass
+        self.keyset = self._render_keyset(keyset)
+
+    def _render_keyset(self, keyset):
+        return {i: convert_pubkey(keyset[i]) for i in keyset}
