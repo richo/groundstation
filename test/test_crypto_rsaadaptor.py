@@ -2,7 +2,8 @@ import unittest
 from Crypto.PublicKey import RSA
 
 import crypto_fixture
-from groundstation.crypto.rsa import RSAAdaptor, convert_pubkey
+from groundstation.crypto.rsa import RSAAdaptor
+from groundstation.crypto.rsa import convert_privkey, convert_pubkey
 
 
 valid_keyset = {
@@ -14,6 +15,12 @@ class CryptoRSAAdaptorTestCase(unittest.TestCase):
     def test_converts_pubkey_to_pem(self):
         key = convert_pubkey(crypto_fixture.valid_pubkey)
         self.assertIsInstance(key, RSA._RSAobj)
+        self.assertFalse(key.has_private())
+
+    def test_convertes_privkey_to_pem(self):
+        key = convert_privkey(crypto_fixture.valid_key)
+        self.assertIsInstance(key, RSA._RSAobj)
+        self.assertTrue(key.has_private())
 
     def test_barfs_on_invalid_keys(self):
         self.assertRaises(TypeError, convert_pubkey, crypto_fixture.invalid_pubkey)

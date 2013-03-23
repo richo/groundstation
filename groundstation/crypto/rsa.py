@@ -32,6 +32,13 @@ def convert_pubkey(key):
 
     return RSA.construct((long(exponent), long(numeric)))
 
+
+def convert_privkey(key):
+    pkey = RSA.importKey(key)
+    assert pkey.has_private()
+    return pkey
+
+
 class RSAAdaptor(object):
     def __init__(self, keyset):
         """Initialize an RSAAdaptor
