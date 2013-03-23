@@ -13,7 +13,7 @@ function init_airship(groundstation) {
   _.each(groundstation.channels.models, function(channel) {
     new ChannelTab({
       model: channel,
-        id: channel.attributes["name"]
+      id: channel.attributes["name"]
     });
   });
   rendered_gref_content = new RenderedGref({
@@ -60,7 +60,7 @@ function init_airship(groundstation) {
 
     if (new_gref_validator(name, title, body)) {
       $.ajax({
-        type: "POST",
+        type: "PUT",
         url: groundstation.active_grefs.url,
         data: {
           title: title,

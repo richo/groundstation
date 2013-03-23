@@ -14,6 +14,7 @@ from groundstation.gref import Gref
 import pygit2
 from groundstation.utils import oid2hex
 
+from groundstation.objects.root_object import RootObject
 from groundstation.objects.update_object import UpdateObject
 
 def jsonate(obj, escaped):
@@ -89,5 +90,37 @@ def make_airship(station):
         oid = station.write(update_object.as_object())
         station.update_gref(gref, [oid], parents)
         return jsonate({"response": "ok"}, False)
+
+    @app.route("/grefs/<channel>", methods=['PUT'])
+    def create_gref(channel):
+        def _write_object(obj):
+            return station.write(obj.as_object())
+
+        name = request.form["name"]
+        protocol = request.form["protocol"]
+        user = request.form["user"]
+        body = request.form["body"]
+        title = request.form["title"]
+        gref = Gref(station.store, channel, name)
+        root = RootObject(name, channel, protocol)
+        root_oid = _write_object(root)
+
+        _title = UpdateObject([root_oid], json.dumps({
+            "type": "title",
+            "id": None,
+            "body": title,
+            "user": user
+            }))
+        title_oid = _write_object(_title)
+
+        _body = UpdateObject([title_oid], json.dumps({
+            "type": "body",
+            "id": None,
+            "body": body
+            }))
+        body_oid = _write_object(_body)
+
+        station.update_gref(gref, [body_oid], [])
+        return ""
 
     return app
