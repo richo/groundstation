@@ -1,3 +1,11 @@
+"""Groundstation's RSA module
+
+We make sweeping assumptions about how we can verify data, namely that we can
+ignore hashing algorithms and length extension attacks. Where it's reasonable
+we assert that you not only have a 40 character SHA1 hash, but also one that
+points to a valid object
+"""
+
 import sys
 import base64
 import struct
