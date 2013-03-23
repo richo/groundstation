@@ -2,7 +2,7 @@ import unittest
 from Crypto.PublicKey import RSA
 
 import crypto_fixture
-from groundstation.crypto.rsa import RSAAdaptor
+from groundstation.crypto.rsa import RSAAdaptor, RSAPrivateAdaptor
 from groundstation.crypto.rsa import convert_privkey, convert_pubkey
 
 
@@ -33,3 +33,9 @@ class CryptoRSAAdaptorTestCase(unittest.TestCase):
             "key4": crypto_fixture.valid_pubkey
             })
         self.assertIsInstance(adaptor, RSAAdaptor)
+
+    def test_signs_data(self):
+        adaptor = RSAPrivateAdaptor(crypto_fixture.valid_key)
+        signature = adaptor.sign(crypto_fixture.sample_data)
+        self.assertEqual(signature[0],
+                crypto_fixture.signatures["sample_data"]["valid_key"])

@@ -58,3 +58,12 @@ class RSAAdaptor(object):
 
     def _render_keyset(self, keyset):
         return {i: convert_pubkey(keyset[i]) for i in keyset}
+
+
+class RSAPrivateAdaptor(object):
+    def __init__(self, key):
+        self.key = convert_privkey(key)
+
+    def sign(self, data):
+        assert len(data) == 40, "We only sign sha1 hashes"
+        return self.key.sign(data, None)
