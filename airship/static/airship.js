@@ -40,7 +40,7 @@ function init_airship(groundstation) {
     body: $("#new-gref-body").html(),
     name: $("#new-gref-name").html()
   };
-  var new_gref_validator = groundstation.validators.gref(name, title, body);
+  var new_gref_validator = groundstation.validators.gref(new_gref.name, new_gref.title, new_gref.body);
 
   $("#new-gref").on('click', function() {
     $("#new-gref-title").html(new_gref.title);
@@ -53,22 +53,32 @@ function init_airship(groundstation) {
     $("#new-gref-modal").modal('hide');
   });
   $("#new-gref-create").on('click', function() {
-    $.ajax({
-      type: "POST",
-      url: groundstation.active_grefs.url,
-      data: {
-        title: $("#new-gref-title").html(),
-        body: $("#new-gref-body").html(),
-        name: $("#new-gref-name").html(),
-        protocol: $("#new-gref-protocol").html(),
+    var title = $("#new-gref-title").html(),
+        body = $("#new-gref-body").html(),
+        name = $("#new-gref-name").html(),
+        protocol = $("#new-gref-protocol").html();
 
-        user: groundstation.username
+    if (new_gref_validator(name, title, body)) {
+      $.ajax({
+        type: "POST",
+        url: groundstation.active_grefs.url,
+        data: {
+          title: title,
+          body: body,
+          name: name,
+          protocol: protocol,
 
-      },
-      success: function(data, st, xhr) {
-        console.log("Successfully updated groundstation");
-      }
-    });
+          user: groundstation.username
+
+        },
+        success: function(data, st, xhr) {
+          console.log("Successfully updated groundstation");
+        }
+      });
+    } else {
+      // TODO Actually give the user something to go with
+      alert("Validation failed!");
+    }
   });
 }
 
