@@ -39,3 +39,10 @@ class CryptoRSAAdaptorTestCase(unittest.TestCase):
         signature = adaptor.sign(crypto_fixture.sample_data)
         self.assertEqual(signature,
                 crypto_fixture.signatures["sample_data"]["valid_key"])
+
+    def test_verifies_data(self):
+        adaptor = RSAAdaptor({"key1": crypto_fixture.valid_pubkey})
+        self.assertEqual("key1", adaptor.verify(
+                crypto_fixture.sample_data,
+                crypto_fixture.signatures["sample_data"]["valid_key"]
+                ))

@@ -56,6 +56,14 @@ class RSAAdaptor(object):
         """
         self.keyset = self._render_keyset(keyset)
 
+    def verify(self, data, signature):
+        assert len(data) == 40, "We only sign sha1 hashes"
+        for keyname in self.keyset:
+            key = self.keyset[keyname]
+            if key.verify(data, signature):
+                return keyname
+        return False
+
     def _render_keyset(self, keyset):
         return {i: convert_pubkey(keyset[i]) for i in keyset}
 
