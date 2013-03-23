@@ -38,7 +38,7 @@ def convert_pubkey(key):
     exponent = materialise_exponent(parts[1])
     numeric = materialise_numeric(parts[2])
 
-    return RSA.construct((long(exponent), long(numeric)))
+    return RSA.construct((long(numeric), long(exponent)))
 
 
 def convert_privkey(key):
