@@ -72,7 +72,8 @@ function init_airship(groundstation) {
 
         },
         success: function(data, st, xhr) {
-          console.log("Successfully updated groundstation");
+          $("#new-gref-modal").modal('hide');
+          groundstation.active_grefs.redraw();
         }
       });
     } else {
@@ -154,18 +155,21 @@ var ChannelTab = Backbone.View.extend({
     var self = this;
     var current_grefs = $("#current-grefs")[0];
     groundstation.active_grefs.url = '/grefs/' + this.model.attributes["name"];
-    groundstation.active_grefs.fetch({
-      success: function(collection, response, options) {
-        $("#active-channel").html(self.model.attributes["name"]);
-        $("#gref-container").show();
-        _.each(visible_grefs, function(el) { el.remove(); });
-        _.each(collection.models, function(gref) {
-          visible_grefs.push(new GrefMenuItem({
-            model: gref
-          }));
-        });
-      }
-    });
+    groundstation.active_grefs.redraw = function() {
+      groundstation.active_grefs.fetch({
+        success: function(collection, response, options) {
+          $("#active-channel").html(self.model.attributes["name"]);
+          $("#gref-container").show();
+          _.each(visible_grefs, function(el) { el.remove(); });
+          _.each(collection.models, function(gref) {
+            visible_grefs.push(new GrefMenuItem({
+              model: gref
+            }));
+          });
+        }
+      });
+    };
+    groundstation.active_grefs.redraw();
   },
 
   events: {
