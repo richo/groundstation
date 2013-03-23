@@ -7,6 +7,8 @@ groundstation.validators.gref = (function() {
   func.valid_name_p = function(name) {
     if ((typeof name) !== 'string')
       return false;
+    if (name.length === 0)
+      return false;
     if (name.indexOf(" ") >= 0)
       return false;
     return true;
@@ -14,11 +16,15 @@ groundstation.validators.gref = (function() {
   func.valid_title_p = function(title) {
     if ((typeof title) !== 'string')
       return false;
+    if (title.length === 0)
+      return false;
     // TODO
     return true;
   };
   func.valid_body_p = function(body) {
     if ((typeof body) !== 'string')
+      return false;
+    if (body.length === 0)
       return false;
     // TODO
     return true;

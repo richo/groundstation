@@ -16,6 +16,9 @@ describe('groundstation.validators.gref', function(){
     it('should return false if spaces in name', function(){
       assert.equal(false, validator("butts lol"));
     });
+    it ('should return false for empty strings', function(){
+      assert.equal(false, validator(""));
+    });
     it('should return true for short valid names', function(){
       assert.equal(true, validator("buttslol"));
     });
@@ -25,11 +28,17 @@ describe('groundstation.validators.gref', function(){
     it('should return false for non strings', function(){
       assert.equal(false, validator(123));
     });
+    it ('should return false for empty strings', function(){
+      assert.equal(false, validator(""));
+    });
   });
   describe('body', function(){
     var validator = groundstation.validators.gref.valid_body_p;
     it('should return false for non strings', function(){
       assert.equal(false, validator(123));
+    });
+    it ('should return false for empty strings', function(){
+      assert.equal(false, validator(""));
     });
   });
 });
