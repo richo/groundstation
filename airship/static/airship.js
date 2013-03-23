@@ -7,6 +7,7 @@ function Groundstation() {
   this.username = localStorage.getItem("airship.committer") || "Anonymous Coward";
 
   this.renderers = {};
+  this.validators = {};
 }
 function init_airship(groundstation) {
   _.each(groundstation.channels.models, function(channel) {
