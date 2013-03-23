@@ -37,5 +37,5 @@ class CryptoRSAAdaptorTestCase(unittest.TestCase):
     def test_signs_data(self):
         adaptor = RSAPrivateAdaptor(crypto_fixture.valid_key)
         signature = adaptor.sign(crypto_fixture.sample_data)
-        self.assertEqual(signature[0],
+        self.assertEqual(signature,
                 crypto_fixture.signatures["sample_data"]["valid_key"])
