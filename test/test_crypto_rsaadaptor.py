@@ -4,6 +4,7 @@ from Crypto.PublicKey import RSA
 import crypto_fixture
 from groundstation.crypto.rsa import RSAAdaptor, RSAPrivateAdaptor
 from groundstation.crypto.rsa import convert_privkey, convert_pubkey
+from groundstation.crypto.rsa import materialise_exponent, materialise_numeric
 
 
 valid_keyset = {
@@ -46,3 +47,9 @@ class CryptoRSAAdaptorTestCase(unittest.TestCase):
                 crypto_fixture.sample_data,
                 crypto_fixture.signatures["sample_data"]["valid_key"]
                 ))
+
+    def test_materialise_helpers(self):
+        self.assertEqual(crypto_fixture.materialize_out,
+                materialise_exponent(crypto_fixture.materialize_in))
+        self.assertEqual(crypto_fixture.materialize_out,
+                materialise_numeric(crypto_fixture.materialize_in))
