@@ -48,6 +48,13 @@ class CryptoRSAAdaptorTestCase(unittest.TestCase):
                 crypto_fixture.signatures["sample_data"]["valid_key"]
                 ))
 
+    def test_returns_false_for_unverified_data(self):
+        adaptor = RSAAdaptor({"key1": crypto_fixture.passphrase_pubkey})
+        self.assertFalse(adaptor.verify(
+                crypto_fixture.sample_data,
+                crypto_fixture.signatures["sample_data"]["valid_key"]
+                ))
+
     def test_materialise_helpers(self):
         self.assertEqual(crypto_fixture.materialize_out,
                 materialise_exponent(crypto_fixture.materialize_in))
