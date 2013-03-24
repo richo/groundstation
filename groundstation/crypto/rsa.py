@@ -14,11 +14,11 @@ from Crypto.PublicKey import RSA
 
 
 def materialise_exponent(e):
-    return eval('0x' + ''.join(['%02X' % struct.unpack('B', x)[0] for x in e]))
+    return int(''.join(['%02X' % struct.unpack('B', x)[0] for x in e]), 16)
 
 
 def materialise_numeric(n):
-    return eval('0x' + ''.join(['%02X' % struct.unpack('B', x)[0] for x in n]))
+    return int(''.join(['%02X' % struct.unpack('B', x)[0] for x in n]), 16)
 
 
 def convert_pubkey(key):
