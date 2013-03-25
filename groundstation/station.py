@@ -32,6 +32,9 @@ class Station(object):
         self.iterators = []
         self.deferreds = []
 
+    def get_request(self, request_id):
+        return self.registry[request_id]
+
     def register_request(self, request):
         log.debug("Registering request %s" % (str(request.id)))
         self.registry.register(request)

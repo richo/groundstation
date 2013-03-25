@@ -18,6 +18,11 @@ def MockTERMINATE():
     pass
 
 
+class MockRequest(object):
+    def __init__(self, id):
+        self.id = id
+
+
 class MockStation(object):
     def __init__(self, **kwargs):
         self.tmpdir = tempfile.mkdtemp()

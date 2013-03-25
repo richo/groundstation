@@ -1,6 +1,6 @@
 import pygit2
 from groundstation.utils import oid2hex
-from handler_fixture import StationHandlerTestCase
+from handler_fixture import StationHandlerTestCase, MockRequest
 
 from groundstation.proto.git_object_pb2 import GitObject
 
@@ -9,8 +9,16 @@ from groundstation.transfer.response_handlers import handle_transfer
 
 class TestHandlerTransfer(StationHandlerTestCase):
     def test_transfer_object(self):
+        self.station.set_real_id(True)
+
         object_body = "foo bar baz butts lol"
         oid = pygit2.hash(object_body)
+
+        req = MockRequest(self.station.id)
+        req.payload = oid
+
+        self.station.station.registry.register(req)
+
         git_pb = GitObject()
         git_pb.data = object_body
         git_pb.type = pygit2.GIT_OBJ_BLOB
