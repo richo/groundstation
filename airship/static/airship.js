@@ -7,12 +7,13 @@ function Groundstation() {
   this.username = localStorage.getItem("airship.committer") || "Anonymous Coward";
 
   this.renderers = {};
+  this.validators = {};
 }
 function init_airship(groundstation) {
   _.each(groundstation.channels.models, function(channel) {
     new ChannelTab({
       model: channel,
-        id: channel.attributes["name"]
+      id: channel.attributes["name"]
     });
   });
   rendered_gref_content = new RenderedGref({
@@ -32,6 +33,52 @@ function init_airship(groundstation) {
       } catch (e) {
         console.log("Not setting committer name in localStorage");
       }
+    }
+  });
+  var new_gref = {
+    title: $("#new-gref-title").html(),
+    body: $("#new-gref-body").html(),
+    name: $("#new-gref-name").html()
+  };
+  var new_gref_validator = groundstation.validators.gref(new_gref.name, new_gref.title, new_gref.body);
+
+  $("#new-gref").on('click', function() {
+    $("#new-gref-title").html(new_gref.title);
+    $("#new-gref-body").html(new_gref.body);
+    $("#new-gref-name").html(new_gref.name);
+    var modal = $("#new-gref-modal");
+    modal.modal();
+  });
+  $("#new-gref-cancel").on('click', function() {
+    $("#new-gref-modal").modal('hide');
+  });
+  $("#new-gref-create").on('click', function() {
+    var title = $("#new-gref-title").html(),
+        body = $("#new-gref-body").html(),
+        name = $("#new-gref-name").html(),
+        protocol = $("#new-gref-protocol").html();
+
+    if (new_gref_validator(name, title, body)) {
+      $.ajax({
+        type: "PUT",
+        url: groundstation.active_grefs.url,
+        data: {
+          title: title,
+          body: body,
+          name: name,
+          protocol: protocol,
+
+          user: groundstation.username
+
+        },
+        success: function(data, st, xhr) {
+          $("#new-gref-modal").modal('hide');
+          groundstation.active_grefs.redraw();
+        }
+      });
+    } else {
+      // TODO Actually give the user something to go with
+      alert("Validation failed!");
     }
   });
 }
@@ -108,18 +155,21 @@ var ChannelTab = Backbone.View.extend({
     var self = this;
     var current_grefs = $("#current-grefs")[0];
     groundstation.active_grefs.url = '/grefs/' + this.model.attributes["name"];
-    groundstation.active_grefs.fetch({
-      success: function(collection, response, options) {
-        $("#active-channel").html(self.model.attributes["name"]);
-        $("#gref-container").show();
-        _.each(visible_grefs, function(el) { el.remove(); });
-        _.each(collection.models, function(gref) {
-          visible_grefs.push(new GrefMenuItem({
-            model: gref
-          }));
-        });
-      }
-    });
+    groundstation.active_grefs.redraw = function() {
+      groundstation.active_grefs.fetch({
+        success: function(collection, response, options) {
+          $("#active-channel").html(self.model.attributes["name"]);
+          $("#gref-container").show();
+          _.each(visible_grefs, function(el) { el.remove(); });
+          _.each(collection.models, function(gref) {
+            visible_grefs.push(new GrefMenuItem({
+              model: gref
+            }));
+          });
+        }
+      });
+    };
+    groundstation.active_grefs.redraw();
   },
 
   events: {

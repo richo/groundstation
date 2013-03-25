@@ -5,6 +5,7 @@
     <script src="/static/underscore-1.4.4.js"></script>
     <script src="/static/backbone-0.9.9.js"></script>
     <script src="/static/bootstrap-dropdown.js"></script>
+    <script src="/static/bootstrap-modal.js"></script>
     <script src="/static/airship.js?bust={{current_time}}"></script>
     <script src="/static/markdown.js"></script>
     <link rel="stylesheet" href="/static/bootstrap.css">
@@ -17,6 +18,7 @@
         init_airship(groundstation);
       });
     </script>
+    <script src="/static/airship-gref-validation.js"></script>
     <!-- For stupid reasons, load order matters. -->
     <script src="/static/protocol/github.js?bust={{current_time}}"></script>
     <script src="/static/protocol/jira.js?bust={{current_time}}"></script>
@@ -48,12 +50,39 @@
       <div class="span3">
         <div class="sidebar-nav">
           <ul class="nav nav-list" style="text-shadow: none;" id="current-grefs">
-            <li class="nav-header">grefs</li>
+            <li class="nav-header">grefs<span class="pull-right"><a id="new-gref">New</a></span></li>
           </ul>
         </div>
       </div>
       <div class="span9" id="gref-content">
       </div>
     </div>
+
+
+    <div class="modal" id="new-gref-modal">
+      <!-- Modal -->
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h6 id="new-gref-name" class="modal-name" contenteditable>GrefName</h6>
+          </div>
+          <div class="modal-header">
+            <h4 id="new-gref-title" class="modal-title" contenteditable>Gref Title</h4>
+          </div>
+          <div id="new-gref-body" class="modal-body" contenteditable>
+            Gref body
+          </div>
+          <div class="modal-footer">
+            <a id="new-gref-cancel" href="#" class="btn">Close</a>
+            <a id="new-gref-create" href="#" class="btn btn-primary">Save changes</a>
+          </div>
+          <div class="hidden" id="new-gref-protocol">richo@psych0tik.net:github:0.0.0</div>
+        </div>
+      </div>
+    </div><!-- /.modal -->
+
+
+
   </body>
 </html>
