@@ -5,12 +5,21 @@ from groundstation import logger
 log = logger.getLogger(__name__)
 
 
+class UnsolicitedTransfer(Exception):
+    pass
+
+
 def handle_transfer(self):
     git_pb = GitObject()
     git_pb.ParseFromString(self.payload)
     log.info("Handling TRANSFER of %s" % (git_pb.type))
-    if git_pb.type == pygit2.GIT_OBJ_BLOB:
+
+    try:
         req = self.station.get_request(self.id)
+    except KeyError:
+        raise UnsolicitedTransfer
+
+    if git_pb.type == pygit2.GIT_OBJ_BLOB:
         assert req.payload == pygit2.hash(git_pb.data), \
             "Attempted to be sent invalid object for %s" % (req.payload)
     ret = self.station.store.write(git_pb.type, git_pb.data)

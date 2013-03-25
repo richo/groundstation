@@ -5,6 +5,7 @@ from handler_fixture import StationHandlerTestCase, MockRequest
 from groundstation.proto.git_object_pb2 import GitObject
 
 from groundstation.transfer.response_handlers import handle_transfer
+from groundstation.transfer.response_handlers.transfer import UnsolicitedTransfer
 
 
 class TestHandlerTransfer(StationHandlerTestCase):
@@ -42,3 +43,14 @@ class TestHandlerTransfer(StationHandlerTestCase):
         git_pb.type = pygit2.GIT_OBJ_BLOB
         self.station.payload = git_pb.SerializeToString()
         self.assertRaises(AssertionError, handle_transfer, self.station)
+
+    def test_rejects_unsolicited_transfers(self):
+        self.station.set_real_id(True)
+
+        object_body = "foo bar baz butts lol"
+
+        git_pb = GitObject()
+        git_pb.data = object_body
+        git_pb.type = pygit2.GIT_OBJ_BLOB
+        self.station.payload = git_pb.SerializeToString()
+        self.assertRaises(UnsolicitedTransfer, handle_transfer, self.station)
