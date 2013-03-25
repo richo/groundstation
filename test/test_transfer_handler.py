@@ -31,7 +31,6 @@ class TestHandlerTransfer(StationHandlerTestCase):
         self.station.set_real_id(True)
 
         object_body = "foo bar baz butts lol"
-        oid = pygit2.hash(object_body)
 
         req = MockRequest(self.station.id)
         req.payload = "deadbeefdeadbeefdeadbeefdeadbeefdeadbeef"
