@@ -38,5 +38,6 @@ groundstation.renderers["richo@psych0tik.net:github:"] = function (item) {
   } else {
     console.log("Unhandled node of type: " + item.type);
   }
+  el.setAttribute("data-sigature", item.signature);
   return el;
 };

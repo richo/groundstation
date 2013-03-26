@@ -33,6 +33,12 @@
   padding: 0px 5px;
   font-size: 10px;
 }
+.github-issue-comment[data-signature="valid"]:after {
+  background-color: #00cc00 !important;
+}
+.github-issue-comment[data-signature="invalid"]:after {
+  background-color: #cc0000 !important;
+}
 
 #active-channel {
   color: #cccccc;
