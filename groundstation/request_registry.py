@@ -26,3 +26,8 @@ class RequestRegistry(object):
 
     def __getitem__(self, key):
         return self._reg[str(key)]
+
+    def requests_where(self, fn):
+        for req in in self._reg:
+            if fn(req):
+                yield req
