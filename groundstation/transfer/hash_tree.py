@@ -32,3 +32,14 @@ class HashTree(object):
             k = values.pop(0)
             store = store[k]
         store[tip] = True
+
+    def __contains__(self, other):
+        values = slices(self.depth, other)
+        store = self.tree
+        tip = values.pop()
+        while values:
+            k = values.pop(0)
+            if k not in store:
+                return False
+            store = store[k]
+        return tip in store
