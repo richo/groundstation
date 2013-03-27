@@ -11,7 +11,8 @@ from groundstation.utils import oid2hex
 
 
 class GitStore(object):
-    required_dirs = ("rindex", "grefs")
+    required_dirs = ("rindex", "grefs", "keys", "private_keys")
+    private_dirs = ("private_keys")
 
     def __init__(self, path):
         # TODO path should probably be a resource, ie redis url etc.
@@ -62,3 +63,5 @@ class GitStore(object):
             nr_path = self.expand_path(path)
             if not os.path.exists(nr_path):
                 os.makedirs(nr_path)
+        for path in self.private_dirs:
+            os.chmod(self.expand_path(path), 0700)
