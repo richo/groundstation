@@ -3,7 +3,10 @@ import airship
 
 import os
 import sys
-import argparse
+try:
+    import argparse
+except ImportError:
+    argparse = False
 
 from groundstation.node import Node
 from groundstation.station import Station
@@ -13,7 +16,17 @@ station_path = os.path.expanduser("~/.groundstation")
 station = Station(station_path, myself)
 
 
+class FakeConfig(object):
+    def __init__(self):
+        self.host = 'localhost'
+
+    def parse_args(self, *args):
+        return self
+
+
 def _create_option_parser():
+    if not argparse:
+        return FakeConfig()
     parser = argparse.ArgumentParser()
     parser.add_argument("--host", dest='host', action='store')
     return parser
