@@ -33,12 +33,9 @@ myself = Node()
 station_path = expanduser("~/.groundstation")
 station = Station(station_path, myself)
 
-discoverer = BroadcastDiscoverer(PORT)
-announcer  = BroadcastAnnouncer(PORT)
 listener   = StreamListener(PORT)
-announcer.name = myself.name
 
-sockets = [discoverer, listener]
+sockets = [listener]
 peer_sockets = PeerSocketPool()
 
 last_beacon = time.time() - BEACON_TIMEOUT # Gaurantee that we'll announce on the first run
@@ -115,9 +112,7 @@ def handle_deferreds():
 
 
 def handler_for(thing):
-    if thing == discoverer:
-        return handle_discoverer_event
-    elif thing == listener:
+    if thing == listener:
         return handle_listener_event
     elif isinstance(thing, PeerSocket) or isinstance(i, StreamClient):
         return handle_tcpnetwork_event
@@ -131,13 +126,6 @@ client.begin_handshake(station)
 while True:
     log.info("Current status :: Iterators: %i Deferreds: %i" %
             (len(station.iterators), len(station.deferreds)))
-    if time.time() > (last_beacon + BEACON_TIMEOUT):
-        last_beacon = time.time()
-        try:
-            announcer.ping()
-        except BroadcastUnrouteable as e:
-            log.fatal("broadcast was unrouteable")
-
     (sread, swrite, sexc) = select.select(_read_sockets(), _write_sockets(), [], BEACON_TIMEOUT)
     log.info("Got %i fds. read: %s write: %i" % (len(sread) + len(swrite), len(sread), len(swrite)))
 
