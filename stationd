@@ -119,10 +119,6 @@ def handler_for(thing):
     else:
         raise KeyError
 
-# XXX Stick connection details in here
-client = StreamClient('hostname or ip')
-peer_sockets.append(client)
-client.begin_handshake(station)
 while True:
     log.info("Current status :: Iterators: %i Deferreds: %i" %
             (len(station.iterators), len(station.deferreds)))
