@@ -54,8 +54,11 @@ class GitStore(object):
     def rindex_path(self, path):
         return os.path.join(self.repo.path, "reindex", path)
 
+    def expand_path(self, path):
+        return os.path.join(self.repo.path, path)
+
     def check_repo_sanity(self):
         for path in self.required_dirs:
-            nr_path = os.path.join(self.repo.path, path)
+            nr_path = self.expand_path(path)
             if not os.path.exists(nr_path):
                 os.makedirs(nr_path)
