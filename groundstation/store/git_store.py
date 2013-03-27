@@ -50,10 +50,13 @@ class GitStore(object):
         return Gref(self, channel, identifier)
 
     def gref_path(self):
-        return os.path.join(self.repo.path, "grefs")
+        return self.expand_path("grefs")
 
     def rindex_path(self, path):
-        return os.path.join(self.repo.path, "reindex", path)
+        return self.expand_path("reindex", path)
+
+    def private_key_path(self, name):
+        return self.expand_path("private_keys", name)
 
     def expand_path(self, *paths):
         return os.path.join(self.repo.path, *paths)
