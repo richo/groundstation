@@ -141,11 +141,13 @@ def mainloop(r_fn, w_fn, e_fn, tick_fn):
                 break
 
             pid = os.fork()
-            if pid > 0:
+            if pid == 0:
                 return peer
             elif pid < 0:
                 log.fatal("fork failed, attempting to handle client in the master")
                 peer_sockets.append(peer)
+            elif pid > 0:
+                log.info("successfully dispatched child: %i" % (pid))
 
         for i in swrite:
             if not (isinstance(i, PeerSocket) or isinstance(i, StreamClient)):
