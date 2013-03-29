@@ -10,7 +10,7 @@ class PeerSocketPool(list):
 
     def remove(self, other):
         for idx, i in enumerate(self):
-            if i.peer == other:
+            if i.peer == other.peer:
                 return self.pop(idx)
         raise AttributeError("%s has no attribute %s" %
                     (type(self), repr(other)))
