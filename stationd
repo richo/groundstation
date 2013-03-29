@@ -56,7 +56,7 @@ def _write_sockets():
             write_sockets.append(i)
     return write_sockets
 
-def handle_discoverer_event():
+def handle_discoverer_event(i):
     # TODO Return Event objects instead of raw data
     data, peer = discoverer.recv(settings.DEFAULT_BUFSIZE)
     try:
@@ -87,12 +87,12 @@ def handle_discoverer_event():
                 log.info("Peer's uuid is smaller, awaiting connection")
 
 
-def handle_listener_event():
+def handle_listener_event(i):
     peer = listener.accept(PeerSocket)
     peer_sockets.append(peer)
 
 
-def handle_tcpnetwork_event():
+def handle_tcpnetwork_event(i):
     try:
         i.recv()
         while i.packet_queue:
@@ -139,7 +139,7 @@ while True:
     log.info("Got %i fds. read: %s write: %i" % (len(sread) + len(swrite), len(sread), len(swrite)))
 
     for i in sread:
-        handler_for(i)()
+        handler_for(i)(i)
 
     for i in swrite:
         if not (isinstance(i, PeerSocket) or isinstance(i, StreamClient)):
