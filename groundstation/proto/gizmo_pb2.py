@@ -13,7 +13,7 @@ from google.protobuf import descriptor_pb2
 DESCRIPTOR = _descriptor.FileDescriptor(
   name='groundstation/proto/gizmo.proto',
   package='',
-  serialized_pb='\n\x1fgroundstation/proto/gizmo.proto\"\x8d\x01\n\x05Gizmo\x12\n\n\x02id\x18\x01 \x02(\t\x12\x11\n\tstationid\x18\x02 \x02(\t\x12\x1e\n\x04type\x18\x03 \x02(\x0e\x32\x10.Gizmo.GizmoType\x12\x0c\n\x04verb\x18\x04 \x02(\t\x12\x0f\n\x07payload\x18\x05 \x01(\x0c\"&\n\tGizmoType\x12\x0b\n\x07REQUEST\x10\x00\x12\x0c\n\x08RESPONSE\x10\x01')
+  serialized_pb='\n\x1fgroundstation/proto/gizmo.proto\"\x9f\x01\n\x05Gizmo\x12\n\n\x02id\x18\x01 \x02(\t\x12\x11\n\tstationid\x18\x02 \x02(\t\x12\x1e\n\x04type\x18\x03 \x02(\x0e\x32\x10.Gizmo.GizmoType\x12\x0c\n\x04verb\x18\x04 \x02(\t\x12\x0f\n\x07payload\x18\x05 \x01(\x0c\"8\n\tGizmoType\x12\x0b\n\x07REQUEST\x10\x00\x12\x0c\n\x08RESPONSE\x10\x01\x12\x10\n\x0cNOTIFICATION\x10\x02')
 
 
 
@@ -31,11 +31,15 @@ _GIZMO_GIZMOTYPE = _descriptor.EnumDescriptor(
       name='RESPONSE', index=1, number=1,
       options=None,
       type=None),
+    _descriptor.EnumValueDescriptor(
+      name='NOTIFICATION', index=2, number=2,
+      options=None,
+      type=None),
   ],
   containing_type=None,
   options=None,
   serialized_start=139,
-  serialized_end=177,
+  serialized_end=195,
 )
 
 
@@ -92,7 +96,7 @@ _GIZMO = _descriptor.Descriptor(
   is_extendable=False,
   extension_ranges=[],
   serialized_start=36,
-  serialized_end=177,
+  serialized_end=195,
 )
 
 _GIZMO.fields_by_name['type'].enum_type = _GIZMO_GIZMOTYPE
