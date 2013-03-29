@@ -143,12 +143,12 @@ def mainloop(r_fn, w_fn, e_fn, tick_fn):
             pid = os.fork()
             if pid == 0:
                 if i == discoverer:
-                    peer.begin_handshake()
+                    peer.begin_handshake(station)
                 return peer
             elif pid < 0:
                 log.fatal("fork failed, attempting to handle client in the master")
                 if i == discoverer:
-                    peer.begin_handshake()
+                    peer.begin_handshake(station)
                 peer_sockets.append(peer)
             elif pid > 0:
                 log.info("successfully dispatched child: %i" % (pid))
