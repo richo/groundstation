@@ -13,7 +13,7 @@ def fix_oid(oid):
 
 
 def _get_formatter():
-    return logging.Formatter('%(name)s - %(levelname)s - %(message)s')
+    return logging.Formatter('%(process)5d: %(name)s - %(levelname)s - %(message)s')
 
 CONSOLE_FORMATTER = _get_formatter()
 
