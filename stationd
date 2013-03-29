@@ -192,7 +192,7 @@ if __name__ == "__main__":
 
     def child_write():
         v = []
-        if peer.has_data_read():
+        if peer.has_data_ready():
             v.append(peer)
         return v
 
