@@ -1,0 +1,1 @@
+from newobject import handle_newobject
