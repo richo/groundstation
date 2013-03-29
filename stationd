@@ -41,21 +41,6 @@ announcer.name = myself.name
 sockets = [discoverer, listener]
 peer_sockets = PeerSocketPool()
 
-last_beacon = time.time() - BEACON_TIMEOUT # Gaurantee that we'll announce on the first run
-
-def _read_sockets():
-    read_sockets = []
-    for i in sockets: read_sockets.append(i)
-    for i in peer_sockets: read_sockets.append(i)
-    return read_sockets
-
-def _write_sockets():
-    write_sockets = []
-    for i in peer_sockets:
-        if i.has_data_ready():
-            write_sockets.append(i)
-    return write_sockets
-
 def handle_discoverer_event(i):
     # TODO Return Event objects instead of raw data
     data, peer = discoverer.recv(settings.DEFAULT_BUFSIZE)
@@ -74,22 +59,18 @@ def handle_discoverer_event(i):
                 if peer[0] not in peer_sockets:
                     # Ensure that they're in our object cache- we're updating it now
                     if not station.recently_queried(event.payload):
-                        client = StreamClient(peer[0])
-                        peer_sockets.append(client)
-                        client.begin_handshake(station)
-                else: # XXX This should check if we have open transactions.
-                    if not station.recently_queried(event.payload):
-                        client = peer_sockets[peer[0]]
-                        client.begin_handshake(station)
-
+                        return StreamClient(peer[0])
             else:
                 # Peer's uuid is smaller, we should do nothing and await connection
                 log.info("Peer's uuid is smaller, awaiting connection")
 
 
+def noop():
+    pass
+
+
 def handle_listener_event(i):
-    peer = listener.accept(PeerSocket)
-    peer_sockets.append(peer)
+    return listener.accept(PeerSocket)
 
 
 def handle_tcpnetwork_event(i):
@@ -119,13 +100,15 @@ def handler_for(thing):
         return handle_discoverer_event
     elif thing == listener:
         return handle_listener_event
-    elif isinstance(thing, PeerSocket) or isinstance(i, StreamClient):
+    elif isinstance(thing, PeerSocket) or isinstance(thing, StreamClient):
         return handle_tcpnetwork_event
     else:
         raise KeyError
 
 
-while True:
+last_beacon = time.time() - BEACON_TIMEOUT # Gaurantee that we'll announce on the first run
+def send_beacon():
+    global last_beacon
     log.info("Current status :: Iterators: %i Deferreds: %i" %
             (len(station.iterators), len(station.deferreds)))
     if time.time() > (last_beacon + BEACON_TIMEOUT):
@@ -135,29 +118,82 @@ while True:
         except BroadcastUnrouteable as e:
             log.fatal("broadcast was unrouteable")
 
-    (sread, swrite, sexc) = select.select(_read_sockets(), _write_sockets(), [], BEACON_TIMEOUT)
-    log.info("Got %i fds. read: %s write: %i" % (len(sread) + len(swrite), len(sread), len(swrite)))
 
-    for i in sread:
-        handler_for(i)(i)
+def mainloop(r_fn, w_fn, e_fn, tick_fn):
+    while True:
+        tick_fn()
+        (sread, swrite, sexc) = select.select(r_fn(), w_fn(), e_fn(), BEACON_TIMEOUT)
+        log.info("Got %i fds. read: %s write: %i" % (len(sread) + len(swrite), len(sread), len(swrite)))
 
-    for i in swrite:
-        if not (isinstance(i, PeerSocket) or isinstance(i, StreamClient)):
-            log.warn("%s wants to do IO" % (type(i)))
-            continue
+        for i in sread:
+            if isinstance(i, PeerSocket) or isinstance(i, StreamClient):
+                handle_tcpnetwork_event(i)
+                break
 
-        try:
-            i.send()
-        except SocketClosedException as e:
-            log.info("Removing %s from clients" % (str(e.peer)))
-            peer_sockets.remove(e.peer)
+            if i == discoverer:
+                peer = handle_discoverer_event(i)
+            elif i == listener:
+                peer = handle_listener_event(i)
+            else:
+                raise Exception("Unhandled peer type: %s" % (repr(i)))
+
+            if not peer:
+                break
+
+            pid = os.fork()
+            if pid > 0:
+                return peer
+            elif pid < 0:
+                log.fatal("fork failed, attempting to handle client in the master")
+                peer_sockets.append(peer)
+
+        for i in swrite:
+            if not (isinstance(i, PeerSocket) or isinstance(i, StreamClient)):
+                log.warn("%s wants to do IO" % (type(i)))
+                continue
+
+            try:
+                i.send()
+            except SocketClosedException as e:
+                log.info("Removing %s from clients" % (str(e.peer)))
+                peer_sockets.remove(e.peer)
+
+        if station.has_ready_iterators():
+            handle_iterators()
+
+        if station.has_ready_deferreds():
+            handle_deferreds()
 
 
-    # Deal with iterators last, this way if they queue up network stuff it'll be processed immediately.
-    if station.has_ready_iterators():
-        handle_iterators()
+def _read_sockets():
+    read_sockets = []
+    for i in sockets: read_sockets.append(i)
+    for i in peer_sockets: read_sockets.append(i)
+    return read_sockets
 
-    if station.has_ready_deferreds():
-        handle_deferreds()
 
-        # else: # Right now that's the only socket
+def _write_sockets():
+    write_sockets = []
+    for i in peer_sockets:
+        if i.has_data_ready():
+            write_sockets.append(i)
+    return write_sockets
+
+if __name__ == "__main__":
+    master_pid = os.getpid()
+    peer = mainloop(_read_sockets, _write_sockets, lambda: [], send_beacon)
+    assert os.getpid() != master_pid, \
+        "Master process returned from mainloop"
+
+    def child_read():
+        return [peer]
+
+    def child_write():
+        v = []
+        if peer.has_data_read():
+            v.append(peer)
+        return v
+
+    log.info("Entering child mainloop")
+    mainloop(child_read, child_write, lambda: [], noop)
+    log.info("Child exited")
