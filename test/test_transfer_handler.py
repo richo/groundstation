@@ -16,7 +16,7 @@ class TestHandlerTransfer(StationHandlerTestCase):
         oid = pygit2.hash(object_body)
 
         req = MockRequest(self.station.id)
-        req.payload = oid
+        req.payload = oid2hex(oid)
 
         self.station.station.registry.register(req)
 
