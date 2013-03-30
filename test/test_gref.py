@@ -40,6 +40,18 @@ class TestGitGref(store_fixture.StoreTestCase):
         for parent in our_parents:
             self.assertIn(parent, parents)
 
+    def test_get_signature(self):
+        gref = Gref(self.repo, "testchannel", "test_get_signature")
+        root = self.create_root_object(gref)
+        oid = self.repo.create_blob(root.as_object())
+
+        signature = "-----BEGIN-----" + \
+                    "signaturedatalulz\n" * 5 + \
+                    "------END------"
+
+        gref.write_tip(oid, signature)
+        self.assertEqual(signature, gref.get_signature(oid))
+
     def test_direct_parents(self):
         gref = Gref(self.repo, "testchannel", "test_write_tip")
         root = self.create_root_object(gref)

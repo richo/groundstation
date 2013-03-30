@@ -57,6 +57,13 @@ class Gref(object):
     def __iter__(self):
         return os.listdir(self.node_path()).__iter__()
 
+    def get_signature(self, tip):
+        try:
+            with open(self.tip_path(tip), 'r') as fh:
+                return fh.read()
+        except IOError:
+            return ""
+
     def remove_tip(self, tip, silent=False):
         try:
             os.unlink(os.path.join(self.tip_path(tip)))
