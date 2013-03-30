@@ -1,6 +1,5 @@
 import socket
 from sockets.stream_socket import StreamSocket
-from sockets.socket_closed_exception import SocketClosedException
 from transfer.request import Request
 import settings
 

@@ -1,4 +1,3 @@
-from sockets.socket_closed_exception import SocketClosedException
 from sockets.stream_socket import StreamSocket
 import socket
 
@@ -33,15 +32,10 @@ class PeerSocket(StreamSocket):
         try:
             return super(PeerSocket, self).send(*args, **kwargs)
         except socket.error as e:
-            raise PeerSocketClosedException(e, self.peer)
+            self.close_and_finalise()
 
     def recv(self, *args, **kwargs):
         try:
             return super(PeerSocket, self).recv(*args, **kwargs)
         except socket.error as e:
-            raise PeerSocketClosedException(e, self.peer)
-
-
-class PeerSocketClosedException(SocketClosedException):
-    """Raised when a peer closes their socket"""
-    pass
+            self.close_and_finalise()

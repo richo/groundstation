@@ -130,5 +130,8 @@ class StreamSocket(object):
                 raise e
         if not data:
             self.socket.close()
-            raise SocketClosedException(self, self.peer)
+            self.close_and_finalise()
         self.buffer = self.buffer + data
+
+    def close_and_finalise(self):
+        raise SocketClosedException(self, self.peer)
