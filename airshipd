@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 import airship
 
-import os
 import sys
 import argparse
 
@@ -9,8 +8,7 @@ from groundstation.node import Node
 from groundstation.station import Station
 
 myself = Node()
-station_path = os.path.expanduser("~/.groundstation")
-station = Station(station_path, myself)
+station = Station.from_env(myself)
 
 
 def _create_option_parser():
