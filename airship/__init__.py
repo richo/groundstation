@@ -53,11 +53,12 @@ def make_airship(station):
 
     @app.route("/gref/<channel>/<path:identifier>")
     def fetch_gref(channel, identifier):
+        crypto_adaptor = station.get_crypto_adaptor()
         adaptor = github_protocol.GithubReadAdaptor(station, channel)
         gref = Gref(station.store, channel, identifier)
         log.info("Trying to fetch channel: %s identifier: %s" %
                 (channel, identifier))
-        marshalled_thread = adaptor.get_issue(gref)
+        marshalled_thread = adaptor.get_issue(gref, crypto_adaptor=crypto_adaptor)
         root_obj = marshalled_thread["roots"].pop()
         root = root_obj.as_json()
         root["hash"] = oid2hex(pygit2.hash(root_obj.as_object()))
@@ -70,7 +71,10 @@ def make_airship(station):
             data["parents"] = list(node.parents)
             data["hash"] = oid2hex(pygit2.hash(node.as_object()))
             response.append(data)
-        return jsonate({"content": response, "root": root, "tips": marshalled_thread["tips"]}, False)
+        return jsonate({"content": response,
+                        "root": root,
+                        "tips": marshalled_thread["tips"],
+                        "signatures": marshalled_thread["signatures"]}, False)
 
     @app.route("/gref/<channel>/<path:identifier>", methods=['POST'])
     def update_gref(channel, identifier):
