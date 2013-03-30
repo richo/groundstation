@@ -258,8 +258,16 @@ var RenderedGref = Backbone.View.extend({
 
     _.each(content, function(item) {
       var el = renderer(item);
-      el.setAttribute("id", item.hash);
       if (el) {
+        el.setAttribute("id", item.hash);
+        var signature = self.model.attributes.signatures[item.hash];
+        if (signature !== undefined) {
+          if (signature === false) {
+            el.setAttribute("data-invalid-signature", "true");
+          } else {
+            el.setAttribute("data-sigature", item.signature);
+          }
+        }
         self.el.appendChild(el);
       }
     });
