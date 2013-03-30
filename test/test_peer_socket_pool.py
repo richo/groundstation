@@ -19,3 +19,26 @@ class TestPeerSocketPool(unittest.TestCase):
         peer = MockPeer('127.0.0.1')
 
         self.assertRaises(AttributeError, pool.remove, peer)
+
+    def test_safe_multiple_removes(self):
+        pool = PeerSocketPool()
+        peer = MockPeer('127.0.0.1')
+
+        pool.append(peer)
+        pool.remove(peer)
+        self.assertEqual(0, len(pool))
+        pool.remove(peer)
+        self.assertEqual(0, len(pool))
+
+    def test_raises_after_purge(self):
+        pool = PeerSocketPool()
+        peer = MockPeer('127.0.0.1')
+
+        pool.append(peer)
+        pool.remove(peer)
+        self.assertEqual(0, len(pool))
+        pool.remove(peer)
+        self.assertEqual(0, len(pool))
+
+        pool.purge(peer.peer)
+        self.assertRaises(AttributeError, pool.remove, peer)

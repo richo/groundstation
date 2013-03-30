@@ -125,6 +125,12 @@ def handler_for(thing):
         raise KeyError
 
 
+def expire_peer(peer):
+    def _():
+        peer_sockets.purge(peer)
+    return _
+
+
 while True:
     log.info("Current status :: Iterators: %i Deferreds: %i" %
             (len(station.iterators), len(station.deferreds)))
