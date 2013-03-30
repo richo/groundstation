@@ -23,6 +23,8 @@ from groundstation.broadcast_events import new_broadcast_event, UnknownBroadcast
 from groundstation.broadcast_events.broadcast_ping import BroadcastPing
 from groundstation.gizmo_factory import InvalidGizmoError
 
+import groundstation.deferred
+
 from os.path import expanduser
 
 PORT = settings.PORT
@@ -125,12 +127,6 @@ def handler_for(thing):
         raise KeyError
 
 
-def expire_peer(peer):
-    def _():
-        peer_sockets.purge(peer)
-    return _
-
-
 while True:
     log.info("Current status :: Iterators: %i Deferreds: %i" %
             (len(station.iterators), len(station.deferreds)))
@@ -156,8 +152,11 @@ while True:
             i.send()
         except SocketClosedException as e:
             log.info("Removing %s from clients" % (str(e.peer)))
-            peer_sockets.remove(e.peer)
-
+            if peer_sockets.remove(e.peer):
+                @station.register_deferred
+                @groundstation.deferred_defer_until(time.time() + settings.CLOSEWAIT_TIMEOUT)
+                def purge():
+                    peer_sockets.purge(e.peer.peer)
 
     # Deal with iterators last, this way if they queue up network stuff it'll be processed immediately.
     if station.has_ready_iterators():
