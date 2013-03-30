@@ -36,8 +36,13 @@ class GitStore(object):
     def get_public_keys(self):
         keys = {}
         for name in os.listdir(self.public_keys_path()):
-            keys[name] = file.read(self.public_keys_path(name))
+            with open(self.public_keys_path(name)) as fh:
+                keys[name] = fh.read()
         return keys
+
+    def get_private_key(self, name):
+        with open(self.private_key_path(name)) as fh:
+            return fh.read()
 
     def lookup_reference(self, ref):
         return self.repo.lookup_reference(ref)
@@ -69,8 +74,14 @@ class GitStore(object):
             paths.append(keyname)
         return self.local_path(*paths)
 
-    def public_keys_path(self):
-        return self.local_path("public_keys")
+    def public_keys_path(self, name=None):
+        paths = ["public_keys"]
+        if name:
+            paths.append(name)
+        return self.local_path(*paths)
+
+    def private_key_path(self, name):
+        return self.local_path("signing_keys", name)
 
     def check_repo_sanity(self):
         for path in self.required_dirs:
