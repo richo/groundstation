@@ -152,11 +152,14 @@ while True:
             i.send()
         except SocketClosedException as e:
             log.info("Removing %s from clients" % (str(e.peer)))
-            if peer_sockets.remove(e.peer):
-                @station.register_deferred
-                @groundstation.deferred_defer_until(time.time() + settings.CLOSEWAIT_TIMEOUT)
+            if peer_sockets.remove(e):
+                log.info("Registering purged deferred")
+                @groundstation.deferred.defer_until(time.time() + settings.CLOSEWAIT_TIMEOUT)
                 def purge():
-                    peer_sockets.purge(e.peer.peer)
+                    log.info("Purging %s from clients" % (str(e.peer)))
+                    peer_sockets.purge(e.peer)
+                log.info("Made %s" % repr(purge))
+                station.register_deferred(purge)
 
     # Deal with iterators last, this way if they queue up network stuff it'll be processed immediately.
     if station.has_ready_iterators():
