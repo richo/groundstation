@@ -13,8 +13,7 @@ from groundstation.station import Station
 
 from collections import OrderedDict
 
-station_path = os.path.expanduser("~/.groundstation")
-station = Station(station_path, None)
+station = Station.from_env(None)
 
 
 def _create_option_parser():

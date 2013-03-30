@@ -31,6 +31,14 @@ class Station(object):
         self.iterators = []
         self.deferreds = []
 
+    @staticmethod
+    def from_env(identity):
+        if "GROUNDSTATION_HOME" in os.environ:
+            return Station(os.getenv("GROUNDSTATION_HOME"), identity)
+        else:
+            station_path = os.path.expanduser("~/.groundstation")
+            return Station(station_path, identity)
+
     def get_crypto_adaptor(self):
         return RSAAdaptor(self.store.get_public_keys())
 
