@@ -77,9 +77,7 @@ class Station(object):
                 i.run()
             else:
                 new_deferreds.append(i)
-                import sys
-                sys.stderr.write("NOTREADY")
-        self.deferreds = new_deferreds
+        [self.deferreds.append(i) for i in new_deferreds]
 
     def channels(self):
         return os.listdir(self.store.gref_path())

@@ -70,6 +70,9 @@ class StreamSocket(object):
                     # run through the event loop
                     self.write_queue.append((data[idx:],))
                     return False
+                elif e.errno == errno.EBADF:
+                    # Connection has been closed. Nuke it.
+                    self.close_and_finalise()
                 else:
                     raise
         return True
@@ -130,5 +133,8 @@ class StreamSocket(object):
                 raise e
         if not data:
             self.socket.close()
-            raise SocketClosedException(self, self.peer)
+            self.close_and_finalise()
         self.buffer = self.buffer + data
+
+    def close_and_finalise(self):
+        raise SocketClosedException(self, self.peer)
