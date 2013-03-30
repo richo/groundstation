@@ -1,8 +1,8 @@
 import unittest
 
 from peer_socket_pool_fixture import MockPeer
-
 from groundstation.peer_socket_pool import PeerSocketPool
+
 
 class TestPeerSocketPool(unittest.TestCase):
     def test_add_remove(self):
