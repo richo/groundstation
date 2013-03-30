@@ -36,16 +36,16 @@ function init_airship(groundstation) {
     }
   });
   var new_gref = {
-    title: $("#new-gref-title").html(),
-    body: $("#new-gref-body").html(),
-    name: $("#new-gref-name").html()
+    title: $("#new-gref-title").text(),
+    body: $("#new-gref-body").text(),
+    name: $("#new-gref-name").text()
   };
   var new_gref_validator = groundstation.validators.gref(new_gref.name, new_gref.title, new_gref.body);
 
   $("#new-gref").on('click', function() {
-    $("#new-gref-title").html(new_gref.title);
-    $("#new-gref-body").html(new_gref.body);
-    $("#new-gref-name").html(new_gref.name);
+    $("#new-gref-title").text(new_gref.title);
+    $("#new-gref-body").text(new_gref.body);
+    $("#new-gref-name").text(new_gref.name);
     var modal = $("#new-gref-modal");
     modal.modal();
   });
@@ -53,10 +53,10 @@ function init_airship(groundstation) {
     $("#new-gref-modal").modal('hide');
   });
   $("#new-gref-create").on('click', function() {
-    var title = $("#new-gref-title").html(),
-        body = $("#new-gref-body").html(),
-        name = $("#new-gref-name").html(),
-        protocol = $("#new-gref-protocol").html();
+    var title = $("#new-gref-title").text(),
+        body = $("#new-gref-body")[0].innerText,
+        name = $("#new-gref-name").text(),
+        protocol = $("#new-gref-protocol").text();
 
     if (new_gref_validator(name, title, body)) {
       $.ajax({
