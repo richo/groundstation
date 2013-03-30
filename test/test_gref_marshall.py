@@ -63,3 +63,20 @@ class TestGrefMarshall(store_fixture.StoreTestCase):
         marshalled = gref.marshall(crypto_adaptor=adaptor)
 
         self.assertEqual(marshalled["signatures"][update_oid], "valid")
+
+    def test_marshalls_untrusted_signatures(self):
+        gref = Gref(self.repo, "testchannel", "test_untrusted_signature")
+        adaptor = RSAAdaptor({
+            "valid": crypto_fixture.passphrase_pubkey
+            })
+        private_adaptor = RSAPrivateAdaptor(crypto_fixture.valid_key)
+
+        root = root_object("test", "test_channel", "test")
+        root_oid = self.repo.create_blob(root.as_object())
+        update = update_object("test object", [root_oid])
+        update_oid = self.repo.create_blob(update.as_object())
+        gref.write_tip(update_oid, private_adaptor.sign(update_oid))
+
+        marshalled = gref.marshall(crypto_adaptor=adaptor)
+
+        self.assertFalse(marshalled["signatures"][update_oid])
