@@ -265,7 +265,7 @@ var RenderedGref = Backbone.View.extend({
           if (signature === false) {
             el.setAttribute("data-invalid-signature", "true");
           } else {
-            el.setAttribute("data-sigature", item.signature);
+            el.setAttribute("data-signature", signature);
           }
         }
         self.el.appendChild(el);
