@@ -34,10 +34,10 @@
   font-size: 10px;
 }
 .gref-taggable[data-signature]:after {
-  background-color: #00cc00 !important;
+  background-color: #dff0d8 !important;
 }
 .gref-taggable[data-invalid-signature]:after {
-  background-color: #cc0000 !important;
+  background-color: #f2dede !important;
 }
 
 #active-channel {
