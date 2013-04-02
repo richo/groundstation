@@ -1,15 +1,17 @@
+.github-issue-comment {
+  *padding-top: 19px;
+  padding: 39px 19px 14px;
+}
 .gref-taggable {
   position: relative;
   margin: 15px 0;
-  padding: 39px 19px 14px;
-  *padding-top: 19px;
   background-color: #fff;
   border: 1px solid #ddd;
   -webkit-border-radius: 4px;
      -moz-border-radius: 4px;
           border-radius: 4px;
 }
-.gref-taggable:before,.gref-taggable:after {
+.github-issue-comment:before,.gref-taggable:after {
   position: absolute;
   font-weight: bold;
   background-color: #f5f5f5;
@@ -19,12 +21,14 @@
      -moz-border-radius: 4px 0 4px 0;
           border-radius: 4px 0 4px 0;
 }
-.gref-taggable:before {
+.github-issue-comment:before {
   content: attr(data-author);
   top: -1px;
   left: -1px;
   padding: 1px 5px;
   font-size: 12px;
+}
+.gref-taggable:before {
 }
 .gref-taggable:after {
   content: attr(data-hash);
