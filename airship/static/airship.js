@@ -189,17 +189,27 @@ var ChannelTab = Backbone.View.extend({
 });
 
 function buildCommentBox(div, model) {
-  var input, submit;
+  var row, input, span, submit;
+
+  row = document.createElement("div");
+  row.className = "input-group";
 
   input = document.createElement("p");
   input.className = "new-comment";
   input.contentEditable = true;
   input.id = "new-comment-body";
 
+  span = document.createElement("span");
+  span.className = "input-group-btn";
+
   submit = document.createElement("button");
   submit.className = "btn";
   submit.id = "new-comment-submit";
   submit.innerText = "Submit";
+  span.appendChild(submit);
+
+  row.appendChild(input);
+  row.appendChild(span);
 
   $(submit).on('click', function(ev) {
     $.ajax({
@@ -219,8 +229,7 @@ function buildCommentBox(div, model) {
     console.log("Sending new comment to groundstation");
   });
 
-  div.appendChild(input);
-  div.appendChild(submit);
+  div.appendChild(row);
 }
 
 var RenderedGref = Backbone.View.extend({
