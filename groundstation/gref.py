@@ -8,11 +8,18 @@ import logger
 log = logger.getLogger(__name__)
 
 
+def valid_path(path):
+    test_path = os.path.join("/", path)
+    return os.path.realpath(test_path) == test_path
+
+
 class Gref(object):
     def __init__(self, store, channel, identifier):
         self.store = store
         self.channel = channel.replace("/", "_")
+        assert valid_path(self.channel), "Invalid channel"
         self.identifier = identifier
+        assert valid_path(self.identifier), "Invalid identifier"
         self._node_path = os.path.join(self.store.gref_path(),
                                  self.channel,
                                  self.identifier)

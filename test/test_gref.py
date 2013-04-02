@@ -1,7 +1,7 @@
 import store_fixture
 import groundstation.store
 
-from groundstation.gref import Gref
+from groundstation.gref import Gref, valid_path
 
 
 class TestGitGref(store_fixture.StoreTestCase):
@@ -56,3 +56,15 @@ class TestGitGref(store_fixture.StoreTestCase):
 
         gref.write_tip(final_oid, "")
         self.assertEqual(gref.direct_parents(final_oid), first_tier)
+
+    def test_valid_path_works(self):
+        self.assertTrue(valid_path("asdf"))
+        self.assertTrue(valid_path("asdf/foo"))
+        self.assertFalse(valid_path("../asdf/asdfasdf"))
+        self.assertFalse(valid_path("././asdf/asdfasdf"))
+        self.assertFalse(valid_path("asdf/../asdfasdf"))
+
+    def test_raises_on_suspicious_path(self):
+        self.assertRaises(AssertionError, Gref, self.repo, "testchannel", "test_write_tip/../hax")
+        self.assertRaises(AssertionError, Gref, self.repo, "testchannel", ".")
+        self.assertRaises(AssertionError, Gref, self.repo, "testchannel", "..")
