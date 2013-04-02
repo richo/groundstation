@@ -192,7 +192,7 @@ function buildCommentBox(div, model) {
   var input, submit;
 
   input = document.createElement("p");
-  input.className = "github-issue-comment";
+  input.className = "new-comment";
   input.contentEditable = true;
   input.id = "new-comment-body";
 
