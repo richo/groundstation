@@ -37,6 +37,16 @@ def grefs_json(station, channel, escaped=False):
 def make_airship(station):
     app = Flask(__name__)
 
+    def set_signing_key(self, keyname):
+        self.private_crypto_adaptor = \
+                station.get_private_crypto_adaptor(keyname)
+    app.set_signing_key = lambda key: set_signing_key(app, key)
+
+    def _update_gref(gref, tips, parents):
+        if app.private_crypto_adaptor:
+            tips = map(lambda tip: Tip(tip.tip, app.private_crypto_adaptor.sign(tip.tip)), tips)
+        station.update_gref(gref, tips, parents)
+
     @app.route("/")
     def index():
         return render_template("index.html",
@@ -92,7 +102,7 @@ def make_airship(station):
                 }
         update_object = UpdateObject(parents, json.dumps(payload))
         oid = station.write(update_object.as_object())
-        station.update_gref(gref, [Tip(oid,"")], parents)
+        _update_gref(gref, [Tip(oid,"")], parents)
         return jsonate({"response": "ok"}, False)
 
     @app.route("/grefs/<channel>", methods=['PUT'])
@@ -124,7 +134,9 @@ def make_airship(station):
             }))
         body_oid = _write_object(_body)
 
-        station.update_gref(gref, [Tip(body_oid, "")], [])
+        _update_gref(gref, [Tip(body_oid, "")], [])
         return ""
+
+
 
     return app
