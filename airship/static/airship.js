@@ -112,7 +112,9 @@ var GrefMenuItem = Backbone.View.extend({
 
   select: function() {
     var active_el = this.el;
-    $(this.el.parentElement.children).removeClass("active");
+//    $(this.el.parentElement.children).removeClass("active");
+// Swapped the above out for the below... this fixes firefox UI issues, not sure if it breaks others.
+    $(this.el.children).removeClass("active");
     rendered_gref.url = this.getUrl();
     rendered_gref.fetch({
       success: function(model, response, options) {
