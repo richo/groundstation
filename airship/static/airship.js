@@ -208,7 +208,7 @@ function buildCommentBox(div, model) {
         type: "POST",
         url: model.url,
         data: {
-            body: input.innerText,
+            body: $(input).text(),
             parents: JSON.stringify(model.attributes["tips"]),
             user: groundstation.username
 
