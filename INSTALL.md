@@ -1,7 +1,7 @@
 INSTALLATION GUIDE
 
 This guide comes with no warrenty or assurance of correctness.  It's mostly meant as a guideline.
-Your milage may vary.
+Your milage may vary.  Many commands assume you have (or can get) root priveldges.  Good luck!
 
 
 __install gcc__
@@ -16,7 +16,8 @@ python -m easy_install protobuff
 __install flask__
 python -m easy_install flask
 
-
+__install pycrypto__
+python -m easy_install pycrypto
 
 These next two need to be from the repos for now, as the patches havent been pushed out yet
 
