@@ -199,7 +199,7 @@ function buildCommentBox(div, model) {
   submit = document.createElement("button");
   submit.className = "btn";
   submit.id = "new-comment-submit";
-  submit.innerText = "Submit";
+  $(submit).text("Submit");
 
   $(submit).on('click', function(ev) {
     $.ajax({
