@@ -1,4 +1,5 @@
 import os
+from collections import namedtuple
 import groundstation.objects.object_factory as object_factory
 
 from groundstation.objects.update_object import UpdateObject
@@ -6,6 +7,8 @@ from groundstation.objects.root_object import RootObject
 
 import logger
 log = logger.getLogger(__name__)
+
+Tip = namedtuple('Tip', ('tip', 'signature'))
 
 
 def valid_path(path):
@@ -40,6 +43,8 @@ class Gref(object):
         return self._node_path
 
     def write_tip(self, tip, signature):
+        if signature:
+            signature = str(signature[0])
         tip_path = self.tip_path(tip)
         open(tip_path, 'a').close()
         fh = open(tip_path, 'r+')
@@ -53,6 +58,16 @@ class Gref(object):
 
     def __iter__(self):
         return os.listdir(self.node_path()).__iter__()
+
+    def get_signature(self, tip):
+        try:
+            with open(self.tip_path(tip), 'r') as fh:
+                data = fh.read()
+                if not data:
+                    return ""
+                return (int(data),)
+        except IOError:
+            return ""
 
     def remove_tip(self, tip, silent=False):
         try:
@@ -85,7 +100,7 @@ class Gref(object):
             this_iter.extend(tips_parents)
         return parents
 
-    def marshall(self):
+    def marshall(self, crypto_adaptor=None):
         """Marshalls the gref into something renderable:
         {
             "thread": An ordered thread of UpdateObjects. Ordering is
@@ -98,6 +113,7 @@ class Gref(object):
         root_nodes = []
         visited_nodes = set()
         tips = []
+        signatures = {}
 
         # TODO Big issues will smash the stack
         def _process(node):
@@ -105,6 +121,11 @@ class Gref(object):
                 log.debug("Bailing on visited node: %s" % (node))
                 return
             visited_nodes.add(node)
+
+            if crypto_adaptor:
+                signature = self.get_signature(node)
+                if signature:
+                    signatures[node] = crypto_adaptor.verify(node, signature)
 
             obj = object_factory.hydrate_object(self.store[node].data)
             if isinstance(obj, RootObject):  # We've found a root
@@ -121,7 +142,8 @@ class Gref(object):
         return {
                 "thread": thread,
                 "roots": root_nodes,
-                "tips": tips
+                "tips": tips,
+                "signatures": signatures
                 }
 
     def as_dict(self):

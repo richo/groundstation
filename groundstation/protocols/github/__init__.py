@@ -6,7 +6,7 @@ import copy
 
 import github
 
-from groundstation.gref import Gref
+from groundstation.gref import Gref, Tip
 
 import groundstation.objects.object_factory as object_factory
 
@@ -42,13 +42,13 @@ class GithubReadAdaptor(AbstractGithubAdaptor):
     def repo_name(self):
         return self.repo
 
-    def get_issue(self, issue):
+    def get_issue(self, issue, **kwargs):
         if isinstance(issue, Gref):
             gref = issue
         else:
             gref = self.issue_gref(issue)
 
-        marshalled_gref = gref.marshall()
+        marshalled_gref = gref.marshall(**kwargs)
 
         assert len(marshalled_gref["roots"]) == 1, \
             "Anything other than one root node and you've got a problem"
@@ -81,7 +81,7 @@ class GithubWriteAdaptor(AbstractGithubAdaptor):
             log.debug("Creating new object with parents: %s" % (str(our_parents)))
 
             oid = self.station.write(obj.as_object())
-            self.station.update_gref(gref, [oid], our_parents)
+            self.station.update_gref(gref, [(oid, "")], our_parents)
             parents.append(oid)
             log.debug("Setting parents to: %s" % (str(parents)))
 

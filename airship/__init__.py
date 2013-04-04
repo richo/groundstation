@@ -9,7 +9,7 @@ log = logger.getLogger(__name__)
 
 # XXX We won't always be using the github adaptor!!
 from groundstation.protocols import github as github_protocol
-from groundstation.gref import Gref
+from groundstation.gref import Gref, Tip
 
 import pygit2
 from groundstation.utils import oid2hex
@@ -37,6 +37,16 @@ def grefs_json(station, channel, escaped=False):
 def make_airship(station):
     app = Flask(__name__)
 
+    def set_signing_key(self, keyname):
+        self.private_crypto_adaptor = \
+                station.get_private_crypto_adaptor(keyname)
+    app.set_signing_key = lambda key: set_signing_key(app, key)
+
+    def _update_gref(gref, tips, parents):
+        if app.private_crypto_adaptor:
+            tips = map(lambda tip: Tip(tip.tip, app.private_crypto_adaptor.sign(tip.tip)), tips)
+        station.update_gref(gref, tips, parents)
+
     @app.route("/")
     def index():
         return render_template("index.html",
@@ -53,11 +63,12 @@ def make_airship(station):
 
     @app.route("/gref/<channel>/<path:identifier>")
     def fetch_gref(channel, identifier):
+        crypto_adaptor = station.get_crypto_adaptor()
         adaptor = github_protocol.GithubReadAdaptor(station, channel)
         gref = Gref(station.store, channel, identifier)
         log.info("Trying to fetch channel: %s identifier: %s" %
                 (channel, identifier))
-        marshalled_thread = adaptor.get_issue(gref)
+        marshalled_thread = adaptor.get_issue(gref, crypto_adaptor=crypto_adaptor)
         root_obj = marshalled_thread["roots"].pop()
         root = root_obj.as_json()
         root["hash"] = oid2hex(pygit2.hash(root_obj.as_object()))
@@ -70,7 +81,10 @@ def make_airship(station):
             data["parents"] = list(node.parents)
             data["hash"] = oid2hex(pygit2.hash(node.as_object()))
             response.append(data)
-        return jsonate({"content": response, "root": root, "tips": marshalled_thread["tips"]}, False)
+        return jsonate({"content": response,
+                        "root": root,
+                        "tips": marshalled_thread["tips"],
+                        "signatures": marshalled_thread["signatures"]}, False)
 
     @app.route("/gref/<channel>/<path:identifier>", methods=['POST'])
     def update_gref(channel, identifier):
@@ -88,7 +102,7 @@ def make_airship(station):
                 }
         update_object = UpdateObject(parents, json.dumps(payload))
         oid = station.write(update_object.as_object())
-        station.update_gref(gref, [oid], parents)
+        _update_gref(gref, [Tip(oid,"")], parents)
         return jsonate({"response": "ok"}, False)
 
     @app.route("/grefs/<channel>", methods=['PUT'])
@@ -120,7 +134,9 @@ def make_airship(station):
             }))
         body_oid = _write_object(_body)
 
-        station.update_gref(gref, [body_oid], [])
+        _update_gref(gref, [Tip(body_oid, "")], [])
         return ""
+
+
 
     return app

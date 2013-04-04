@@ -25,15 +25,12 @@ from groundstation.gizmo_factory import InvalidGizmoError
 
 import groundstation.deferred
 
-from os.path import expanduser
-
 PORT = settings.PORT
 BEACON_TIMEOUT = settings.BEACON_TIMEOUT
 
 myself = Node()
 
-station_path = expanduser("~/.groundstation")
-station = Station(station_path, myself)
+station = Station.from_env(myself)
 
 discoverer = BroadcastDiscoverer(PORT)
 announcer  = BroadcastAnnouncer(PORT)
