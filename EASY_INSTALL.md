@@ -33,7 +33,9 @@ __install pygit2__
 git clone https://github.com/libgit2/pygit2.git ./pygit2
 sudo python setup.py install
 
-__install github (python)__ - going to be depricated
+__install github (python)__
+This is only required if you intend to pull data from github
+
 python -m easy_install pygithub
 
 __Groundstation setup__
