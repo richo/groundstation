@@ -191,8 +191,8 @@ var ChannelTab = Backbone.View.extend({
 function buildCommentBox(div, model) {
   var input, submit;
 
-  input = document.createElement("p");
-  input.className = "github-issue-comment";
+  input = document.createElement("textarea");
+  input.setAttribute('rows', 7);
   input.contentEditable = true;
   input.id = "new-comment-body";
 
@@ -206,7 +206,7 @@ function buildCommentBox(div, model) {
         type: "POST",
         url: model.url,
         data: {
-            body: input.innerText,
+            body: input.value,
             parents: JSON.stringify(model.attributes["tips"]),
             user: groundstation.username
 
