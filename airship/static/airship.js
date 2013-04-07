@@ -112,7 +112,7 @@ var GrefMenuItem = Backbone.View.extend({
 
   select: function() {
     var active_el = this.el;
-    $(this.el.parentElement.children).removeClass("active");
+    $(this.el.children).removeClass("active");
     rendered_gref.url = this.getUrl();
     rendered_gref.fetch({
       success: function(model, response, options) {
@@ -206,7 +206,7 @@ function buildCommentBox(div, model) {
         type: "POST",
         url: model.url,
         data: {
-            body: input.innerText,
+            body: $(input).text(),
             parents: JSON.stringify(model.attributes["tips"]),
             user: groundstation.username
 
