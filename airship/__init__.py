@@ -8,7 +8,7 @@ from groundstation import logger
 log = logger.getLogger(__name__)
 
 # XXX We won't always be using the github adaptor!!
-from groundstation.protocols import github as github_protocol
+from groundstation.protocols.github.read_adaptor import GithubReadAdaptor
 from groundstation.gref import Gref
 
 import pygit2
@@ -53,7 +53,7 @@ def make_airship(station):
 
     @app.route("/gref/<channel>/<path:identifier>")
     def fetch_gref(channel, identifier):
-        adaptor = github_protocol.GithubReadAdaptor(station, channel)
+        adaptor = GithubReadAdaptor(station, channel)
         gref = Gref(station.store, channel, identifier)
         log.info("Trying to fetch channel: %s identifier: %s" %
                 (channel, identifier))
