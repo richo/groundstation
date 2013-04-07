@@ -1,5 +1,8 @@
 INSTALLATION GUIDE
 
+This guide assumes you want to install system-wide, without pip. The
+recommended install is still with virtualenv and pip.
+
 This guide comes with no warrenty or assurance of correctness.  It's mostly meant as a guideline.
 Your milage may vary.  Many commands assume you have (or can get) root priveldges.  Good luck!
 
@@ -23,7 +26,7 @@ These next two need to be from the repos for now, as the patches havent been pus
 
 __install libgit2__
  git clone git://github.com/libgit2/libgit2.git
- follow cmake instructions 
+ follow cmake instructions
 (you must remove old version of libgit2 and it's devel headers)
 
 __install pygit2__
