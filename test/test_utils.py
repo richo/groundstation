@@ -36,3 +36,7 @@ class TestUtilsLeafDirs(unittest.TestCase):
         self.assertNotIn(os.path.join("foo", "bar"), leaves)
         self.assertNotIn(os.path.join("foo"), leaves)
         self.assertNotIn(os.path.join("foo", "test", "test"), leaves)
+
+class TestPath2Id(unittest.TestCase):
+    def test_path2id(self):
+        self.assertEqual(utils.path2id("/long/tail/name/as/asdfasdfasdf"), "asasdfasdfasdf")
