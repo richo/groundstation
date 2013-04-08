@@ -23,6 +23,8 @@ from groundstation.broadcast_events import new_broadcast_event, UnknownBroadcast
 from groundstation.broadcast_events.broadcast_ping import BroadcastPing
 from groundstation.gizmo_factory import InvalidGizmoError
 
+from groundstation.utils import path2id
+
 import groundstation.deferred
 
 PORT = settings.PORT
@@ -123,6 +125,15 @@ def handler_for(thing):
     else:
         raise KeyError
 
+if sys.argv.count("--watch-fs"):
+    from groundstation.fs_watcher import FSWatcher
+    watcher = FSWatcher(station.store.object_root)
+
+    @watcher.register_handler
+    def handler(event):
+        obj_id = path2id(event.src_path)
+        for client in peer_sockets:
+            client.notify_new_object(obj_id, station)
 
 while True:
     log.info("Current status :: Iterators: %i Deferreds: %i" %
