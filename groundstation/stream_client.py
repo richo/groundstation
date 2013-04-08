@@ -1,6 +1,7 @@
 import socket
 from sockets.stream_socket import StreamSocket
 from transfer.request import Request
+from transfer.notification import Notification
 import settings
 
 import groundstation.logger
@@ -17,3 +18,7 @@ class StreamClient(StreamSocket):
         request = Request("LISTALLOBJECTS", station=station, stream=self)
         station.register_request(request)
         self.enqueue(request)
+
+    def notify_new_object(self, station, obj):
+        notification = Notification("NEWOBJECT", station=station, stream=self, payload="object")
+        self.enqueue(notification)
