@@ -11,11 +11,17 @@ class FSHandler(FileSystemEventHandler):
 
     def on_created(self, event):
         if isinstance(event, FileCreatedEvent):
+            if not self.is_legit_object(event.src_path):
+                return
             sent = 0
             data = event.src_path + chr(0)
             data_len = len(data)
             while sent != data_len:
                 sent += os.write(self.pipe, data[sent:])
+
+    def is_legit_object(self, path):
+        # Cheaty heuristic
+        return "_" not in os.path.basename(path)
 
 
 class Watcher(object):
