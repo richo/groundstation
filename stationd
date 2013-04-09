@@ -134,10 +134,14 @@ if sys.argv.count("--watch-fs"):
 
     @watcher.register_handler
     def handler(event):
+        log.fatal("Sending NEWOBJECT")
         obj_id = path2id(event.src_path)
         for client in peer_sockets:
             client.notify_new_object(obj_id, station)
 
+client = StreamClient('99designs.com.vm')
+peer_sockets.append(client)
+client.begin_handshake(station)
 while True:
     log.info("Current status :: Iterators: %i Deferreds: %i" %
             (len(station.iterators), len(station.deferreds)))
