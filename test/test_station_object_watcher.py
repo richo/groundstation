@@ -13,6 +13,8 @@ class TestFSNotifcation(StationTestCase):
 
         _id = self.station.write("foobarbaz")
         ret = watcher.read()
+        import sys
+        sys.stderr.write(ret)
         self.assertEqual(_id, path2id(ret))
 
         _id = self.station.write("foobarbaz1")
