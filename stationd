@@ -22,6 +22,7 @@ from groundstation.peer_socket_pool import PeerSocketPool
 from groundstation.broadcast_events import new_broadcast_event, UnknownBroadcastEvent
 from groundstation.broadcast_events.broadcast_ping import BroadcastPing
 from groundstation.gizmo_factory import InvalidGizmoError
+import groundstation.fs_watcher as fs_watcher
 
 from groundstation.utils import path2id
 
@@ -107,6 +108,10 @@ def handle_tcpnetwork_event():
         log.warn("Recieved invalid gizmo!")
 
 
+def handle_fsevent():
+    pass
+
+
 def handle_iterators():
     station.handle_iters()
 
@@ -122,18 +127,15 @@ def handler_for(thing):
         return handle_listener_event
     elif isinstance(thing, PeerSocket) or isinstance(i, StreamClient):
         return handle_tcpnetwork_event
+    elif isinstance(thing, fs_watcher.Watcher):
+        return handle_fsevent
     else:
         raise KeyError
 
 if sys.argv.count("--watch-fs"):
-    from groundstation.fs_watcher import FSWatcher
-    watcher = FSWatcher(station.store.object_root)
+    watcher = fs_watcher.FSWatcher(station.store.object_root)
 
-    @watcher.register_handler
-    def handler(event):
-        obj_id = path2id(event.src_path)
-        for client in peer_sockets:
-            client.notify_new_object(obj_id, station)
+    peer_sockets.append(watcher)
 
 while True:
     log.info("Current status :: Iterators: %i Deferreds: %i" %
