@@ -13,3 +13,11 @@ class StationTestCase(unittest.TestCase):
 
     def tearDown(self):
         shutil.rmtree(self.station.store.path)
+
+
+class RandomPathTestCase(unittest.TestCase):
+    def setUp(self):
+        self.path = tempfile.mkdtemp()
+
+    def tearDown(self):
+        shutil.rmtree(self.path)

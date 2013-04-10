@@ -1,4 +1,7 @@
-from station_fixture import StationTestCase
+import os
+from station_fixture import StationTestCase, RandomPathTestCase
+
+from groundstation.station import Station
 from groundstation.gref import Gref
 
 class TestStationObjectCache(StationTestCase):
@@ -7,6 +10,24 @@ class TestStationObjectCache(StationTestCase):
         self.assertFalse(self.station.recently_queried("rawrtest"))
         self.assertTrue(self.station.recently_queried("rawrtest"))
         self.assertFalse(self.station.recently_queried("rawrtestSomeOther"))
+
+
+class TestStationInit(RandomPathTestCase):
+    def test_init(self):
+        station = Station(self.path, None)
+        self.assertEqual(station.store.path, self.path)
+
+
+class TestSTationInitFromEnv(RandomPathTestCase):
+    def test_init(self):
+        old_gs_home = os.getenv('GROUNDSTATION_HOME')
+
+        os.environ['GROUNDSTATION_HOME'] = self.path
+        station = Station.from_env(None)
+        self.assertEqual(station.store.path, self.path)
+        if old_gs_home:
+            os.environ['GROUNDSTATION_HOME'] = old_gs_home
+
 
 class TestStationIterator(StationTestCase):
     def test_iterator(self):
