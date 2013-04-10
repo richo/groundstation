@@ -37,14 +37,14 @@ function init_airship(groundstation) {
   });
   var new_gref = {
     title: $("#new-gref-title").text(),
-    body: $("#new-gref-body").text(),
+    body: $("#new-gref-body")[0].value,
     name: $("#new-gref-name").text()
   };
   var new_gref_validator = groundstation.validators.gref(new_gref.name, new_gref.title, new_gref.body);
 
   $("#new-gref").on('click', function() {
     $("#new-gref-title").text(new_gref.title);
-    $("#new-gref-body").text(new_gref.body);
+    $("#new-gref-body")[0].value = new_gref.body;
     $("#new-gref-name").text(new_gref.name);
     var modal = $("#new-gref-modal");
     modal.modal();
@@ -54,7 +54,7 @@ function init_airship(groundstation) {
   });
   $("#new-gref-create").on('click', function() {
     var title = $("#new-gref-title").text(),
-        body = $("#new-gref-body")[0].innerText,
+        body = $("#new-gref-body")[0].value,
         name = $("#new-gref-name").text(),
         protocol = $("#new-gref-protocol").text();
 
@@ -199,7 +199,7 @@ function buildCommentBox(div, model) {
   submit = document.createElement("button");
   submit.className = "btn";
   submit.id = "new-comment-submit";
-  submit.innerText = "Submit";
+  $(submit).text("Submit");
 
   $(submit).on('click', function(ev) {
     $.ajax({
