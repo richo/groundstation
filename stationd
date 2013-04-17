@@ -109,7 +109,10 @@ def handle_tcpnetwork_event():
 
 
 def handle_fsevent():
-    pass
+    obj_name = i.read()
+    assert obj_name in station.store
+    for sock in peer_sockets:
+        sock.notify_new_object(station, obj_name)
 
 
 def handle_iterators():
