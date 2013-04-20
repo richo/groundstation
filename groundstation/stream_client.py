@@ -3,6 +3,8 @@ from transfer.request import Request
 from transfer.notification import Notification
 import settings
 
+from groundstation.utils import path2id
+
 import groundstation.logger
 log = groundstation.logger.getLogger(__name__)
 
@@ -20,6 +22,7 @@ class StreamClient(StreamSocket):
         station.register_request(request)
         self.enqueue(request)
 
-    def notify_new_object(self, station, obj):
+    def notify_new_object(self, station, path):
+        obj = path2id(path)
         notification = Notification("NEWOBJECT", station=station, stream=self, payload=obj)
         self.enqueue(notification)
