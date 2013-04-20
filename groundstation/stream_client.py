@@ -21,5 +21,5 @@ class StreamClient(StreamSocket):
         self.enqueue(request)
 
     def notify_new_object(self, station, obj):
-        notification = Notification("NEWOBJECT", station=station, stream=self, payload="object")
+        notification = Notification("NEWOBJECT", station=station, stream=self, payload=obj)
         self.enqueue(notification)

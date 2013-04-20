@@ -34,7 +34,7 @@ class Notification(object):
     @classmethod
     def from_gizmo(klass, gizmo, station, stream):
         log.debug("Hydrating a notification from gizmo")
-        return Notification(gizmo.id, gizmo.verb, gizmo.payload, station, stream, gizmo.stationid)
+        return Notification(gizmo.verb, station, stream, gizmo.payload, remoteId=gizmo.id)
 
     def SerializeToString(self):
         gizmo = self.station.gizmo_factory.gizmo()

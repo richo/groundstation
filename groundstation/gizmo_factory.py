@@ -30,7 +30,7 @@ class GizmoFactory(object):
         except DecodeError:
             raise InvalidGizmoError("Couldn't decode gizmo")
         try:
-            return self.builders[gizmo.type].from_gizmo(gizmo, self.station, stream)
+            return self.builders[gizmo.type].from_gizmo(gizmo, station=self.station, stream=stream)
         except KeyError:
             raise Exception("Invalid message type")
 
