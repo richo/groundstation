@@ -23,7 +23,7 @@ class Notification(object):
         # if origin:
         #     self.origin = uuid.UUID(origin)
         self.origin = origin
-        self.validate()
+        # self.validate() #  TODO
 
     def _Request(self, *args, **kwargs):
         kwargs['station'] = self.station
