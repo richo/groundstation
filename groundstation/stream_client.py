@@ -1,4 +1,3 @@
-import socket
 from sockets.stream_socket import StreamSocket
 from transfer.request import Request
 import settings
@@ -6,9 +5,11 @@ import settings
 import groundstation.logger
 log = groundstation.logger.getLogger(__name__)
 
+
 class StreamClient(StreamSocket):
     def __init__(self, addr):
         super(StreamClient, self).__init__()
+        # TODO Pretty sure this should be a struct sockaddr
         self.peer = addr
         self.socket.connect((addr, settings.PORT))
         self.socket.setblocking(False)
