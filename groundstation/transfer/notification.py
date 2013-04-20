@@ -39,7 +39,7 @@ class Notification(object):
     def SerializeToString(self):
         gizmo = self.station.gizmo_factory.gizmo()
         gizmo.id = str(self.id)
-        gizmo.type = Gizmo.RESPONSE
+        gizmo.type = Gizmo.NOTIFICATION
         gizmo.verb = self.verb
         if self.payload:
             gizmo.payload = self.payload
