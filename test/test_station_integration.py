@@ -3,6 +3,7 @@ import socket
 
 import unittest
 import tempfile
+import shutil
 
 from groundstation.stream_listener import StreamListener
 from groundstation.stream_client import StreamClient
@@ -28,6 +29,10 @@ class TestClient(StreamClient):
 class StationIntegrationFixture(unittest.TestCase):
     def setUp(self):
         self.dir = tempfile.mkdtemp()
+
+    def tearDown(self):
+        shutil.rmtree(self.dir)
+
 
 class StationConnectionTestCase(StationIntegrationFixture):
     def test_two_stations_connect(self):
