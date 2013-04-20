@@ -50,11 +50,12 @@ class Watcher(object):
         os.kill(self.pid, signal.SIGKILL)
 
 
-
 def FSWatcher(path):
     _out, _in = os.pipe()
     _pid = os.fork()
     if _pid > 0:
+        assert chr(0) == os.read(_out, 1), \
+            "Watcher didn't write the test byte"
         return Watcher(_pid, _out)
     elif _pid == 0:
         # Run doesn't create a new thread

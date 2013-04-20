@@ -9,7 +9,6 @@ from groundstation.utils import path2id
 class TestFSNotifcation(StationTestCase):
     def test_fs_notification(self):
         watcher = FSWatcher(self.station.store.object_root)
-        self.assertEqual(chr(0), os.read(watcher.pipe, 1))
 
         _id = self.station.write("foobarbaz")
         ret = watcher.read()
@@ -28,7 +27,6 @@ class TestFSNotifcation(StationTestCase):
 
     def test_selects_sanely(self):
         watcher = FSWatcher(self.station.store.object_root)
-        self.assertEqual(chr(0), os.read(watcher.pipe, 1))
 
         (s_read, s_write, s_exc) = select.select([watcher.pipe], [], [], 0)
         self.assertEqual(len(s_read), 0)
