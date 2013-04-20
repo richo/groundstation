@@ -23,6 +23,8 @@ class StreamClient(StreamSocket):
         self.enqueue(request)
 
     def notify_new_object(self, station, path):
+        # TODO FSWatcher should probably be responsible for catching these to
+        # keep signal:noise sane
         obj = path2id(path)
         notification = Notification("NEWOBJECT", station=station, stream=self, payload=obj)
         self.enqueue(notification)
