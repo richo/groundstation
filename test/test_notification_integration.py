@@ -4,6 +4,8 @@ import select
 import groundstation.fs_watcher as fs_watcher
 from groundstation.peer_socket import PeerSocket
 
+from groundstation.utils import path2id
+
 from integration_fixture import StationIntegrationFixture, \
                                 TestListener, \
                                 TestClient
@@ -27,7 +29,7 @@ class StationFSWatcherIntegration(StationIntegrationFixture):
         (sread, _, _) = tick()
 
         self.assertIn(watcher, sread)
-        obj_name = watcher.read()
+        obj_name = path2id(watcher.read())
         client.notify_new_object(self.stations[0], obj_name)
         client.send()
 
@@ -35,6 +37,15 @@ class StationFSWatcherIntegration(StationIntegrationFixture):
         data = peer.packet_queue.pop()
         gizmo = self.stations[1].gizmo_factory.hydrate(data, peer)
         assert gizmo is not None, "gizmo_factory returned None"
+        gizmo.process()
+        peer.send()
+
+        client.recv()
+        data = client.packet_queue.pop()
+        gizmo = self.stations[0].gizmo_factory.hydrate(data, peer)
+        assert gizmo is not None, "gizmo_factory returned None"
+        self.assertEqual(gizmo.verb, "FETCHOBJECT")
+        self.assertEqual(gizmo.payload, obj_name)
         gizmo.process()
 
         watcher.kill()
