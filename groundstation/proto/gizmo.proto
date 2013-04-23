@@ -4,6 +4,7 @@ message Gizmo {
   enum GizmoType {
     REQUEST = 0;
     RESPONSE = 1;
+    NOTIFICATION = 2;
   }
 
   required string stationid = 2;

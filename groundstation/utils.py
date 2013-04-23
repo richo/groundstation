@@ -30,3 +30,8 @@ def chunks(l, n):
 
 def oid2hex(oid):
     return binascii.hexlify(oid)
+
+
+def path2id(path):
+    o_dir, o_name = os.path.split(path)
+    return "%s%s" % (os.path.basename(o_dir), o_name)

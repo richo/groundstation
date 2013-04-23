@@ -4,3 +4,4 @@ Flask==0.9
 PyGithub==1.12.2
 jira-python
 pycrypto
+watchdog

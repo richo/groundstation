@@ -6,40 +6,12 @@ import unittest
 import tempfile
 import shutil
 
-from groundstation.node import Node
-from groundstation.station import Station
-
-from groundstation.stream_listener import StreamListener
-from groundstation.stream_client import StreamClient
-
 from groundstation.peer_socket import PeerSocket
 
+from integration_fixture import StationIntegrationFixture, \
+                                TestListener, \
+                                TestClient
 
-class TestListener(StreamListener):
-    def __init__(self, path):
-        self._sock = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
-        super(StreamListener, self).__init__()
-        self._sock.bind(path)
-        self._sock.listen(16)
-
-
-class TestClient(StreamClient):
-    def __init__(self, path):
-        self._sock = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
-        super(StreamClient, self).__init__()
-        self.peer = path
-        self.socket.connect(path)
-        self.socket.setblocking(False)
-
-
-class StationIntegrationFixture(unittest.TestCase):
-    def setUp(self):
-        self.dir = tempfile.mkdtemp()
-        self.node = Node()
-        self.station = Station(os.path.join(self.dir, "station"), self.node)
-
-    def tearDown(self):
-        shutil.rmtree(self.dir)
 
 
 class StationConnectionTestCase(StationIntegrationFixture):
@@ -51,8 +23,8 @@ class StationConnectionTestCase(StationIntegrationFixture):
 
 class StationCommunication(StationIntegrationFixture):
     def test_send_objects(self):
-        read_sockets = [];
-        write_sockets = [];
+        read_sockets = []
+        write_sockets = []
         def tick():
             return select.select(read_sockets, write_sockets, [], 1)
 
@@ -72,7 +44,7 @@ class StationCommunication(StationIntegrationFixture):
 
         self.assertEqual(len(swrite), 1)
 
-        client.begin_handshake(self.station)
+        client.begin_handshake(self.stations[0])
         client.send()
 
         (sread, swrite, _) = tick()
