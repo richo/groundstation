@@ -19,21 +19,21 @@ class StationFSWatcherIntegration(StationIntegrationFixture):
         listener = TestListener(addr)
         client = TestClient(addr)
         peer = listener.accept(PeerSocket)
-        watcher = fs_watcher.FSWatcher(self.station.store.object_root)
+        watcher = fs_watcher.FSWatcher(self.stations[0].store.object_root)
 
         read_sockets.append(client)
         read_sockets.append(watcher)
-        self.station.write("trolololol")
+        self.stations[0].write("trolololol")
         (sread, _, _) = tick()
 
         self.assertIn(watcher, sread)
         obj_name = watcher.read()
-        client.notify_new_object(self.station, obj_name)
+        client.notify_new_object(self.stations[0], obj_name)
         client.send()
 
         peer.recv()
         data = peer.packet_queue.pop()
-        gizmo = self.station.gizmo_factory.hydrate(data, peer)
+        gizmo = self.stations[1].gizmo_factory.hydrate(data, peer)
         assert gizmo is not None, "gizmo_factory returned None"
         gizmo.process()
 

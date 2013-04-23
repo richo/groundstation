@@ -44,7 +44,7 @@ class StationCommunication(StationIntegrationFixture):
 
         self.assertEqual(len(swrite), 1)
 
-        client.begin_handshake(self.station)
+        client.begin_handshake(self.stations[0])
         client.send()
 
         (sread, swrite, _) = tick()

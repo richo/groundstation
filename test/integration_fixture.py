@@ -32,7 +32,7 @@ class StationIntegrationFixture(unittest.TestCase):
     def setUp(self):
         self.dir = tempfile.mkdtemp()
         self.node = Node()
-        self.station = Station(os.path.join(self.dir, "station"), self.node)
+        self.stations = [Station(os.path.join(self.dir, "station%i" % i), self.node) for i in xrange(10)]
 
     def tearDown(self):
         shutil.rmtree(self.dir)
