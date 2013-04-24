@@ -14,6 +14,7 @@ station = Station.from_env(myself)
 def _create_option_parser():
     parser = argparse.ArgumentParser()
     parser.add_argument("--host", dest='host', action='store')
+    parser.add_argument("--keyname", dest='key', action='store')
     return parser
 
 
@@ -21,6 +22,8 @@ def main(argv):
     parser = _create_option_parser()
     args = parser.parse_args(argv[1:])
     app = airship.make_airship(station)
+    if args.key:
+        app.set_signing_key(args.key)
     app.run(args.host, 9005, True)
 
 if __name__ == "__main__":

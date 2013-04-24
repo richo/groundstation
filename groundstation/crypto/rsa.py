@@ -60,7 +60,7 @@ class RSAAdaptor(object):
         assert len(data) == 40, "We only sign sha1 hashes"
         for keyname in self.keyset:
             key = self.keyset[keyname]
-            if key.verify(data, signature):
+            if key.verify(str(data), signature):
                 return keyname
         return False
 

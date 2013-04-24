@@ -3,7 +3,7 @@ import groundstation.proto.channel_list_pb2
 from groundstation import logger
 log = logger.getLogger(__name__)
 
-from groundstation.gref import Gref
+from groundstation.gref import Gref, Tip
 
 
 def handle_describechannels(self):
@@ -16,5 +16,5 @@ def handle_describechannels(self):
         for gref in channel.grefs:
             _gref = Gref(self.station.store, channel.channelname, gref.identifier)
             # Create a tip object to avoid upsetting fileutils
-            tips = [tip.tip for tip in gref.tips]
+            tips = [Tip(tip.tip, tip.signature) for tip in gref.tips]
             self.station.update_gref(_gref, tips, True)

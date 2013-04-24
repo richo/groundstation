@@ -26,13 +26,14 @@ groundstation.renderers["richo@psych0tik.net:github:"] = function (item) {
     }
   } else if (item.type == "comment") {
     el = document.createElement("p");
-    el.className = "github-issue-comment";
+    el.className = "github-issue-comment gref-taggable";
     el.setAttribute("data-author", item.user);
     el.setAttribute("data-hash", item.hash);
     $(el).html(markdown.toHTML(item.body));
   } else if (item.type == "event") {
     el = document.createElement("div");
-    el.className = classFor(item.state);
+    el.className = "gref-taggable";
+    el.className += ' ' + classFor(item.state);
     $(el).text(item.state + " by " + item.user);
     el.setAttribute("data-hash", item.hash);
   } else {

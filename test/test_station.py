@@ -2,7 +2,8 @@ import os
 from station_fixture import StationTestCase, RandomPathTestCase
 
 from groundstation.station import Station
-from groundstation.gref import Gref
+from groundstation.gref import Gref, Tip
+
 
 class TestStationObjectCache(StationTestCase):
     """Proves that querying for an unknown object returns false, then true"""
@@ -64,5 +65,5 @@ class TestStationIterator(StationTestCase):
 class TestStationGrefs(StationTestCase):
     def test_channels(self):
         gref = Gref(self.station.store, "test_channel", "test_id")
-        self.station.update_gref(gref, "foobar", "")
+        self.station.update_gref(gref, [Tip("foobar", "")], "")
         self.assertEqual(self.station.channels(), ["test_channel"])

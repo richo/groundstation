@@ -1,7 +1,7 @@
 from handler_fixture import StationHandlerTestCase
 
 from groundstation.transfer.request_handlers import handle_listallchannels
-from groundstation.gref import Gref
+from groundstation.gref import Gref, Tip
 from groundstation.objects.root_object import RootObject
 from groundstation.proto.channel_list_pb2 import ChannelList
 
@@ -16,7 +16,7 @@ class TestHandlerListAllChannels(StationHandlerTestCase):
         gref = Gref(self.station.station.store, test_channel, test_id)
 
         oid = self.station.station.write(obj.as_object())
-        self.station.station.update_gref(gref, [oid], [])
+        self.station.station.update_gref(gref, [Tip(oid, "")], [])
 
         handle_listallchannels(self.station)
         response = self.station.stream.pop()

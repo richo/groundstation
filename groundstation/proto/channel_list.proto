@@ -3,7 +3,7 @@ message ChannelList {
      message ChannelGrefDescription {
        message GrefTip {
          required bytes tip = 1;
-         optional bytes signature =2;
+         optional bytes signature = 2 [default = ""];
        }
        required string identifier = 1;
        repeated GrefTip tips = 2;

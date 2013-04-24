@@ -4,12 +4,11 @@ import time
 import logger
 log = logger.getLogger(__name__)
 
-from user import User, NoSuchUser
-
 from packed_keys import PackedKeys, NoKeysRef
 from gizmo_factory import GizmoFactory, InvalidGizmoError
 from request_registry import RequestRegistry
 from groundstation.gref import Gref
+from groundstation.crypto.rsa import RSAAdaptor, RSAPrivateAdaptor
 
 import groundstation.utils
 
@@ -39,6 +38,12 @@ class Station(object):
         else:
             station_path = os.path.expanduser("~/.groundstation")
             return Station(station_path, identity)
+
+    def get_crypto_adaptor(self):
+        return RSAAdaptor(self.store.get_public_keys())
+
+    def get_private_crypto_adaptor(self, keyname):
+        return RSAPrivateAdaptor(self.store.get_private_key(keyname))
 
     def get_request(self, request_id):
         return self.registry[request_id]
@@ -122,32 +127,14 @@ class Station(object):
     def update_gref(self, gref, tips, parents=[]):
         log.debug("updating %s - %s => %s" % (gref.channel, gref.identifier, tips))
         node_path = gref.node_path()
+        tip_oids = []
         for tip in tips:
-            gref.write_tip(tip, "")
+            gref.write_tip(tip.tip, tip.signature)
+            tip_oids.append(tip.tip)
         if parents is True:
-            parents = gref.parents(tips)
+            parents = gref.parents(tip_oids)
         for parent in parents:
             gref.remove_tip(parent, True)
-
-    def get_user(self, name):
-        return User(name, self)
-
-    def get_keys(self, user):
-        """Fetch the keys from an object pointed to by $db/users/_name_/keys"""
-        try:
-            ref = self.store.lookup_reference(user.keys_ref)
-            assert ref.oid in self.store, "Invalid user keys ref"
-            return PackedKeys(self.store[ref.oid].read_raw())
-        except KeyError:
-            raise NoKeysRef(user.name)
-
-    def set_keys(self, user, keys):
-        """Serialize the keys, then write them out to the db and update the ref"""
-        ref = self.store.create_blob(keys.pack())
-        try:
-            self.store.lookup_reference(user.keys_ref).oid = ref
-        except KeyError:
-            self.store.create_reference(user.keys_ref, ref)
 
     def recently_queried(self, identity):
         """CAS the cache status of a given identity.
