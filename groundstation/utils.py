@@ -1,5 +1,4 @@
 import os
-import binascii
 
 
 def is_dir(path):
@@ -29,4 +28,4 @@ def chunks(l, n):
         yield l[i:i+n]
 
 def oid2hex(oid):
-    return binascii.hexlify(oid)
+    return oid.hex

@@ -18,7 +18,7 @@ def handle_listallobjects(self):
     else:
         log.info("object cache for %s still valid" % (self.origin))
     log.info("Handling LISTALLOBJECTS")
-    payload = self.station.objects()
+    payload = [groundstation.utils.oid2hex(i) for i in self.station.objects()]
     if len(payload) > settings.LISTALLOBJECTS_CHUNK_THRESHOLD:
         log.info("Lots of objects to send, registering an iterator")
 
