@@ -36,6 +36,7 @@ def grefs_json(station, channel, escaped=False):
 
 def make_airship(station):
     app = Flask(__name__)
+    app.has_signing_key = False
 
     def set_signing_key(self, keyname):
         self.private_crypto_adaptor = \
@@ -43,7 +44,7 @@ def make_airship(station):
     app.set_signing_key = lambda key: set_signing_key(app, key)
 
     def _update_gref(gref, tips, parents):
-        if app.private_crypto_adaptor:
+        if app.has_signing_key:
             tips = map(lambda tip: Tip(tip.tip, app.private_crypto_adaptor.sign(tip.tip)), tips)
         station.update_gref(gref, tips, parents)
 
