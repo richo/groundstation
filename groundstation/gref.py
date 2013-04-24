@@ -1,4 +1,5 @@
 import os
+from collections import namedtuple
 import groundstation.objects.object_factory as object_factory
 
 from groundstation.objects.update_object import UpdateObject
@@ -6,6 +7,8 @@ from groundstation.objects.root_object import RootObject
 
 import logger
 log = logger.getLogger(__name__)
+
+Tip = namedtuple('Tip', ('tip', 'signature'))
 
 
 def valid_path(path):

@@ -9,7 +9,7 @@ log = logger.getLogger(__name__)
 
 # XXX We won't always be using the github adaptor!!
 from groundstation.protocols.github.read_adaptor import GithubReadAdaptor
-from groundstation.gref import Gref
+from groundstation.gref import Gref, Tip
 
 import pygit2
 from groundstation.utils import oid2hex
@@ -88,7 +88,7 @@ def make_airship(station):
                 }
         update_object = UpdateObject(parents, json.dumps(payload))
         oid = station.write(update_object.as_object())
-        station.update_gref(gref, [oid], parents)
+        station.update_gref(gref, [Tip(oid,"")], parents)
         return jsonate({"response": "ok"}, False)
 
     @app.route("/grefs/<channel>", methods=['PUT'])
@@ -120,7 +120,7 @@ def make_airship(station):
             }))
         body_oid = _write_object(_body)
 
-        station.update_gref(gref, [body_oid], [])
+        station.update_gref(gref, [Tip(body_oid, "")], [])
         return ""
 
     return app

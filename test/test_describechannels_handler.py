@@ -3,7 +3,7 @@ from handler_fixture import StationHandlerTestCase
 from groundstation.proto.channel_list_pb2 import ChannelList
 
 from groundstation.transfer.response_handlers import handle_describechannels
-from groundstation.gref import Gref
+from groundstation.gref import Gref, Tip
 from groundstation.objects.root_object import RootObject
 from groundstation.objects.update_object import UpdateObject
 
@@ -41,7 +41,7 @@ class TestHandlerDescribeChannels(StationHandlerTestCase):
         for i in xrange(10):
             update_obj = UpdateObject([current_oid.pop()], "loldata")
             current_oid.append(self.station.station.write(update_obj.as_object()))
-        self.station.station.update_gref(gref, [root_oid])
+        self.station.station.update_gref(gref, [Tip(root_oid, "")])
         self.assertEqual([root_oid], gref.tips())
         current_oid = current_oid.pop()
 
@@ -68,7 +68,7 @@ class TestHandlerDescribeChannels(StationHandlerTestCase):
         update_obj = UpdateObject([current_oid.pop()], "loldata")
         current_oid.append(binascii.hexlify(pygit2.hash(update_obj.as_object())))
 
-        self.station.station.update_gref(gref, [root_oid])
+        self.station.station.update_gref(gref, [Tip(root_oid, "")])
         self.assertEqual([root_oid], gref.tips())
         current_oid = current_oid.pop()
 

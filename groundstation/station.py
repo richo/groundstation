@@ -122,10 +122,12 @@ class Station(object):
     def update_gref(self, gref, tips, parents=[]):
         log.debug("updating %s - %s => %s" % (gref.channel, gref.identifier, tips))
         node_path = gref.node_path()
+        tip_oids = []
         for tip in tips:
-            gref.write_tip(tip, "")
+            gref.write_tip(tip.tip, tip.signature)
+            tip_oids.append(tip.tip)
         if parents is True:
-            parents = gref.parents(tips)
+            parents = gref.parents(tip_oids)
         for parent in parents:
             gref.remove_tip(parent, True)
 
