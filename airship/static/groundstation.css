@@ -33,10 +33,10 @@
   padding: 0px 5px;
   font-size: 10px;
 }
-.gref-taggable[data-signature="valid"]:after {
+.gref-taggable[data-signature]:after {
   background-color: #00cc00 !important;
 }
-.gref-taggable[data-signature="invalid"]:after {
+.gref-taggable[data-invalid-signature]:after {
   background-color: #cc0000 !important;
 }
 
