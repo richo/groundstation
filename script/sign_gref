@@ -1,0 +1,38 @@
+#!/usr/bin/env python
+
+import sys
+import argparse
+
+from groundstation.station import Station
+from groundstation.gref import Gref
+
+from groundstation import logger
+log = logger.getLogger(__name__)
+
+station = Station.from_env(None)
+
+def _create_option_parser():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("keyname", nargs=1)
+    parser.add_argument("channel", nargs=1)
+    parser.add_argument("identifier", nargs=1)
+    return parser
+
+def main(argv):
+    parser = _create_option_parser()
+    args = parser.parse_args(sys.argv[1:])
+
+    channel = args.channel.pop()
+    identifier = args.identifier.pop()
+    keyname = args.keyname.pop()
+
+    adaptor = station.get_private_crypto_adaptor(keyname)
+
+    gref = Gref(station.store, channel, identifier)
+    for tip in gref.tips():
+        if not gref.get_signature(tip):
+            log.info("Signing tip: %s" % (tip))
+            gref.write_tip(tip, adaptor.sign(tip))
+
+if __name__ == "__main__":
+    main(sys.argv[:1])
