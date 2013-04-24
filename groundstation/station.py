@@ -8,6 +8,7 @@ from packed_keys import PackedKeys, NoKeysRef
 from gizmo_factory import GizmoFactory, InvalidGizmoError
 from request_registry import RequestRegistry
 from groundstation.gref import Gref
+from groundstation.crypto.rsa import RSAAdaptor
 
 import groundstation.utils
 
@@ -37,6 +38,9 @@ class Station(object):
         else:
             station_path = os.path.expanduser("~/.groundstation")
             return Station(station_path, identity)
+
+    def get_crypto_adaptor(self):
+        return RSAAdaptor(self.store.get_public_keys())
 
     def get_request(self, request_id):
         return self.registry[request_id]
