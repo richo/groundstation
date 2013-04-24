@@ -62,7 +62,10 @@ class Gref(object):
     def get_signature(self, tip):
         try:
             with open(self.tip_path(tip), 'r') as fh:
-                return (int(fh.read()),)
+                data = fh.read()
+                if not data:
+                    return ""
+                return (int(data),)
         except IOError:
             return ""
 
