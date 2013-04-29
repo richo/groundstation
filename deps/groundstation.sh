@@ -4,15 +4,27 @@ groundstation_dev() {
     process
 }
 
-libgit2_dev() {
-    function is_met() {
-        echo "main() { return 0; }" | gcc -x c /dev/stdin -lgit2 -o /dev/null
-    }
-    function meet {
-        ( [ "`uname -s`" == "Darwin" ] && which brew >/dev/null ) || unmeetable "Only supported on osx"
-        brew install --HEAD libgit2
-    }
+build_essential_installed() {
+    # TODO osx
+    install_package build-essential
     process
+}
+
+libgit2_dev() {
+    requires "build_essential_installed"
+
+    case `uname -s` in
+        Darwin)
+            function is_met() {
+                echo "main() { return 0; }" | gcc -x c /dev/stdin -lgit2 -o /dev/null
+            }
+            function meet {
+                brew install --HEAD libgit2
+            }
+            process;;
+        *)
+            requires "libgit2_from_git";;
+    esac
 }
 
 virtualenv_exists() {
