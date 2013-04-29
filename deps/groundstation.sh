@@ -27,8 +27,25 @@ libgit2_dev() {
     esac
 }
 
+libgit2_from_git() {
+    requires "virtualenv_exists"
+
+    function is_met() {
+        echo "main() { return 0; }" | gcc -x c /dev/stdin -lgit2 -o /dev/null
+    }
+    function meet() {
+        git clone git://github.com/libgit2/libgit2.git env/src/libgit2
+        (
+          cd env/src/libgit2
+          ./autogen.sh
+          make
+          $__babashka_sudo make install
+        )
+    }
+}
+
 virtualenv_exists() {
-    #requires "virtualenv installed"
+    requires "virtualenv_installed"
     function is_met() {
         test -d env
     }
@@ -56,4 +73,22 @@ pip_packages_installed() {
         )
     }
     process
+}
+
+virtualenv_installed() {
+    function is_met() {
+        which virtualenv
+    }
+    function meet() {
+        case `uname -s` in
+            Linux)
+                # TODO Non debian derivatives
+                $__babashka_sudo aptitude install python-virtualenv
+                ;;
+            Darwin)
+                pip install virtualenv
+                ;;
+        esac
+        process
+    }
 }
