@@ -123,6 +123,10 @@ def handler_for(thing):
     else:
         raise KeyError
 
+for host in sys.argv[1:]:
+    client = StreamClient(host)
+    peer_sockets.append(client)
+    client.begin_handshake(station)
 
 while True:
     log.info("Current status :: Iterators: %i Deferreds: %i" %
