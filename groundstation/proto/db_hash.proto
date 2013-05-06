@@ -1,0 +1,4 @@
+message DBHash {
+    required string prefix = 1;
+    optional bytes hash = 2;
+}
