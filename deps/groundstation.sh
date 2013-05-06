@@ -89,6 +89,6 @@ virtualenv_installed() {
                 pip install virtualenv
                 ;;
         esac
-        process
     }
+    process
 }
