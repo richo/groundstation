@@ -10,6 +10,11 @@ build_essential_installed() {
     process
 }
 
+python_dev_installed() {
+    install_package python-dev
+    process
+}
+
 libgit2_dev() {
     requires "build_essential_installed"
 
@@ -57,6 +62,7 @@ virtualenv_exists() {
 
 pip_packages_installed() {
     requires "virtualenv_exists"
+    requires "python_dev_installed"
     function is_met() {
         (
             . env/bin/activate
