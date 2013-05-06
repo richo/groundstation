@@ -3,12 +3,20 @@ groundstation
 
 groundstation is a decentralised task/project management suite.
 
+It's uses are wide and varied, but some key examples are:
+
+* Locale driven marketplaces.
+* Fully decentralised bulletin boards.
+* Networks that keep working long after the internet has failed.
+
 The core of its implementation is an object store of linked immutable objects
 that are synced via a gossip protocol.
 
 The current version uses libgit2 as a storage backend, but doesn't use many git
-primitives, beyond git's objects as a storage medium. This may change in the
-future.
+primitives, beyond git's objects as a storage medium. Git is deliberately
+pulled out into a storage driver, however while groundstation doesn't assume
+that you're using git it does assume you're using something that looks *a lot
+like git*.
 
 pygit2
 ------
@@ -29,7 +37,7 @@ what to actually do with that data.
 That said, groundstation does ship with some protocol adaptors. Adaptors take
 the form `name@domain:adaptor-version`, and until such time as a release is
 already, everything that ships with groundstation will be released with
-`richo@psych0tik.net` as the email.
+`richo@psych0tik.net` as the email, ie `richo@psych0tik.net:github-0.0.0`.
 
 
 development
