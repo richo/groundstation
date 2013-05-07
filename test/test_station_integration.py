@@ -93,6 +93,12 @@ class StationHandshakeTestCase(StationIntegrationFixture):
         active = self.stations["active"]
         passive = self.stations["passive"]
 
+        # Put some unique objects in each station
+
+        for i in xrange(100):
+            active.write("active%d" % i)
+            passive.write("passive%d" % i)
+
         read_sockets = [];
         write_sockets = [];
         def tick():
