@@ -81,3 +81,26 @@ class TestHandlerQueuesDeferredRetry(StationHandlerTestCase):
         req1 = self.station.stream.pop(0)
         handle_terminate(req1)
         self.assertEqual(len(self.station.station.deferreds), 1)
+
+
+class TestListAllObjectsWithPrefix(StationHandlerTestCase):
+    def test_only_fetches_for_prefix(self):
+        # Make ourselves cached
+        self.station.station.mark_queried(self.station.origin)
+        oids = list()
+        for i in xrange(64):
+            oid = self.station.station.write("test_%i" % (i))
+            if oid.startswith("0"):
+                oids.append(oid)
+
+        self.station.payload = "0"
+        handle_listallobjects(self.station)
+        resp = self.station.stream.pop()
+        self.assertIsInstance(resp, response.Response)
+        objects = ObjectList()
+        objects.ParseFromString(resp.payload)
+
+        self.assertEqual(len(objects.objectname), len(oids))
+
+        for i in objects.objectname:
+            self.assertIn(i, oids)
