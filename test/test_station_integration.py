@@ -102,17 +102,13 @@ class StationHandshakeTestCase(StationIntegrationFixture):
         read_sockets = [];
         write_sockets = [];
         def tick():
-            tmp_write = []
-            for sock in write_sockets:
-                if sock.has_data_ready():
-                    tmp_write.append(sock)
-            sread, swrite, sexc = select.select(read_sockets, tmp_write, [], 1)
+            for i in write_sockets:
+                while i.has_data_ready():
+                    i.send()
+
+            sread, swrite, sexc = select.select(read_sockets, [], [], 1)
             if sexc:
                 assert False, "Sockets kerploded"
-
-            for i in swrite:
-                if i.has_data_ready():
-                    i.send()
 
             return sread
 
