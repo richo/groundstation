@@ -23,6 +23,8 @@ from groundstation.broadcast_events import new_broadcast_event, UnknownBroadcast
 from groundstation.broadcast_events.broadcast_ping import BroadcastPing
 from groundstation.gizmo_factory import InvalidGizmoError
 
+import groundstation.events.tcpnetwork_event as tcpnetwork_event
+
 import groundstation.deferred
 
 PORT = settings.PORT
@@ -93,10 +95,8 @@ def handle_listener_event(sock):
 
 def handle_tcpnetwork_event(sock):
     try:
-        sock.recv()
-        while sock.packet_queue:
-            data = sock.packet_queue.pop()
-            gizmo = station.gizmo_factory.hydrate(data, sock)
+        for payload in tcpnetwork_event.payloads(sock):
+            gizmo = station.gizmo_factory.hydrate(payload, sock)
             assert gizmo is not None, "gizmo_factory returned None"
             gizmo.process()
     except SocketClosedException:
