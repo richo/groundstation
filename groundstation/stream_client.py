@@ -15,6 +15,17 @@ class StreamClient(StreamSocket):
         self.socket.setblocking(False)
 
     def begin_handshake(self, station):
-        request = Request("LISTALLOBJECTS", station=station, stream=self)
-        station.register_request(request)
-        self.enqueue(request)
+        prefixes = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+                    'a', 'b', 'c', 'd', 'e', 'f']
+        def terminate(inst):
+            if not prefixes:
+                pass
+            prefix = prefixes.pop(0)
+            request = Request("LISTDBHASH", payload=prefix, station=station, stream=self)
+            request.terminate = terminate
+            station.register_request(request)
+            self.enqueue(request)
+
+        # Our terminate handler kicks of a fetch of the next DB hash prefix. We
+        # bump it to start the handshake.
+        terminate()
