@@ -16,6 +16,8 @@ from groundstation.stream_client import StreamClient
 
 from groundstation.peer_socket import PeerSocket
 
+import groundstation.events.tcpnetwork_event as tcpnetwork_event
+
 
 class TestListener(StreamListener):
     def __init__(self, path):
@@ -121,14 +123,10 @@ class StationHandshakeTestCase(StationIntegrationFixture):
 
         # Start out handlshake
         client.begin_handshake(passive)
+        client.send()
         sread = tick()
 
-        # (sread, swrite, _) = tick()
-        # # Handle our listener
-        # self.assertEqual(len(sread), 1)
-        # peer = listener.accept(PeerSocket)
-
-        # self.assertEqual(len(swrite), 1)
-
-
-        # (sread, swrite, _) = tick()
+        self.assertEqual(len(sread), 1)
+        self.assertIsInstance(sread[0], PeerSocket)
+        for payload in tcpnetwork_event.payloads(sread[0]):
+            active.gizmo_factory.hydrate(payload, peer)
