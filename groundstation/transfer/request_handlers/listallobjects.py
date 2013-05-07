@@ -9,6 +9,7 @@ log = logger.getLogger(__name__)
 
 
 def handle_listallobjects(self):
+    # XXX This is going to be obsolete soon
     if not self.station.recently_queried(self.origin):
         log.info("%s not up to date, issuing LISTALLOBJECTS" % (self.origin))
         #                                                                      Pass in the station for gizmo_factory in the constructor
@@ -18,7 +19,13 @@ def handle_listallobjects(self):
     else:
         log.info("object cache for %s still valid" % (self.origin))
     log.info("Handling LISTALLOBJECTS")
-    payload = [groundstation.utils.oid2hex(i) for i in self.station.objects()]
+    prefix = self.payload
+    payload = []
+    for i in self.station.objects():
+        name = groundstation.utils.oid2hex(i)
+        if name.startswith(prefix):
+            payload.append(name)
+
     if len(payload) > settings.LISTALLOBJECTS_CHUNK_THRESHOLD:
         log.info("Lots of objects to send, registering an iterator")
 

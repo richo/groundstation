@@ -15,6 +15,7 @@ class TestHandlerListAllObjects(StationHandlerTestCase):
         for i in xrange(64):
             oids.append(self.station.station.write("test_%i" % (i)))
 
+        self.station.payload = ""
         handle_listallobjects(self.station)
         resp = self.station.stream.pop()
         self.assertIsInstance(resp, response.Response)
@@ -30,6 +31,8 @@ class TestHandlerListAllObjects(StationHandlerTestCase):
         self.station.set_real_terminate(True)
         self.station.set_real_id(True)
         self.station.set_real_register(True)
+
+        self.station.payload = ""
         handle_listallobjects(self.station)
         req1 = self.station.stream.pop(0)
         self.assertEqual(req1.verb, "LISTALLOBJECTS")
@@ -51,6 +54,7 @@ class TestHandlerListAllObjects(StationHandlerTestCase):
 
 class TestHandlerListAllObjectsCached(StationHandlerTestCase):
     def test_has_cache(self):
+        self.station.payload = ""
         handle_listallobjects(self.station)
         req1 = self.station.stream.pop(0)
         self.assertEqual(req1.verb, "LISTALLOBJECTS")
@@ -72,6 +76,7 @@ class TestHandlerQueuesDeferredRetry(StationHandlerTestCase):
         self.assertFalse(self.station.station.has_ready_deferreds())
 
         self.assertEqual(len(self.station.station.deferreds), 0)
+        self.station.payload = ""
         handle_listallobjects(self.station)
         req1 = self.station.stream.pop(0)
         handle_terminate(req1)
