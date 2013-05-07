@@ -159,7 +159,7 @@ class Station(object):
     def get_hash(self, prefix):
         # TODO This depends heavily on the order that objects() returns
         sha = hashlib.sha1()
-        for oid in self.objects():
+        for oid in sorted(self.objects()):
             name = groundstation.utils.oid2hex(oid)
             if name.startswith(prefix):
                 sha.update(name)
