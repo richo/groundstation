@@ -102,20 +102,11 @@ class StationHandshakeTestCase(StationIntegrationFixture):
             if sexc:
                 assert False, "Sockets kerploded"
 
-            for i in sread:
-                if i == client:
-                    pass
-                elif i == peer:
-                    pass
-                else:
-                    assert False, "Something unknown found it's way in"
-
             for i in swrite:
                 if i.has_data_ready():
                     i.send()
 
-
-
+            return sread
 
         addr = os.path.join(self.dir, "listener")
         listener = TestListener(addr)
@@ -130,7 +121,7 @@ class StationHandshakeTestCase(StationIntegrationFixture):
 
         # Start out handlshake
         client.begin_handshake(passive)
-        tick()
+        sread = tick()
 
         # (sread, swrite, _) = tick()
         # # Handle our listener
