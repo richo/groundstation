@@ -129,4 +129,6 @@ class StationHandshakeTestCase(StationIntegrationFixture):
         self.assertEqual(len(sread), 1)
         self.assertIsInstance(sread[0], PeerSocket)
         for payload in tcpnetwork_event.payloads(sread[0]):
-            active.gizmo_factory.hydrate(payload, peer)
+            gizmo = active.gizmo_factory.hydrate(payload, peer)
+            self.assertEqual(gizmo.verb, "LISTDBHASH")
+            self.assertEqual(gizmo.payload, "")

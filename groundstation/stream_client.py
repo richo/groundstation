@@ -15,6 +15,11 @@ class StreamClient(StreamSocket):
         self.socket.setblocking(False)
 
     def begin_handshake(self, station):
+        request = Request("LISTDBHASH", payload="", station=station, stream=self)
+        station.register_request(request)
+        self.enqueue(request)
+
+    def begin_incremental_sync(self, station):
         prefixes = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
                     'a', 'b', 'c', 'd', 'e', 'f']
 
