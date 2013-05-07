@@ -27,6 +27,7 @@ class Request(object):
             "LISTALLOBJECTS": request_handlers.handle_listallobjects,
             "FETCHOBJECT": request_handlers.handle_fetchobject,
             "LISTALLCHANNELS": request_handlers.handle_listallchannels,
+            "LISTDBHASH": request_handlers.handle_listdbhash
     }
 
     def __init__(self, verb, station=None, stream=None, payload=None, origin=None, remoteId=None):
