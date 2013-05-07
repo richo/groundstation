@@ -27,23 +27,16 @@ class TestHandlerNullDatabase(StationHandlerTestCase):
 
 class TestHandlerPopulatedDataBase(StationHandlerTestCase):
     def test_prefixes_work_for_populated_db(self):
-        # Create some test data.
-        oids = []
-        prefixes = ("a", "1c", "eb9")
         for i in xrange(100):
-            oid = self.station.station.write("butts %d" % i)
-            oids.append(oid)
+            self.station.station.write("butts %d" % i)
 
-        oids = sorted(oids)
-        hashes = {}
-        for prefix in prefixes:
-            s = hashlib.sha1()
-            for i in oids:
-                if i.startswith(prefix):
-                    s.update(i)
-            hashes[prefix] = s.digest()
+        hashes = {'a': "\xa9K}\xa3\x9d\x9a\xb4\xab\xb2\xb6i.\xb5#\x1d/\xfdKu\xf4",
+                  '1c': "\x1bZ\x8c\x9dETL4H\"`\te\xca\xa9Vy\x9f\xfdS",
+                  'eb9': "\xc4q\x9a\xe0\xadJ\x12\x19n\x06\x18\x9c*\xae\nT-\xe3\t>"
+                  }
 
-        for prefix in prefixes:
+        for prefix in hashes:
+
             self.station.payload = prefix
             handle_listdbhash(self.station)
 
