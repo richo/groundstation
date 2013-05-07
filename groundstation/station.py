@@ -1,5 +1,6 @@
 import os
 import time
+import hashlib
 
 import logger
 log = logger.getLogger(__name__)
@@ -154,3 +155,12 @@ class Station(object):
     def mark_queried(self, identity):
         val = str(identity)
         self.identity_cache[val] = time.time()
+
+    def get_hash(self, prefix):
+        # TODO This depends heavily on the order that objects() returns
+        sha = hashlib.sha1()
+        for oid in self.objects():
+            name = groundstation.utils.oid2hex(oid)
+            if name.startswith(prefix):
+                sha.update(name)
+        return sha.digest()
