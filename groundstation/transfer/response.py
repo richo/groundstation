@@ -51,6 +51,7 @@ class Response(object):
             "TRANSFER": response_handlers.handle_transfer,
             "DESCRIBEOBJECTS": response_handlers.handle_describeobjects,
             "DESCRIBECHANNELS": response_handlers.handle_describechannels,
+            "DESCRIBEHASH": response_handlers.handle_describehash,
             "TERMINATE": response_handlers.handle_terminate,
     }
 
