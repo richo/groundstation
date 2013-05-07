@@ -55,9 +55,9 @@ def _write_sockets():
             write_sockets.append(i)
     return write_sockets
 
-def handle_discoverer_event():
+def handle_discoverer_event(sock):
     # TODO Return Event objects instead of raw data
-    data, peer = discoverer.recv(settings.DEFAULT_BUFSIZE)
+    data, peer = sock.recv(settings.DEFAULT_BUFSIZE)
     try:
         event = new_broadcast_event(data)
     except UnknownBroadcastEvent:
@@ -86,21 +86,21 @@ def handle_discoverer_event():
                 log.info("Peer's uuid is smaller, awaiting connection")
 
 
-def handle_listener_event():
-    peer = listener.accept(PeerSocket)
+def handle_listener_event(sock):
+    peer = sock.accept(PeerSocket)
     peer_sockets.append(peer)
 
 
-def handle_tcpnetwork_event():
+def handle_tcpnetwork_event(sock):
     try:
-        i.recv()
-        while i.packet_queue:
-            data = i.packet_queue.pop()
-            gizmo = station.gizmo_factory.hydrate(data, i)
+        sock.recv()
+        while sock.packet_queue:
+            data = sock.packet_queue.pop()
+            gizmo = station.gizmo_factory.hydrate(data, sock)
             assert gizmo is not None, "gizmo_factory returned None"
             gizmo.process()
     except SocketClosedException:
-        peer_sockets.remove(i)
+        peer_sockets.remove(sock)
     except InvalidGizmoError:
         log.warn("Recieved invalid gizmo!")
 
@@ -142,7 +142,7 @@ while True:
     log.info("Got %i fds. read: %s write: %i" % (len(sread) + len(swrite), len(sread), len(swrite)))
 
     for i in sread:
-        handler_for(i)()
+        handler_for(i)(i)
 
     for i in swrite:
         if not (isinstance(i, PeerSocket) or isinstance(i, StreamClient)):
