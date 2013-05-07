@@ -18,6 +18,8 @@ from groundstation.peer_socket import PeerSocket
 
 import groundstation.events.tcpnetwork_event as tcpnetwork_event
 
+from groundstation.transfer.request_handlers import handle_listdbhash
+
 
 class TestListener(StreamListener):
     def __init__(self, path):
@@ -134,3 +136,4 @@ class StationHandshakeTestCase(StationIntegrationFixture):
             gizmo = active.gizmo_factory.hydrate(payload, peer)
             self.assertEqual(gizmo.verb, "LISTDBHASH")
             self.assertEqual(gizmo.payload, "")
+            handle_listdbhash(gizmo)
