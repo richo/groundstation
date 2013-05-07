@@ -1,3 +1,4 @@
 from listallobjects import handle_listallobjects
 from fetchobject import handle_fetchobject
 from listallchannels import handle_listallchannels
+from listdbhash import handle_listdbhash
