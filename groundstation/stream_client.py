@@ -17,7 +17,8 @@ class StreamClient(StreamSocket):
     def begin_handshake(self, station):
         prefixes = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
                     'a', 'b', 'c', 'd', 'e', 'f']
-        def terminate(inst):
+
+        def terminate(self):
             if not prefixes:
                 pass
             prefix = prefixes.pop(0)
@@ -28,4 +29,4 @@ class StreamClient(StreamSocket):
 
         # Our terminate handler kicks of a fetch of the next DB hash prefix. We
         # bump it to start the handshake.
-        terminate()
+        terminate(self)
