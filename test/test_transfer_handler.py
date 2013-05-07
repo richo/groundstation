@@ -1,6 +1,6 @@
 import pygit2
 from groundstation.utils import oid2hex
-from handler_fixture import StationHandlerTestCase, MockRequest
+from support.handler_fixture import StationHandlerTestCase, MockRequest
 
 from groundstation.proto.git_object_pb2 import GitObject
 

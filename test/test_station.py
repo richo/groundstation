@@ -1,5 +1,5 @@
 import os
-from station_fixture import StationTestCase, RandomPathTestCase
+from support.station_fixture import StationTestCase, RandomPathTestCase
 
 from groundstation.station import Station
 from groundstation.gref import Gref, Tip
