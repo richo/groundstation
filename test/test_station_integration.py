@@ -6,6 +6,8 @@ import unittest
 import tempfile
 import shutil
 
+from collections import defaultdict
+
 from groundstation.node import Node
 from groundstation.station import Station
 
@@ -36,7 +38,13 @@ class StationIntegrationFixture(unittest.TestCase):
     def setUp(self):
         self.dir = tempfile.mkdtemp()
         self.node = Node()
-        self.station = Station(os.path.join(self.dir, "station"), self.node)
+        current_station = [-1]
+
+        def new_station():
+            current_station[0] += 1
+            return Station(os.path.join(self.dir, "station%d" % current_station[0]), self.node)
+
+        self.stations = defaultdict(new_station)
 
     def tearDown(self):
         shutil.rmtree(self.dir)
@@ -72,8 +80,64 @@ class StationCommunication(StationIntegrationFixture):
 
         self.assertEqual(len(swrite), 1)
 
-        client.begin_handshake(self.station)
+        client.begin_handshake(self.stations[0])
         client.send()
 
         (sread, swrite, _) = tick()
         self.assertEqual(sread, [peer])
+
+class StationHandshakeTestCase(StationIntegrationFixture):
+    def test_handshake(self):
+        active = self.stations["active"]
+        passive = self.stations["passive"]
+
+        read_sockets = [];
+        write_sockets = [];
+        def tick():
+            tmp_write = []
+            for sock in write_sockets:
+                if sock.has_data_ready():
+                    tmp_write.append(sock)
+            sread, swrite, sexc = select.select(read_sockets, tmp_write, [], 1)
+            if sexc:
+                assert False, "Sockets kerploded"
+
+            for i in sread:
+                if i == client:
+                    pass
+                elif i == peer:
+                    pass
+                else:
+                    assert False, "Something unknown found it's way in"
+
+            for i in swrite:
+                if i.has_data_ready():
+                    i.send()
+
+
+
+
+        addr = os.path.join(self.dir, "listener")
+        listener = TestListener(addr)
+
+        client = TestClient(addr)
+        write_sockets.append(client)
+
+        # Get our client
+        peer = listener.accept(PeerSocket)
+        read_sockets.append(peer)
+        write_sockets.append(peer)
+
+        # Start out handlshake
+        client.begin_handshake(passive)
+        tick()
+
+        # (sread, swrite, _) = tick()
+        # # Handle our listener
+        # self.assertEqual(len(sread), 1)
+        # peer = listener.accept(PeerSocket)
+
+        # self.assertEqual(len(swrite), 1)
+
+
+        # (sread, swrite, _) = tick()
