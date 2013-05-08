@@ -29,3 +29,9 @@ will actually remove objects that are no longer needed.
 This in turn needs to be orchestrated with a cache to make sure they're not
 collected again, and in turn (again) potentially with Station#get_hash to
 ensure that we're equivalent as someone who hasn't removed them.
+
+### Configurable sync depth
+
+Retrieving some order of magnitude of the objects a station is intending to
+fetch would help the sync driver choose and appropriate depth for the db_hash
+sync strategy
