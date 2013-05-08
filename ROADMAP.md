@@ -19,3 +19,13 @@ smarter, and easier to hack on.
 
 Integration testing is currently super awkward. Building an internal framework
 for sanely mapping out integration tests needs doing soonish
+
+### Garbage Collection
+
+By creating trees of relevant objects, and then pointing at them with junk
+refs, it should be possible to get the db into a state where `git gc --prune`
+will actually remove objects that are no longer needed.
+
+This in turn needs to be orchestrated with a cache to make sure they're not
+collected again, and in turn (again) potentially with Station#get_hash to
+ensure that we're equivalent as someone who hasn't removed them.
