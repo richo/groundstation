@@ -1,6 +1,6 @@
 import pygit2
 
-from handler_fixture import StationHandlerTestCase
+from support.handler_fixture import StationHandlerTestCase
 
 from groundstation.transfer.request_handlers import handle_fetchobject
 from groundstation.proto.object_list_pb2 import ObjectList

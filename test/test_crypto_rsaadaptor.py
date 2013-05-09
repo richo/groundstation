@@ -1,7 +1,7 @@
 import unittest
 from Crypto.PublicKey import RSA
 
-import crypto_fixture
+from support import crypto_fixture
 from groundstation.crypto.rsa import RSAAdaptor, RSAPrivateAdaptor
 from groundstation.crypto.rsa import convert_privkey, convert_pubkey
 from groundstation.crypto.rsa import materialise_exponent, materialise_numeric

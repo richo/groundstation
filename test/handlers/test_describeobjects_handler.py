@@ -1,5 +1,5 @@
 import random
-from handler_fixture import StationHandlerTestCase
+from support.handler_fixture import StationHandlerTestCase
 
 from groundstation.proto.object_list_pb2 import ObjectList
 from groundstation.proto.object_list_pb2 import ObjectList

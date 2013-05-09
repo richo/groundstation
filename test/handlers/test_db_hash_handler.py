@@ -1,5 +1,5 @@
 import hashlib
-from handler_fixture import StationHandlerTestCase
+from support.handler_fixture import StationHandlerTestCase
 
 from groundstation.transfer.request_handlers import handle_listdbhash
 from groundstation.transfer.response_handlers import handle_terminate
