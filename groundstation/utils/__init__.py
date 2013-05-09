@@ -27,5 +27,11 @@ def chunks(l, n):
     for i in xrange(0, len(l), n):
         yield l[i:i+n]
 
+
 def oid2hex(oid):
     return oid.hex
+
+
+def path2id(path):
+    o_dir, o_name = os.path.split(path)
+    return "%s%s" % (os.path.basename(o_dir), o_name)

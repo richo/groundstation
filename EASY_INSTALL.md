@@ -40,6 +40,11 @@ This is only required if you intend to pull data from github
 
 `python -m easy_install pygithub`
 
+__install watchdog__
+Only required if you want realtime updating of peer nodes
+
+`python -m easy_install watchdog`
+
 __Groundstation setup__
 Odds are good if you're reading this, you've already done the following, but incase you're viewing this via a browser:
 ```
