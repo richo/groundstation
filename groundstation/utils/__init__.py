@@ -2,7 +2,10 @@ import os
 
 
 def is_dir(path):
-    return (040000 & (os.stat(path).st_mode)) > 0
+    try:
+        return (040000 & (os.stat(path).st_mode)) > 0
+    except OSError:
+        return False
 
 
 def find_leaf_dirs(root, ident_format=False):
