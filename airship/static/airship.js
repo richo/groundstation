@@ -238,49 +238,68 @@ var RenderedGref = Backbone.View.extend({
   className: "",
 
   render: function() {
-    console.log("Rendering new refs");
     var self = this;
-    var content = this.model.attributes["content"];
-    var root = this.model.attributes["root"];
-    var renderer = null;
+    var width  = 800,
+    height = 500;
 
-    $(this.$el).children().remove();
-    renderer = (function() {
-      for (var renderer in groundstation.renderers) {
-        if (groundstation.renderers.hasOwnProperty(renderer)) {
-          if (root.protocol.search(renderer) === 0)
-            return groundstation.renderers[renderer];
-        }
-      }
-    })();
-    if (renderer === null) {
-      console.log("Unhandled protocol: " + root.protocol);
-      return this;
-    }
+    $("#gref-content").children().remove();
 
-    // Stick the root object in the DOM to make parent linking sane.
-    (function() {
-      var el = document.createElement("div");
-      el.setAttribute("id", root.hash);
-      self.el.appendChild(el);
-    })();
+    var force = d3.layout.force()
+      .charge(-120)
+      .linkDistance(30)
+      .size([width, height]);
 
-    _.each(content, function(item) {
-      var el = renderer(item);
-      if (el) {
-        el.setAttribute("id", item.hash);
-        var signature = self.model.attributes.signatures[item.hash];
-        if (signature !== undefined) {
-          if (signature === false) {
-            el.setAttribute("data-invalid-signature", "true");
-          } else {
-            el.setAttribute("data-signature", signature);
-          }
-        }
-        self.el.appendChild(el);
-      }
+    var svg = d3.select("#gref-content").append("svg")
+      .attr("width", width)
+      .attr("height", height);
+
+    var data = this.model.attributes;
+    var nodes = data.content;
+    data.root.parents = [];
+    data.root.fixed = true;
+    data.root.x = width / 2;
+    data.root.y = 10;
+    nodes.push(data.root);
+
+    var hash_to_node = {};
+    nodes.forEach(function(node) {
+      hash_to_node[node.hash] = node;
     });
-    buildCommentBox(self.el, self.model);
+
+    var links = [];
+    nodes.forEach(function(node) {
+      node.parents.forEach(function(parent) {
+        links.push({source: node, target: hash_to_node[parent]});
+      });
+    });
+
+    force.nodes(nodes)
+      .links(links)
+      .start();
+
+    var link = svg.selectAll(".link")
+      .data(links)
+      .enter().append("line")
+      .attr("class", "link");
+
+    var node = svg.selectAll(".node")
+      .data(nodes)
+      .enter().append("circle")
+      .attr("class", "node")
+      .attr("r", 5)
+      .call(force.drag);
+
+    force.on("tick", function() {
+      link.attr("x1", function(d) { return d.source.x; })
+      .attr("y1", function(d) { return d.source.y; })
+      .attr("x2", function(d) { return d.target.x; })
+      .attr("y2", function(d) { return d.target.y; });
+
+    node.attr("cx", function(d) { return d.x; })
+      .attr("cy", function(d) { return d.y; });
+
+    });
+
     return this;
   },
 
