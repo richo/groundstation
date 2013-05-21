@@ -1,6 +1,5 @@
 #!/bin/sh
 set -e
-exit 1
 sleep 15
 exit 0
 
