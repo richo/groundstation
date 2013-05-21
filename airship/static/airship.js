@@ -334,12 +334,23 @@ var RenderedGref = Backbone.View.extend({
       .enter().append("line")
       .attr("class", "link");
 
+    function hilight(id) {
+      hash_to_node[id].parents.forEach(function(par) {
+        hilight(par);
+      });
+      $(document.getElementById(id)).addClass("selected");
+    }
+
     var node = svg.selectAll(".node")
       .data(nodes)
       .enter().append("circle")
       .attr("class", "node")
       .attr("r", 5)
-      .call(force.drag);
+      .call(force.drag)
+      .on('click', function(node) {
+        $(".gref-taggable").removeClass("selected");
+        hilight(node.hash);
+      });
 
     force.on("tick", function() {
       link.attr("x1", function(d) { return d.source.x; })

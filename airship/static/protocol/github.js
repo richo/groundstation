@@ -10,6 +10,7 @@ groundstation.renderers["richo@psych0tik.net:github:"] = function (item) {
   var el;
   if (item.type == "title") {
     el = document.createElement("div");
+    el.className = "gref-taggable";
 
     op = document.createElement("div");
     op.className = "alert alert-info";
@@ -22,6 +23,7 @@ groundstation.renderers["richo@psych0tik.net:github:"] = function (item) {
   } else if (item.type == "body") {
     if (item.body !== null) {
       el = document.createElement("p");
+      el.className = "gref-taggable";
       $(el).html(markdown.toHTML(item.body));
     }
   } else if (item.type == "comment") {
