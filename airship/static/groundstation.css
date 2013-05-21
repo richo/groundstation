@@ -55,3 +55,8 @@
 #active-channel {
   color: #cccccc;
 }
+
+.link {
+  stroke: #999;
+  stroke-opacity: .6;
+}

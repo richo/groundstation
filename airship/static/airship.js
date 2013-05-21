@@ -285,14 +285,17 @@ var RenderedGref = Backbone.View.extend({
 
 
     var graph = $("#gref-graph");
+    var width  = graph.width(),
+        height = 500;
+
     var force = d3.layout.force()
       .charge(-120)
+      .size([width, height])
       .linkDistance(30);
 
-    var svg = d3.select("#gref-graph").append("svg");
-
-    var width  = graph.width(),
-        height = graph.height();
+    var svg = d3.select("#gref-graph").append("svg")
+      .attr("width", width)
+      .attr("height", height);;
 
     var data = this.model.attributes;
     var nodes = data.content;
