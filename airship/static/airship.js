@@ -341,6 +341,7 @@ var RenderedGref = Backbone.View.extend({
       $(document.getElementById(id)).addClass("selected");
     }
 
+    var last_node = null;
     var node = svg.selectAll(".node")
       .data(nodes)
       .enter().append("circle")
@@ -348,6 +349,12 @@ var RenderedGref = Backbone.View.extend({
       .attr("r", 5)
       .call(force.drag)
       .on('click', function(node) {
+        if (last_node !== null)
+          d3.select(last_node).attr('r', 5);
+
+        d3.select(this).attr('r', 10);
+        last_node = this;
+
         $(".gref-taggable").removeClass("selected");
         hilight(node.hash);
       });
