@@ -284,8 +284,8 @@ var RenderedGref = Backbone.View.extend({
     buildCommentBox(self.el, self.model);
 
 
-    var graph = $("#gref-graph");
-    var width  = graph.width(),
+    var graph_span = $("#gref-graph-span");
+    var width  = graph_span.width(),
         height = 500;
 
     var force = d3.layout.force()
