@@ -286,7 +286,8 @@ var RenderedGref = Backbone.View.extend({
 
     var graph_span = $("#gref-graph-span");
     var width  = graph_span.width(),
-        height = 500;
+                              // 40 pix header, 20 pix footer
+        height = document.documentElement.clientHeight - 60;
 
     var force = d3.layout.force()
       .charge(-120)
