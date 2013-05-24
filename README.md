@@ -47,15 +47,10 @@ groundstation uses [babashka][3] for managing its dependencies. If you have it i
 
 `babashka groundstation_dev` and wind up with a working environment. Maybe.
 
-1. install development libgit2 (on OSX this is streamlined by `brew install --HEAD libgit2`)
+1. install libgit2 v0.18.0
 2. `pip install -r requirements.txt`
 3. ???????
 4. profit!
-
-If not, you need:
-
-1. libgit2 from source. (OSX `brew install --HEAD libgit2`)
-2. groundstations's requirements, (`pip install -r requirements`).
 
 You probably want to install those requirements in a virtualenv.
 
