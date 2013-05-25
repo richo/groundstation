@@ -8,3 +8,6 @@ if ! which babushka >/dev/null ; then
   echo installing babushka
   wget -O - https://s3.amazonaws.com/99designs-babushka/bootstrap | bash
 fi
+
+echo installing docker
+./groundstation/vagrant/docker.sh
