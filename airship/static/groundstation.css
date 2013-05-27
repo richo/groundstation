@@ -37,6 +37,9 @@
   padding: 0px 5px;
   font-size: 10px;
 }
+.gref-taggable.selected {
+  background: #bebec5;
+}
 
 .new-comment {
   background-color: #fff;
@@ -54,4 +57,9 @@
 
 #active-channel {
   color: #cccccc;
+}
+
+.link {
+  stroke: #999;
+  stroke-opacity: .6;
 }

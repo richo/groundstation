@@ -238,13 +238,14 @@ var RenderedGref = Backbone.View.extend({
   className: "",
 
   render: function() {
-    console.log("Rendering new refs");
     var self = this;
     var content = this.model.attributes["content"];
     var root = this.model.attributes["root"];
     var renderer = null;
 
     $(this.$el).children().remove();
+    $("#gref-graph").children().remove();
+
     renderer = (function() {
       for (var renderer in groundstation.renderers) {
         if (groundstation.renderers.hasOwnProperty(renderer)) {
@@ -281,6 +282,95 @@ var RenderedGref = Backbone.View.extend({
       }
     });
     buildCommentBox(self.el, self.model);
+
+
+    var graph_span = $("#gref-graph-span");
+    var width  = graph_span.width(),
+                              // 40 pix header, 20 pix footer
+        height = document.documentElement.clientHeight - 60;
+
+    var force = d3.layout.force()
+      .charge(-120)
+      .size([width, height])
+      .linkDistance(30);
+
+    var svg = d3.select("#gref-graph").append("svg")
+      .attr("width", width)
+      .attr("height", height);;
+
+    var data = this.model.attributes;
+    var nodes = data.content;
+    data.root.parents = [];
+    data.root.fixed = true;
+    data.root.x = width / 2;
+    data.root.y = 10;
+    nodes.push(data.root);
+
+    var hash_to_node = {};
+    nodes.forEach(function(node) {
+      hash_to_node[node.hash] = node;
+    });
+
+    var links = [];
+    nodes.forEach(function(node) {
+      node.parents.forEach(function(parent) {
+        links.push({source: node, target: hash_to_node[parent]});
+      });
+    });
+
+    var tip_node, tip_length = data.tips.length;
+    for(var i = 0; i < tip_length; i++) {
+      tip_node = hash_to_node[data.tips[i]];
+      tip_node.y = height - 10;
+      tip_node.x = (width / (tip_length + 1)) * (i + 1);
+      tip_node.fixed = true;
+    };
+
+    force.nodes(nodes)
+      .links(links)
+      .start();
+
+    var link = svg.selectAll(".link")
+      .data(links)
+      .enter().append("line")
+      .attr("class", "link");
+
+    function hilight(id) {
+      hash_to_node[id].parents.forEach(function(par) {
+        hilight(par);
+      });
+      $(document.getElementById(id)).addClass("selected");
+    }
+
+    var last_node = null;
+    var node = svg.selectAll(".node")
+      .data(nodes)
+      .enter().append("circle")
+      .attr("class", "node")
+      .attr("r", 5)
+      .call(force.drag)
+      .on('click', function(node) {
+        if (last_node !== null)
+          d3.select(last_node).attr('r', 5);
+
+        d3.select(this).attr('r', 10);
+        last_node = this;
+
+        $(".gref-taggable").removeClass("selected");
+        hilight(node.hash);
+      });
+
+    force.on("tick", function() {
+      link.attr("x1", function(d) { return d.source.x; })
+      .attr("y1", function(d) { return d.source.y; })
+      .attr("x2", function(d) { return d.target.x; })
+      .attr("y2", function(d) { return d.target.y; });
+
+      node.attr("cx", function(d) { return d.x; })
+        .attr("cy", function(d) { return d.y; });
+
+    });
+
     return this;
   },
 
