@@ -6,6 +6,8 @@
     <script src="/static/vendor/backbone-0.9.9.js"></script>
     <script src="/static/vendor/bootstrap-dropdown.js"></script>
     <script src="/static/vendor/bootstrap-modal.js"></script>
+    <script src="/static/vendor/bootstrap-affix.js"></script>
+    <script src="/static/vendor/d3.js"></script>
     <script src="/static/airship.js?bust={{current_time}}"></script>
     <script src="/static/vendor/markdown.js"></script>
     <link rel="stylesheet" href="/static/vendor/bootstrap.css">
@@ -54,7 +56,11 @@
           </ul>
         </div>
       </div>
-      <div class="span9" id="gref-content">
+      <div class="span7" id="gref-content">
+      </div>
+      <div class="span2" id="gref-graph-span">
+          <div id="gref-graph" data-spy="affix">
+          </div>
       </div>
     </div>
 
