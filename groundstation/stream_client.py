@@ -5,6 +5,38 @@ import settings
 import groundstation.logger
 log = groundstation.logger.getLogger(__name__)
 
+HANDSHAKE_PROTOCOLS = {}
+def register_handshake(name):
+    def _(func):
+        HANDSHAKE_PROTOCOLS[name] = func
+    return _
+
+
+@register_handshake("NAIVE")
+def _(self, station):
+    request = Request("LISTDBHASH", payload="", station=station, stream=self)
+    station.register_request(request)
+    self.enqueue(request)
+
+
+@register_handshake("INCREMENTAL")
+def _(self, station):
+    prefixes = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+                'a', 'b', 'c', 'd', 'e', 'f']
+
+    def terminate(self):
+        if not prefixes:
+            pass
+        prefix = prefixes.pop(0)
+        request = Request("LISTDBHASH", payload=prefix, station=station, stream=self)
+        request.terminate = terminate
+        station.register_request(request)
+        self.enqueue(request)
+
+    # Our terminate handler kicks of a fetch of the next DB hash prefix. We
+    # bump it to start the handshake.
+    terminate(self)
+
 
 class StreamClient(StreamSocket):
     def __init__(self, addr):
@@ -14,24 +46,6 @@ class StreamClient(StreamSocket):
         self.socket.connect((addr, settings.PORT))
         self.socket.setblocking(False)
 
-    def begin_handshake(self, station):
-        request = Request("LISTDBHASH", payload="", station=station, stream=self)
-        station.register_request(request)
-        self.enqueue(request)
-
-    def begin_incremental_sync(self, station):
-        prefixes = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
-                    'a', 'b', 'c', 'd', 'e', 'f']
-
-        def terminate(self):
-            if not prefixes:
-                pass
-            prefix = prefixes.pop(0)
-            request = Request("LISTDBHASH", payload=prefix, station=station, stream=self)
-            request.terminate = terminate
-            station.register_request(request)
-            self.enqueue(request)
-
-        # Our terminate handler kicks of a fetch of the next DB hash prefix. We
-        # bump it to start the handshake.
-        terminate(self)
+    def begin_handshake(self, station, protocol=None):
+        protocol = protocol or settings.HANDSHAKE_PROTOCOL
+        HANDSHAKE_PROTOCOLS[protocol](self, station)
