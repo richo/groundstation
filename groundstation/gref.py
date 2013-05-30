@@ -150,5 +150,6 @@ class Gref(object):
         return {
                 "channel": self.channel,
                 "identifier": self.identifier,
-                "node_path": self._node_path
+                "node_path": self._node_path,
+                "tips": self.tips()
                 }
