@@ -1,7 +1,6 @@
 enum GizmoType {
-    REQUEST = 0;
-    RESPONSE = 1;
-    NOTIFICATION = 2;
+    ROOT = 0;
+    UPDATE = 1;
 }
 message BaseObject {
     required GizmoType type = 15;
