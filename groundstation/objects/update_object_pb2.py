@@ -8,12 +8,13 @@ from google.protobuf import descriptor_pb2
 # @@protoc_insertion_point(imports)
 
 
+import groundstation.objects.base_object_pb2
 
 
 DESCRIPTOR = _descriptor.FileDescriptor(
   name='groundstation/objects/update_object.proto',
   package='',
-  serialized_pb='\n)groundstation/objects/update_object.proto\"-\n\x0cUpdateObject\x12\x0f\n\x07parents\x18\x01 \x03(\x0c\x12\x0c\n\x04\x64\x61ta\x18\x02 \x02(\x0c')
+  serialized_pb='\n)groundstation/objects/update_object.proto\x1a\'groundstation/objects/base_object.proto\"O\n\x0cUpdateObject\x12\x0f\n\x07parents\x18\x01 \x03(\x0c\x12\x0c\n\x04\x64\x61ta\x18\x02 \x02(\x0c\x12 \n\x04type\x18\x0f \x01(\x0e\x32\n.GizmoType:\x06UPDATE')
 
 
 
@@ -39,6 +40,13 @@ _UPDATEOBJECT = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
+    _descriptor.FieldDescriptor(
+      name='type', full_name='UpdateObject.type', index=2,
+      number=15, type=14, cpp_type=8, label=1,
+      has_default_value=True, default_value=2,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
   ],
   extensions=[
   ],
@@ -48,10 +56,11 @@ _UPDATEOBJECT = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=45,
-  serialized_end=90,
+  serialized_start=86,
+  serialized_end=165,
 )
 
+_UPDATEOBJECT.fields_by_name['type'].enum_type = groundstation.objects.base_object_pb2._GIZMOTYPE
 DESCRIPTOR.message_types_by_name['UpdateObject'] = _UPDATEOBJECT
 
 class UpdateObject(_message.Message):

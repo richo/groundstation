@@ -1,0 +1,8 @@
+enum GizmoType {
+    UNSET = 0;
+    ROOT = 1;
+    UPDATE = 2;
+}
+message BaseObject {
+    required GizmoType type = 15;
+}

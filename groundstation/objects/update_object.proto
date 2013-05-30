@@ -1,4 +1,8 @@
+import "groundstation/objects/base_object.proto";
+
 message UpdateObject {
     repeated bytes parents = 1;
     required bytes data = 2;
+
+    optional GizmoType type = 15 [default = UPDATE];
 }
