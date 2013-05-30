@@ -5,5 +5,5 @@ message RootObject {
     required string channel = 2;
     required string protocol = 3;
 
-    optional GizmoType type = 15 [default = UNSET];
+    optional GizmoType type = 15 [default = ROOT];
 }
