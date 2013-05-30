@@ -4,5 +4,5 @@ message UpdateObject {
     repeated bytes parents = 1;
     required bytes data = 2;
 
-    required GizmoType type = 15;
+    optional GizmoType type = 15;
 }
