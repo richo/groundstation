@@ -14,7 +14,7 @@ from google.protobuf import descriptor_pb2
 DESCRIPTOR = _descriptor.FileDescriptor(
   name='groundstation/objects/base_object.proto',
   package='',
-  serialized_pb='\n\'groundstation/objects/base_object.proto\"&\n\nBaseObject\x12\x18\n\x04type\x18\x0f \x02(\x0e\x32\n.GizmoType*!\n\tGizmoType\x12\x08\n\x04ROOT\x10\x00\x12\n\n\x06UPDATE\x10\x01')
+  serialized_pb='\n\'groundstation/objects/base_object.proto\"&\n\nBaseObject\x12\x18\n\x04type\x18\x0f \x02(\x0e\x32\n.GizmoType*,\n\tGizmoType\x12\t\n\x05UNSET\x10\x00\x12\x08\n\x04ROOT\x10\x01\x12\n\n\x06UPDATE\x10\x02')
 
 _GIZMOTYPE = _descriptor.EnumDescriptor(
   name='GizmoType',
@@ -23,23 +23,28 @@ _GIZMOTYPE = _descriptor.EnumDescriptor(
   file=DESCRIPTOR,
   values=[
     _descriptor.EnumValueDescriptor(
-      name='ROOT', index=0, number=0,
+      name='UNSET', index=0, number=0,
       options=None,
       type=None),
     _descriptor.EnumValueDescriptor(
-      name='UPDATE', index=1, number=1,
+      name='ROOT', index=1, number=1,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='UPDATE', index=2, number=2,
       options=None,
       type=None),
   ],
   containing_type=None,
   options=None,
   serialized_start=83,
-  serialized_end=116,
+  serialized_end=127,
 )
 
 GizmoType = enum_type_wrapper.EnumTypeWrapper(_GIZMOTYPE)
-ROOT = 0
-UPDATE = 1
+UNSET = 0
+ROOT = 1
+UPDATE = 2
 
 
 

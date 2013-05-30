@@ -1,0 +1,43 @@
+import unittest
+
+from groundstation.objects.base_object_pb2 import BaseObject, \
+    ROOT as TYPE_ROOT, \
+    UPDATE as TYPE_UPDATE, \
+    UNSET as TYPE_UNSET
+from groundstation.objects.root_object_pb2 import RootObject
+from groundstation.objects.update_object_pb2 import UpdateObject
+
+
+def new_root_object(weak):
+    root = RootObject()
+    root.id = "butts"
+    root.channel = "butts"
+    root.protocol = "butts"
+    if not weak:
+        root.type = TYPE_ROOT
+    return root
+
+
+def new_update_object(weak, parents=[]):
+    update = UpdateObject()
+    update.parents.extend(parents)
+    update.data = "butts"
+    if not weak:
+        update.type = TYPE_UPDATE
+    return update
+
+
+class WeaklyTypedObjectDiscriminationTestCase(unittest.TestCase):
+    def test_weakly_typed_roots_are_unset(self):
+        root = new_root_object(True)
+        root_pb = root.SerializeToString()
+        base = BaseObject()
+        base.ParseFromString(root_pb)
+        self.assertEqual(base.type, TYPE_UNSET)
+
+    def test_weakly_typed_updates_are_unset(self):
+        update = new_update_object(True)
+        update_pb = update.SerializeToString()
+        base = BaseObject()
+        base.ParseFromString(update_pb)
+        self.assertEqual(base.type, TYPE_UNSET)
