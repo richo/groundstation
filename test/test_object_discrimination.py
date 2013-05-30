@@ -45,19 +45,3 @@ class TypeOfTestCase(unittest.TestCase):
     def test_weakly_typed_update(self):
         update_str = new_update_object(True).SerializeToString()
         self.assertEqual(object_factory.type_of(update_str), TYPE_UNSET)
-
-
-class WeaklyTypedObjectDiscriminationTestCase(unittest.TestCase):
-    def test_weakly_typed_roots_are_unset(self):
-        root = new_root_object(True)
-        root_pb = root.SerializeToString()
-        base = BaseObject()
-        base.ParseFromString(root_pb)
-        self.assertEqual(base.type, TYPE_UNSET)
-
-    def test_weakly_typed_updates_are_unset(self):
-        update = new_update_object(True)
-        update_pb = update.SerializeToString()
-        base = BaseObject()
-        base.ParseFromString(update_pb)
-        self.assertEqual(base.type, TYPE_UNSET)
