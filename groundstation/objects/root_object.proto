@@ -1,5 +1,9 @@
+import "groundstation/objects/base_object.proto";
+
 message RootObject {
     required string id = 1;
     required string channel = 2;
     required string protocol = 3;
+
+    required GizmoType type = 15;
 }
