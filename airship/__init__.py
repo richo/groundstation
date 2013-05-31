@@ -39,6 +39,7 @@ def make_airship(station):
     app.has_signing_key = False
 
     def set_signing_key(self, keyname):
+        app.has_signing_key = True
         self.private_crypto_adaptor = \
                 station.get_private_crypto_adaptor(keyname)
     app.set_signing_key = lambda key: set_signing_key(app, key)
