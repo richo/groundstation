@@ -59,9 +59,9 @@ def make_airship(station):
     def list_channels():
         return channels_json(station)
 
-    @app.route("/channels/new", methods=['POST'])
+    @app.route("/channels/new", methods=['PUT'])
     def new_channel():
-        channel = request.form["channel"]
+        channel = request.form.keys()[0]
         station.create_channel(channel)
         return ""
 
