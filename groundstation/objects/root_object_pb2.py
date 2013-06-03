@@ -8,12 +8,13 @@ from google.protobuf import descriptor_pb2
 # @@protoc_insertion_point(imports)
 
 
+import groundstation.objects.base_object_pb2
 
 
 DESCRIPTOR = _descriptor.FileDescriptor(
   name='groundstation/objects/root_object.proto',
   package='',
-  serialized_pb='\n\'groundstation/objects/root_object.proto\";\n\nRootObject\x12\n\n\x02id\x18\x01 \x02(\t\x12\x0f\n\x07\x63hannel\x18\x02 \x02(\t\x12\x10\n\x08protocol\x18\x03 \x02(\t')
+  serialized_pb='\n\'groundstation/objects/root_object.proto\x1a\'groundstation/objects/base_object.proto\"[\n\nRootObject\x12\n\n\x02id\x18\x01 \x02(\t\x12\x0f\n\x07\x63hannel\x18\x02 \x02(\t\x12\x10\n\x08protocol\x18\x03 \x02(\t\x12\x1e\n\x04type\x18\x0f \x01(\x0e\x32\n.GizmoType:\x04ROOT')
 
 
 
@@ -46,6 +47,13 @@ _ROOTOBJECT = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
+    _descriptor.FieldDescriptor(
+      name='type', full_name='RootObject.type', index=3,
+      number=15, type=14, cpp_type=8, label=1,
+      has_default_value=True, default_value=1,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
   ],
   extensions=[
   ],
@@ -55,10 +63,11 @@ _ROOTOBJECT = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=43,
-  serialized_end=102,
+  serialized_start=84,
+  serialized_end=175,
 )
 
+_ROOTOBJECT.fields_by_name['type'].enum_type = groundstation.objects.base_object_pb2._GIZMOTYPE
 DESCRIPTOR.message_types_by_name['RootObject'] = _ROOTOBJECT
 
 class RootObject(_message.Message):

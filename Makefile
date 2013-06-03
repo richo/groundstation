@@ -7,6 +7,7 @@ proto: groundstation/proto/gizmo_pb2.py \
 	groundstation/proto/object_list_pb2.py \
 	groundstation/proto/channel_list_pb2.py \
 	groundstation/proto/db_hash_pb2.py \
+	groundstation/objects/base_object_pb2.py \
 	groundstation/objects/root_object_pb2.py \
 	groundstation/objects/update_object_pb2.py
 
