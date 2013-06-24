@@ -1,6 +1,7 @@
-function Groundstation() {
+function Groundstation(prefix) {
+  this.prefix = prefix;
   this.channels = new Channels();
-  this.channels.url = '/channels';
+  this.channels.url = prefix + 'channels';
 
   this.active_grefs = new Grefs();
 
@@ -102,7 +103,7 @@ var GrefMenuItem = Backbone.View.extend({
   template: '<a class="select" href="#">{{identifier}}</a>',
 
   getUrl: function() {
-    return "/gref/" + this.model.attributes["channel"] + "/" + this.model.attributes["identifier"];
+    return groundstation.prefix + "gref/" + this.model.attributes["channel"] + "/" + this.model.attributes["identifier"];
   },
 
   render: function() {
