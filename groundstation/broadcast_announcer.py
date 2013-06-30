@@ -7,9 +7,10 @@ log = logger.getLogger(__name__)
 
 
 class BroadcastAnnouncer(BroadcastSocket):
-    def __init__(self, port):
+    def __init__(self, port, address = None):
         super(BroadcastAnnouncer, self).__init__()
-        self._addr = '255.255.255.255', port
+        broadcast_address = address or '255.255.255.255'
+        self._addr = broadcast_address, port
         self._name = None
         self.broadcast_payload = "PING None"
 

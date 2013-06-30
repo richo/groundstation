@@ -37,8 +37,9 @@ myself = Node()
 
 station = Station.from_env(myself)
 
+broadcast_address = os.getenv("BROADCAST_ADDRESS")
 discoverer = BroadcastDiscoverer(PORT)
-announcer  = BroadcastAnnouncer(PORT)
+announcer  = BroadcastAnnouncer(PORT, broadcast_address)
 listener   = StreamListener(PORT)
 announcer.name = myself.name
 
