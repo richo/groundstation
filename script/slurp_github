@@ -54,12 +54,8 @@ def main(argv):
     for repo in repos:
         adaptor = GithubWriteAdaptor(station, repo)
         log.info("fetching %s" % (repo.name))
-        try:
-            for issue in repo.get_issues(state="open,closed"):
-                adaptor.write_issue(issue)
-        except github.GithubException: # XXX Overzealous
-            log.warn("Issues disabled for %s" % (repo.name))
-            continue
+        for issue in repo.get_issues(state="open,closed"):
+            adaptor.write_issue(issue)
 
 if __name__ == "__main__":
     main(sys.argv)
