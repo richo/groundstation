@@ -38,7 +38,7 @@ class GithubWriteAdaptor(AbstractGithubAdaptor):
             log.debug("Creating new object with parents: %s" % (str(our_parents)))
 
             oid = self.station.write(obj.as_object())
-            self.station.update_gref(gref, Tip(oid, ""), our_parents)
+            self.station.update_gref(gref, [Tip(oid, "")], our_parents)
             parents.append(oid)
             log.debug("Setting parents to: %s" % (str(parents)))
 
