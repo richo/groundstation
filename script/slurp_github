@@ -11,7 +11,7 @@ from groundstation.node import Node
 from groundstation import logger
 log = logger.getLogger(__name__)
 
-from groundstation.protocols import github as github_protocol
+from groundstation.protocols.github.write_adaptor import GithubWriteAdaptor
 
 
 class NoGithubToken(Exception): pass
@@ -52,7 +52,7 @@ def main(argv):
         repos = [gh.get_repo(args.repo)]
 
     for repo in repos:
-        adaptor = github_protocol.GithubWriteAdaptor(station, repo)
+        adaptor = GithubWriteAdaptor(station, repo)
         log.info("fetching %s" % (repo.name))
         try:
             for issue in repo.get_issues(state="open,closed"):
