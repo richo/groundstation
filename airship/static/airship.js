@@ -19,6 +19,10 @@ function init_airship(groundstation) {
   rendered_gref_content = new RenderedGref({
     model: rendered_gref
   });
+
+  if (groundstation.channels.models.length === 1) {
+    activate_channel(groundstation.channels.models[0]);
+  }
   // Wire up user switching
   // TODO Currently not stored because I haven't decided where it should live. PRobably git-config(5)
 
@@ -137,6 +141,26 @@ var GrefMenuItem = Backbone.View.extend({
   }
 });
 
+function activate_channel(model) {
+    var current_grefs = $("#current-grefs")[0];
+    groundstation.active_grefs.url = '/grefs/' + model.attributes["name"];
+    groundstation.active_grefs.redraw = function() {
+      groundstation.active_grefs.fetch({
+        success: function(collection, response, options) {
+          $("#active-channel").html(model.attributes["name"]);
+          $("#gref-container").show();
+          _.each(visible_grefs, function(el) { el.remove(); });
+          _.each(collection.models, function(gref) {
+            visible_grefs.push(new GrefMenuItem({
+              model: gref
+            }));
+          });
+        }
+      });
+    };
+    groundstation.active_grefs.redraw();
+}
+
 var visible_grefs = [];
 var ChannelTab = Backbone.View.extend({
 
@@ -152,24 +176,7 @@ var ChannelTab = Backbone.View.extend({
   },
 
   select: function() {
-    var self = this;
-    var current_grefs = $("#current-grefs")[0];
-    groundstation.active_grefs.url = '/grefs/' + this.model.attributes["name"];
-    groundstation.active_grefs.redraw = function() {
-      groundstation.active_grefs.fetch({
-        success: function(collection, response, options) {
-          $("#active-channel").html(self.model.attributes["name"]);
-          $("#gref-container").show();
-          _.each(visible_grefs, function(el) { el.remove(); });
-          _.each(collection.models, function(gref) {
-            visible_grefs.push(new GrefMenuItem({
-              model: gref
-            }));
-          });
-        }
-      });
-    };
-    groundstation.active_grefs.redraw();
+    activate_channel(this.model);
   },
 
   events: {
