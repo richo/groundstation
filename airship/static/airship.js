@@ -2,6 +2,8 @@ function Groundstation() {
   this.channels = new Channels();
   this.channels.url = '/channels';
 
+  this.current_channel = undefined;
+
   this.active_grefs = new Grefs();
 
   this.username = localStorage.getItem("airship.committer") || "Anonymous Coward";
@@ -85,6 +87,7 @@ function init_airship(groundstation) {
       alert("Validation failed!");
     }
   });
+  start_updater();
 }
 
 var Channel = Backbone.Model.extend();
@@ -98,6 +101,21 @@ var Grefs = Backbone.Collection.extend({
   model: Gref
 });
 
+function start_updater() {
+  var chk = $("#gref-autoupdate");
+  function update() {
+    if (chk.is(":checked")) {
+      if (groundstation.current_channel !== undefined) {
+        activate_channel(groundstation.current_channel, function() {
+          window.setTimeout(update, 5000);
+        });
+      }
+    } else {
+      window.setTimeout(update, 5000);
+    }
+  }
+  update();
+}
 
 var GrefMenuItem = Backbone.View.extend({
   tagName: "li",
@@ -141,8 +159,9 @@ var GrefMenuItem = Backbone.View.extend({
   }
 });
 
-function activate_channel(model) {
+function activate_channel(model, callback) {
     var current_grefs = $("#current-grefs")[0];
+    groundstation.current_channel = model;
     groundstation.active_grefs.url = '/grefs/' + model.attributes["name"];
     groundstation.active_grefs.redraw = function() {
       groundstation.active_grefs.fetch({
@@ -159,6 +178,9 @@ function activate_channel(model) {
       });
     };
     groundstation.active_grefs.redraw();
+    if (callback !== undefined) {
+      callback();
+    }
 }
 
 var visible_grefs = [];
