@@ -14,7 +14,8 @@
     <link rel="stylesheet" href="/static/groundstation.css">
     <title>airship.js</title>
     <script>
-      var groundstation = new Groundstation();
+      var root = window.location.pathname;
+      var groundstation = new Groundstation(root);
       $(document).ready(function() {
         groundstation.channels.reset({{channels_json|safe}});
         init_airship(groundstation);
