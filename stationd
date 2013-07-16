@@ -3,6 +3,7 @@ import os
 import sys
 import select
 import time
+import argparse
 
 from groundstation import logger
 log = logger.getLogger("stationd")
@@ -128,12 +129,21 @@ def handler_for(thing):
     else:
         raise KeyError
 
-if sys.argv.count("--watch-fs"):
-    watcher = fs_watcher.FSWatcher(station.store.object_root)
+def _create_option_parser():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--watch-fs", dest='watchfs', action='store_true',
+                        default=False)
+    parser.add_argument("hosts", metavar='hosts', nargs='*')
+    return parser
 
+parser = _create_option_parser()
+args = parser.parse_args()
+
+if args.watchfs:
+    watcher = fs_watcher.FSWatcher(station.store.object_root)
     peer_sockets.append(watcher)
 
-for host in sys.argv[1:]:
+for host in args.hosts:
     client = StreamClient(host)
     peer_sockets.append(client)
     client.begin_handshake(station)
