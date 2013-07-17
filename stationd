@@ -26,6 +26,7 @@ from groundstation.gizmo_factory import InvalidGizmoError
 import groundstation.fs_watcher as fs_watcher
 
 from groundstation.utils import path2id
+import groundstation.utils.pid
 
 import groundstation.events.tcpnetwork_event as tcpnetwork_event
 
@@ -133,6 +134,8 @@ def _create_option_parser():
     parser = argparse.ArgumentParser()
     parser.add_argument("--watch-fs", dest='watchfs', action='store_true',
                         default=False)
+    parser.add_argument("--pidfile", dest='pidfile', action='store',
+                        default=False)
     parser.add_argument("hosts", metavar='hosts', nargs='*')
     return parser
 
@@ -147,6 +150,10 @@ for host in args.hosts:
     client = StreamClient(host)
     peer_sockets.append(client)
     client.begin_handshake(station)
+
+
+if args.pidfile:
+    groundstation.utils.pid.register_pidfile(args.pidfile)
 
 while True:
     log.info("Current status :: Iterators: %i Deferreds: %i" %
