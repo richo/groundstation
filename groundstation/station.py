@@ -99,6 +99,13 @@ class Station(object):
         # for channel in os.listdir(self.store.gref_path()):
         #     channels["channel"] = Channel(self.store, channel)
 
+    def create_channel(self, channel_name):
+        try:
+            os.mkdir(os.path.join(self.store.gref_path(), channel_name))
+            return True
+        except OSError:
+            return False
+
     def grefs(self, channel):
         channel_path = os.path.join(self.store.gref_path(), channel)
         if not groundstation.utils.is_dir(channel_path):

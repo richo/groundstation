@@ -7,6 +7,10 @@ var groundstation = {
 // Oh yes.
 eval(fs.readFileSync("static/airship-gref-validation.js").toString());
 
+function alert(string) {
+  // Noop
+}
+
 describe('groundstation.validators.gref', function(){
   var gref_validator = groundstation.validators.gref("defaultname", "defaulttitle", "defaultbody");
   describe('name', function(){

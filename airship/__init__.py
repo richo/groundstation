@@ -59,6 +59,12 @@ def make_airship(station):
     def list_channels():
         return channels_json(station)
 
+    @app.route("/channels/new", methods=['PUT'])
+    def new_channel():
+        channel = request.form.keys()[0]
+        station.create_channel(channel)
+        return ""
+
     @app.route("/grefs/<channel>")
     def list_grefs(channel):
         return grefs_json(station, channel)
