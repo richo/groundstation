@@ -1,7 +1,9 @@
 groundstation
 =============
 
-groundstation is a decentralised task/project management suite.
+groundstation is a database, and framework for operating with the database,
+intended to build distributed knowledge graphs, and then sync them up in
+hostile network settings.
 
 It's uses are wide and varied, but some key examples are:
 
