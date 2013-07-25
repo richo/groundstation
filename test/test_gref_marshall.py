@@ -1,10 +1,10 @@
-import crypto_fixture
-import store_fixture
+from support import crypto_fixture
+from support import store_fixture
 import groundstation.store
 
 from groundstation.gref import Gref
 
-from object_fixture import update_object, root_object
+from support.object_fixture import update_object, root_object
 from groundstation.crypto.rsa import RSAAdaptor, RSAPrivateAdaptor
 
 

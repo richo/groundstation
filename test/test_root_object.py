@@ -1,4 +1,4 @@
-from station_fixture import StationTestCase
+from support.station_fixture import StationTestCase
 import groundstation.objects.root_object as root_object
 
 

@@ -1,6 +1,6 @@
 import os
 
-import store_fixture
+from support import store_fixture
 import groundstation.store
 
 

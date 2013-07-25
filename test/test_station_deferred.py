@@ -1,6 +1,6 @@
 import time
 
-from station_fixture import StationTestCase
+from support.station_fixture import StationTestCase
 
 from groundstation.deferred import Deferred, defer_until
 

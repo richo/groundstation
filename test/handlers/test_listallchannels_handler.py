@@ -1,4 +1,4 @@
-from handler_fixture import StationHandlerTestCase
+from support.handler_fixture import StationHandlerTestCase
 
 from groundstation.transfer.request_handlers import handle_listallchannels
 from groundstation.gref import Gref, Tip

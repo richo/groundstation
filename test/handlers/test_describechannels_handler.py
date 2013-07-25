@@ -1,4 +1,4 @@
-from handler_fixture import StationHandlerTestCase
+from support.handler_fixture import StationHandlerTestCase
 
 from groundstation.proto.channel_list_pb2 import ChannelList
 
