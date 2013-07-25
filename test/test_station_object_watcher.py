@@ -1,7 +1,7 @@
 import os
 import select
 
-from station_fixture import StationTestCase
+from support.station_fixture import StationTestCase
 from groundstation.fs_watcher import FSWatcher
 from groundstation.utils import path2id
 
