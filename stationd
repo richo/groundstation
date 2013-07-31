@@ -29,6 +29,7 @@ from groundstation.utils import path2id
 import groundstation.utils.pid
 
 import groundstation.events.tcpnetwork_event as tcpnetwork_event
+import groundstation.transfer.handshake_handlers as handshake_handlers
 
 import groundstation.deferred
 
@@ -49,6 +50,10 @@ sockets = [discoverer, listener]
 peer_sockets = PeerSocketPool()
 
 last_beacon = time.time() - BEACON_TIMEOUT # Gaurantee that we'll announce on the first run
+
+HANDSHAKE_HANDLERS = {
+        "stationd": handshake_handlers.naive_sync.NaiveHandshakeHandler,
+}
 
 def _read_sockets():
     read_sockets = []
@@ -83,11 +88,11 @@ def handle_discoverer_event(sock):
                     if not station.recently_queried(event.payload):
                         client = StreamClient(peer[0])
                         peer_sockets.append(client)
-                        client.begin_handshake(station)
+                        handshake_handler.begin(station)
                 else: # XXX This should check if we have open transactions.
                     if not station.recently_queried(event.payload):
                         client = peer_sockets[peer[0]]
-                        client.begin_handshake(station)
+                        handshake_handler.begin(station)
 
             else:
                 # Peer's uuid is smaller, we should do nothing and await connection
@@ -155,6 +160,7 @@ for host in args.hosts:
 if args.pidfile:
     groundstation.utils.pid.register_pidfile(args.pidfile)
 
+handshake_handler = HANDSHAKE_HANDLERS[sys.argv[0]](station)
 while True:
     log.info("Current status :: Iterators: %i Deferreds: %i" %
             (len(station.iterators), len(station.deferreds)))
