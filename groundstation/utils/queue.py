@@ -3,7 +3,7 @@ class Queue(list):
     dynamically"""
 
     def __init__(self, size):
-        self.size = size
+        self._size = size
 
     def append(self, obj):
         if obj not in self:
@@ -11,14 +11,14 @@ class Queue(list):
         self.trim()
 
     def trim(self):
-        while len(self) > self.size:
+        while len(self) > self._size:
             self.pop(0)
 
     @property
     def size(self):
-        return self.size
+        return self._size
 
     @size.setter
-    def set_size(self, size):
-        self.size = size
+    def size(self, size):
+        self._size = size
         self.trim()
