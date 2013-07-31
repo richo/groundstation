@@ -12,6 +12,9 @@ from integration_fixture import StationIntegrationFixture, \
                                 TestListener, \
                                 TestClient
 
+from groundstation.transfer.handshake_handlers \
+        import NaiveHandshakeHandler
+
 
 
 class StationConnectionTestCase(StationIntegrationFixture):
@@ -44,6 +47,7 @@ class StationCommunication(StationIntegrationFixture):
 
         self.assertEqual(len(swrite), 1)
 
+        handshaker = NaiveHandshakeHandler(client)
         client.begin_handshake(self.stations[0])
         client.send()
 
