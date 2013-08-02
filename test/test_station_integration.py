@@ -12,7 +12,7 @@ from integration_fixture import StationIntegrationFixture, \
                                 TestListener, \
                                 TestClient
 
-from groundstation.transfer.handshake_handlers \
+from groundstation.transfer.handshake_handlers.naive_sync \
         import NaiveHandshakeHandler
 
 

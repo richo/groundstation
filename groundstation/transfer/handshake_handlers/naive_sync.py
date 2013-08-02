@@ -1,4 +1,4 @@
-from transfer.request import Request
+from groundstation.transfer.request import Request
 
 class NaiveHandshakeHandler(object):
     def __init__(self, station):
