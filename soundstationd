@@ -1,0 +1,25 @@
+#!/usr/bin/env python
+import os
+import sys
+import select
+import time
+import argparse
+
+from groundstation import logger
+log = logger.getLogger("stationd")
+
+from groundstation.node import Node
+from groundstation.station import Station
+
+from groundstation.audio_discoverer import AudioDiscoverer
+from groundstation.audio_announcer import AudioAnnouncer
+
+FREQUENCY = 19100
+
+myself = Node()
+station = Station.from_env(myself)
+
+discoverer = AudioDiscoverer(FREQUENCY)
+announcer  = AudioAnnouncer(FREQUENCY)
+
+log.info("Not implemented")
