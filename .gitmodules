@@ -1,0 +1,3 @@
+[submodule "quietnet"]
+	path = quietnet
+	url = git://github.com/Katee/quietnet.git
