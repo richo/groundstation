@@ -1,7 +1,5 @@
 -e git+git://github.com/libgit2/pygit2.git#egg=pygit2
 protobuf==2.5.0
 Flask==0.9
-PyGithub==1.16.0
-jira-python
 pycrypto
 watchdog
