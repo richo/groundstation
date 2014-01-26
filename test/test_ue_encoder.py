@@ -27,3 +27,10 @@ class TestUnambiguousEncapsulation(unittest.TestCase):
 
         self.assertEqual(message, self.test_bytes)
         self.assertEqual(header,  self.test_bytes)
+
+    def test_decode_weird_lengths(self):
+        encoder = UnambiguousEncoder()
+
+        message = encoder.decode("message", self.test_message + [54, 31])
+        test_bytes = self.test_bytes + [0b00000010]
+        self.assertEqual(message, test_bytes)
