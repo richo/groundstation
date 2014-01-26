@@ -3,7 +3,7 @@ from groundstation.ue_encoder import UnambiguousEncoder
 
 class TestUnambiguousEncapsulation(unittest.TestCase):
 
-    test_bytes = (0b01010101, 0b11110000)
+    test_bytes = [0b01010101, 0b11110000]
     test_message = [31, 54, 31, 54, 31, 54, 31, 54, 54, 54, 54, 54, 31, 31, 31, 31]
     test_header = [41, 0, 41, 0, 41, 0, 41, 0, 0, 0, 0, 0, 41, 41, 41, 41]
 
@@ -18,3 +18,12 @@ class TestUnambiguousEncapsulation(unittest.TestCase):
         # These offsets are totes legit. Trust me.
         self.assertEqual(message, self.test_message)
         self.assertEqual(header,  self.test_header)
+
+    def test_successfully_decoded(self):
+        encoder = UnambiguousEncoder()
+
+        message = encoder.decode("message", self.test_message)
+        header  = encoder.decode("header", self.test_header)
+
+        self.assertEqual(message, self.test_bytes)
+        self.assertEqual(header,  self.test_bytes)
