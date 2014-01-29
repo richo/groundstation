@@ -22,4 +22,27 @@ station = Station.from_env(myself)
 discoverer = AudioDiscoverer(FREQUENCY)
 announcer  = AudioAnnouncer(FREQUENCY)
 
-log.info("Not implemented")
+def main_server(opts):
+    log.info("Starting discoverer at %dhz" % FREQUENCY)
+    discoverer.start()
+
+def main_client(opts):
+    log.info("Starting announcer at %dhz" % FREQUENCY)
+    announcer.start()
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--server", dest='server', action='store_true',
+                        default=None)
+    parser.add_argument("--client", dest='server', action='store_false',
+                        default=None)
+
+    args = parser.parse_args()
+    if args.server is None:
+        raise Exception("Must specify --server or --client")
+
+    if args.server:
+        main_server(args)
+    else:
+        main_client(args)
