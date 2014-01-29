@@ -6,7 +6,7 @@ import time
 import argparse
 
 from groundstation import logger
-log = logger.getLogger("stationd")
+log = logger.getLogger("soundstationd")
 
 from groundstation.node import Node
 from groundstation.station import Station
