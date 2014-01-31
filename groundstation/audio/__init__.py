@@ -10,6 +10,8 @@ SIGIL = "00"
 BEACON_TIMEOUT = 1
 FREQUENCY = 1400
 
+FRAMES_PER_BUFFER = CHUNK * 10
+
 FORMAT = pyaudio.paInt16
 
 p = pyaudio.PyAudio()

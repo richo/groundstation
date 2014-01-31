@@ -1,3 +1,6 @@
+import Queue
+import audio
+import quietnet.quietnet as quietnet
 import pyaudio
 
 class AudioDiscoverer(object):
@@ -5,10 +8,22 @@ class AudioDiscoverer(object):
     def __init__(self, freq):
         self.audio = pyaudio.PyAudio()
         self.freq = freq
-        # self.stream = p.open(format=FORMAT, channels=options.channels, rate=options.rate,
-        #         input=True, frames_per_buffer=frames_per_buffer, stream_callback=callback)
+        self.stream = audio.get_stream(self.audio, input=True, stream_callback=self.append_msg,
+                                       frames_per_buffer=audio.FRAMES_PER_BUFFER)
+        self.msgs = Queue.Queue(4096)
+
+    def append_msg(self, in_data, frame_count, time_info, status):
+        frames = list(quietnet.chunks(quietnet.unpack(in_data), audio.CHUNK))
+        for frame in frames:
+            if frame and not self.msgs.full():
+                self.msgs.put(frame, False)
+        return (in_data, pyaudio.paContinue)
+
+    def start(self):
+        self.stream.start_stream()
 
     # Size is a relic of the socket based API, and probably needs to be refactored out
     def recv(self, size=None):
-        "Recieve a payload from the underlying audio stream"
-        return None
+        "Recieve a payload from the underlying audio stream, blocking if necessary"
+        item = self.msgs.get(True)
+        return item

@@ -29,6 +29,9 @@ announcer  = AudioAnnouncer(FREQUENCY)
 def main_server(opts):
     log.info("Starting discoverer at %dhz" % FREQUENCY)
     discoverer.start()
+    while True:
+        msg = discoverer.recv()
+        log.warn(repr(msg))
 
 def main_client(opts):
     log.info("Starting announcer at %dhz" % FREQUENCY)
