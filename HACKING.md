@@ -7,7 +7,7 @@ Vagrant works reasonably well, a Vagrantfile is distributed in HACKING/
 Stations
 ========
 
-The station is the core of groundstation. It represents a warpper around (For
+The station is the core of groundstation. It represents a wrapper around (For
 now) a single git object database. the network stuff isn't directly related,
 but the sole purpose of groundstations network stack is to interact with a
 station object.
