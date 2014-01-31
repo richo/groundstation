@@ -13,7 +13,11 @@ from groundstation.station import Station
 
 from groundstation.audio_discoverer import AudioDiscoverer
 from groundstation.audio_announcer import AudioAnnouncer
+from groundstation import settings
 
+import groundstation.audio
+
+BEACON_TIMEOUT = settings.BEACON_TIMEOUT
 FREQUENCY = 19100
 
 myself = Node()
@@ -28,7 +32,9 @@ def main_server(opts):
 
 def main_client(opts):
     log.info("Starting announcer at %dhz" % FREQUENCY)
-    announcer.start()
+    while True:
+        announcer.ping()
+        time.sleep(groundstation.audio.BEACON_TIMEOUT)
 
 
 if __name__ == "__main__":
