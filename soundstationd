@@ -17,8 +17,8 @@ from groundstation import settings
 
 import groundstation.audio
 
-BEACON_TIMEOUT = settings.BEACON_TIMEOUT
-FREQUENCY = 1400
+BEACON_TIMEOUT = groundstation.audio.BEACON_TIMEOUT
+FREQUENCY = groundstation.audio.FREQUENCY
 
 myself = Node()
 station = Station.from_env(myself)
