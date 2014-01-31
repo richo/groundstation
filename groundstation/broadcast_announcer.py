@@ -18,6 +18,8 @@ class BroadcastAnnouncer(BroadcastSocket):
     def name(self):
         return self._name
 
+    # TODO: Make this accept a Node to build the payload from
+
     @name.setter
     def name(self, value):
         self._name = value
