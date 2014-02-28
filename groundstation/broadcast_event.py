@@ -5,7 +5,7 @@ class BroadcastEvent(object):
         self.validate()
 
     def validate(self):
-        return True # Assume that if no validation is specified its all good
+        return True # Assume that if no validation is specified it's all good
 
     @staticmethod
     def normalize_payload(payload):
