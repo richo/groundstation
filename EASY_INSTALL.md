@@ -22,12 +22,12 @@ __install flask__
 __install pycrypto__
 `python -m easy_install pycrypto`
 
-These next two need to be from the repos for now, as the patches havent been pushed out yet
+These next two need to be from the repos for now, as the patches haven't been pushed out yet
 
 __install libgit2__
 `git clone git://github.com/libgit2/libgit2.git`
  follow cmake instructions
-(you must remove old version of libgit2 and it's devel headers)
+(you must remove old version of libgit2 and its devel headers)
 
 __install pygit2__
 ```
@@ -46,7 +46,7 @@ Only required if you want realtime updating of peer nodes
 `python -m easy_install watchdog`
 
 __Groundstation setup__
-Odds are good if you're reading this, you've already done the following, but incase you're viewing this via a browser:
+Odds are good if you're reading this, you've already done the following, but in case you're viewing this via a browser:
 ```
 git clone https://github.com/richo/groundstation ./groundstation
 
