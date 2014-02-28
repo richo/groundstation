@@ -28,7 +28,7 @@
  *
  *  ##### Intermediate Representation
  *
- *  *TODO* Talk about this :) Its JsonML, but document the node names we use.
+ *  *TODO* Talk about this :) It's JsonML, but document the node names we use.
  *
  *  [JsonML]: http://jsonml.org/ "JSON Markup Language"
  **/
@@ -142,7 +142,7 @@ var mk_block = Markdown.mk_block = function(block, trail, line) {
 
   var s = new String(block);
   s.trailing = trail;
-  // To make it clear its not just a string
+  // To make it clear it's not just a string
   s.inspect = mk_block_inspect;
   s.toSource = mk_block_toSource;
 
@@ -240,7 +240,7 @@ Markdown.prototype.processInline = function processInline( block ) {
 Markdown.prototype.toTree = function toTree( source, custom_root ) {
   var blocks = source instanceof Array ? source : this.split_blocks( source );
 
-  // Make tree a member variable so its easier to mess with in extensions
+  // Make tree a member variable so it's easier to mess with in extensions
   var old_tree = this.tree;
   try {
     this.tree = custom_root || this.tree || [ "markdown" ];
@@ -1338,7 +1338,7 @@ var isArray = Array.isArray || function(obj) {
 };
 
 var forEach;
-// Don't mess with Array.prototype. Its not friendly
+// Don't mess with Array.prototype. It's not friendly
 if ( Array.prototype.forEach ) {
   forEach = function( arr, cb, thisp ) {
     return arr.forEach( cb, thisp );
