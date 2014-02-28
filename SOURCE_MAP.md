@@ -7,7 +7,7 @@ stationd
 stationd runs a station on the local network. By default it:
 
 - Runs a BroadcastListener which detects peers on the local
-- Runs a BroadcastAnnouncer which announces it's presence to available listeners
+- Runs a BroadcastAnnouncer which announces its presence to available listeners
 - maintains a SocketPool of peers which were discovered using the Broadcast* handlers.
 
 airshipd

@@ -5,9 +5,9 @@ groundstation is a database, and framework for operating with the database,
 intended to build distributed knowledge graphs, and then sync them up in
 hostile network settings.
 
-It's uses are wide and varied, but some key examples are:
+Its uses are wide and varied, but some key examples are:
 
-* Locale driven marketplaces.
+* Locale-driven marketplaces.
 * Fully decentralised bulletin boards.
 * Networks that keep working long after the internet has failed.
 
@@ -32,7 +32,7 @@ source.
 protocol support
 ----------------
 
-groundstation hinges on the notion of protocols internally- groundstation core
+groundstation hinges on the notion of protocols internally – groundstation core
 provides you with content addressable storage, but it's up to you to work out
 what to actually do with that data.
 
@@ -57,7 +57,7 @@ groundstation uses [babashka][3] for managing its dependencies. If you have it i
 You probably want to install those requirements in a virtualenv.
 
 You'll almost certainly want to have a read of the [hacking document](HACKING.md),
-and checkout the other [misc hacking docs](HACKING/).
+and check out the other [misc hacking docs](HACKING/).
 
 [1]:http://libgit2.github.com/
 [2]:https://github.com/libgit2/pygit2#building-on-nix-including-os-x
