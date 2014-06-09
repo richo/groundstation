@@ -20,15 +20,6 @@ pulled out into a storage driver, however while groundstation doesn't assume
 that you're using git it does assume you're using something that looks *a lot
 like git*.
 
-pygit2
-------
-
-groundstation uses pygit2 under the hood for its git interactions, and some
-features that it depends on have not landed in a stable release yet.
-
-For this reason, you'll need to build and install the latest [libgit2][1] from
-source.
-
 protocol support
 ----------------
 
@@ -45,20 +36,19 @@ already, everything that ships with groundstation will be released with
 development
 -----------
 
-groundstation uses [babashka][3] for managing its dependencies. If you have it installed, you should be able to do something like:
+groundstation is mostly self contained, and hasn't relied on unreleased
+features in libgit2 or pygit2 for some time now. Assuming that you have a
+working and recent libgit2 you should be able to run the test suite by running:
 
-`babashka groundstation_dev` and wind up with a working environment. Maybe.
-
-1. install libgit2 v0.18.0
-2. `pip install -r requirements.txt`
-3. ???????
-4. profit!
+1. `pip install -r requirements.txt`
+2. `make groundstation_dev`
 
 You probably want to install those requirements in a virtualenv.
 
+There is also a tiny unittest suite for some of the javascript in Airship, you can run them by running:
+
+1. `npm install`
+2. `make airship_test`
+
 You'll almost certainly want to have a read of the [hacking document](HACKING.md),
 and check out the other [misc hacking docs](HACKING/).
-
-[1]:http://libgit2.github.com/
-[2]:https://github.com/libgit2/pygit2#building-on-nix-including-os-x
-[3]:https://github.com/richo/babashka
