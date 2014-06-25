@@ -43,10 +43,10 @@
 intended to build distributed knowledge graphs, and then sync them up in
 hostile network settings.</p>
 
-<p>It’s uses are wide and varied, but some key examples are:</p>
+<p>Its uses are wide and varied, but some key examples are:</p>
 
 <ul>
-  <li>Locale driven marketplaces.</li>
+  <li>Locale-driven marketplaces.</li>
   <li>Fully decentralised bulletin boards.</li>
   <li>Networks that keep working long after the internet has failed.</li>
 </ul>
@@ -60,17 +60,9 @@ pulled out into a storage driver, however while groundstation doesn’t assume
 that you’re using git it does assume you’re using something that looks <em>a lot
 like git</em>.</p>
 
-<h2>pygit2</h2>
+<h2 id="protocol-support">protocol support</h2>
 
-<p>groundstation uses pygit2 under the hood for its git interactions, and some
-features that it depends on have not landed in a stable release yet.</p>
-
-<p>For this reason, you'll need to build and install the latest <a href="http://libgit2.github.com/">libgit2</a> and
-<a href="https://github.com/libgit2/pygit2#building-on-nix-including-os-x">pygit2</a> from source.</p>
-
-<h2>protocol support</h2>
-
-<p>groundstation hinges on the notion of protocols internally- groundstation core
+<p>groundstation hinges on the notion of protocols internally – groundstation core
 provides you with content addressable storage, but it’s up to you to work out
 what to actually do with that data.</p>
 
@@ -79,23 +71,25 @@ the form <code>name@domain:adaptor-version</code>, and until such time as a rele
 already, everything that ships with groundstation will be released with
 <code>richo@psych0tik.net</code> as the email, ie <code>richo@psych0tik.net:github-0.0.0</code>.</p>
 
-<h2>development</h2>
+<h2 id="development">development</h2>
 
-<p>groundstation uses <a href="https://github.com/richo/babashka">babashka</a> for managing it's dependencies. If you have it installed, you should be able to do something like:</p>
-
-<p><code>babashka groundstation_dev</code> and wind up with a working environment. Maybe.</p>
+<p>groundstation is mostly self contained, and hasn’t relied on unreleased
+features in libgit2 or pygit2 for some time now. Assuming that you have a
+working and recent libgit2 you should be able to run the test suite by running:</p>
 
 <ol>
-  <li>install libgit2 v0.18.0</li>
   <li><code>pip install -r requirements.txt</code></li>
-  <li>???????</li>
-  <li>profit!</li>
+  <li><code>make groundstation_dev</code></li>
 </ol>
 
 <p>You probably want to install those requirements in a virtualenv.</p>
 
-<p>You’ll almost certainly want to have a read of the <a href="https://github.com/richo/github/blob/master/HACKING.md">hacking document</a>,
-and checkout the other <a href="https://github.com/richo/groundstation/tree/master/HACKING/">misc hacking docs</a>.</p>
+<p>There is also a tiny unittest suite for some of the javascript in Airship, you can run them by running:</p>
+
+<ol>
+  <li><code>npm install</code></li>
+  <li><code>make airship_test</code></li>
+</ol>
 
     <footer>
       <div class="owner">
