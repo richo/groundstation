@@ -1,4 +1,5 @@
 import unittest
+import random
 from groundstation.ue_encoder import UnambiguousEncoder
 
 class TestUnambiguousEncapsulation(unittest.TestCase):
@@ -27,6 +28,25 @@ class TestUnambiguousEncapsulation(unittest.TestCase):
 
         self.assertEqual(message, self.test_bytes)
         self.assertEqual(header,  self.test_bytes)
+
+    @staticmethod
+    def flip_n_bits(n, msg):
+        out = []
+        for byte in msg:
+            bits = list(range(8))
+            for _ in range(n):
+                bit = bits.pop(random.randint(0, len(bits) - 1))
+                byte = byte ^ 1 << bit
+            out.append(byte)
+        return out
+
+    def test_1_flipped_bit(self):
+        encoder = UnambiguousEncoder()
+
+        flipped_message = self.flip_n_bits(1, self.test_message)
+        message = encoder.decode("message", flipped_message)
+
+        self.assertEqual(message, self.test_bytes)
 
     def test_decode_weird_lengths(self):
         encoder = UnambiguousEncoder()
