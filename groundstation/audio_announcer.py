@@ -1,4 +1,4 @@
-import audio
+import groundstation.audio as audio
 import quietnet.quietnet as quietnet
 import pyaudio
 
@@ -48,17 +48,18 @@ def pack_ascii_to_bitstream(payload):
     return out
 
 
-
 class AudioAnnouncer(object):
     bitstream = pack_ascii_to_bitstream(PING_PAYLOAD)
 
-    def __init__(self, freq):
-        self.audio = pyaudio.PyAudio()
+    def __init__(self, freq, _audio):
+        self.audio = _audio
         self.freq = freq
         self.stream = audio.get_stream(self.audio, output=True)
         self.ping_buffer = make_buffer_from_bit_pattern(self.bitstream, self.freq, 0)
 
+    def _ping_payload(self):
+        return "".join(self.ping_buffer)
+
     def ping(self):
         log.info("Broadcasting audio ping")
-        output = "".join(self.ping_buffer)
-        self.stream.write(output)
+        self.stream.write(self._ping_payload())

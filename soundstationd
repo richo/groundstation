@@ -4,7 +4,6 @@ import sys
 import select
 import time
 import argparse
-
 from groundstation import logger
 log = logger.getLogger("soundstationd")
 
@@ -23,8 +22,10 @@ FREQUENCY = groundstation.audio.FREQUENCY
 myself = Node()
 station = Station.from_env(myself)
 
-discoverer = AudioDiscoverer(FREQUENCY)
-announcer  = AudioAnnouncer(FREQUENCY)
+AUDIO = groundstation.audio.audio_singleton
+
+discoverer = AudioDiscoverer(FREQUENCY, AUDIO)
+announcer  = AudioAnnouncer(FREQUENCY, AUDIO)
 
 def main_server(opts):
     log.info("Starting discoverer at %dhz" % FREQUENCY)

@@ -15,6 +15,7 @@ FRAMES_PER_BUFFER = CHUNK * 10
 FORMAT = pyaudio.paInt16
 
 p = pyaudio.PyAudio()
+audio_singleton = p
 
 def get_stream(a, **kwargs):
     """a: a pyaudio.PyAudio"""

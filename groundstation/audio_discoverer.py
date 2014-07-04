@@ -1,12 +1,12 @@
 import Queue
-import audio
+import groundstation.audio as audio
 import quietnet.quietnet as quietnet
 import pyaudio
 
 class AudioDiscoverer(object):
 
-    def __init__(self, freq):
-        self.audio = pyaudio.PyAudio()
+    def __init__(self, freq, _audio):
+        self.audio = _audio
         self.freq = freq
         self.stream = audio.get_stream(self.audio, input=True, stream_callback=self.append_msg,
                                        frames_per_buffer=audio.FRAMES_PER_BUFFER)
