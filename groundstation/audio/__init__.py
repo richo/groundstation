@@ -1,4 +1,11 @@
-import pyaudio
+import sys
+
+try:
+    import pyaudio
+except ImportError:
+    # FIXME: Nasty hack to work around virtualenv on arm.
+    sys.path.append('/usr/lib/python2.7/dist-packages')
+    import pyaudio
 
 # Shamelessly stolen directly from quietnet
 RATE = 44100
