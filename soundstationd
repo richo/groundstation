@@ -18,14 +18,15 @@ import groundstation.audio
 
 BEACON_TIMEOUT = groundstation.audio.BEACON_TIMEOUT
 FREQUENCY = groundstation.audio.FREQUENCY
+FREQUENCY_OFF = groundstation.audio.FREQUENCY_OFF
 
 myself = Node()
 station = Station.from_env(myself)
 
 AUDIO = groundstation.audio.audio_singleton
 
-discoverer = AudioDiscoverer(FREQUENCY, AUDIO)
-announcer  = AudioAnnouncer(FREQUENCY, AUDIO)
+discoverer = AudioDiscoverer(FREQUENCY, FREQUENCY_OFF, AUDIO)
+announcer  = AudioAnnouncer(FREQUENCY, FREQUENCY_OFF, AUDIO)
 
 def main_server(opts):
     log.info("Starting discoverer at %dhz" % FREQUENCY)

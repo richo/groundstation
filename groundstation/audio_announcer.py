@@ -51,11 +51,12 @@ def pack_ascii_to_bitstream(payload):
 class AudioAnnouncer(object):
     bitstream = pack_ascii_to_bitstream(PING_PAYLOAD)
 
-    def __init__(self, freq, _audio):
+    def __init__(self, freq, freq_off, _audio):
         self.audio = _audio
         self.freq = freq
+        self.freq_off = freq_off
         self.stream = audio.get_stream(self.audio, output=True)
-        self.ping_buffer = make_buffer_from_bit_pattern(self.bitstream, self.freq, 0)
+        self.ping_buffer = make_buffer_from_bit_pattern(self.bitstream, self.freq, self.freq_off)
 
     def _ping_payload(self):
         return "".join(self.ping_buffer)
