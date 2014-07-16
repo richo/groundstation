@@ -40,8 +40,11 @@ groundstation is mostly self contained, and hasn't relied on unreleased
 features in libgit2 or pygit2 for some time now. Assuming that you have a
 working and recent libgit2 you should be able to run the test suite by running:
 
-1. `pip install -r requirements.txt`
-2. `make groundstation_dev`
+groundstation depends on the development branch of libgit2 via pygit2 again. Surprise!
+
+1. install libgit2 from the `development` branch.
+2. `pip install -r requirements.txt` (On OSX you'll need to `export CC=clang` for pycrypto)
+3. `make groundstation_dev`
 
 You probably want to install those requirements in a virtualenv.
 
