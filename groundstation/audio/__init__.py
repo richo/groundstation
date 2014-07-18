@@ -8,7 +8,7 @@ except ImportError:
     import pyaudio
 
 # Shamelessly stolen directly from quietnet
-RATE = 44100
+RATE = 8000
 CHANNELS = 1
 FRAME_LENGTH = 3
 CHUNK = 256
