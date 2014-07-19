@@ -25,10 +25,8 @@ station = Station.from_env(myself)
 
 AUDIO = groundstation.audio.audio_singleton
 
-discoverer = AudioDiscoverer(FREQUENCY, FREQUENCY_OFF, AUDIO)
-announcer  = AudioAnnouncer(FREQUENCY, FREQUENCY_OFF, AUDIO)
-
 def main_server(opts):
+    discoverer = AudioDiscoverer(FREQUENCY, FREQUENCY_OFF, AUDIO)
     log.info("Starting discoverer at %dhz" % FREQUENCY)
     discoverer.start()
     while True:
@@ -36,6 +34,7 @@ def main_server(opts):
         log.warn(repr(msg))
 
 def main_client(opts):
+    announcer  = AudioAnnouncer(FREQUENCY, FREQUENCY_OFF, AUDIO)
     log.info("Starting announcer at %dhz" % FREQUENCY)
     while True:
         announcer.ping()

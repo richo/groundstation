@@ -8,19 +8,19 @@ except ImportError:
     import pyaudio
 
 # Shamelessly stolen directly from quietnet
-RATE = 8000
+RATE = 2400
 CHANNELS = 1
 FRAME_LENGTH = 3
 CHUNK = 256
 DATASIZE = CHUNK * FRAME_LENGTH
 SIGIL = "00"
 BEACON_TIMEOUT = 1
-FREQUENCY = 1400
+FREQUENCY = 19100
 FREQUENCY_OFF = FREQUENCY / 2 * 1.5
 
 FRAMES_PER_BUFFER = CHUNK * 10
 
-FORMAT = pyaudio.paInt16
+FORMAT = pyaudio.paFloat32
 
 p = pyaudio.PyAudio()
 audio_singleton = p

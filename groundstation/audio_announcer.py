@@ -1,8 +1,10 @@
+import sys
 import groundstation.audio as audio
 import quietnet.quietnet as quietnet
 import pyaudio
 
 import alltheFSKs.MFSKModulator as modulator
+import alltheFSKs.MFSKDemodulator as demodulator
 
 import groundstation.ue_encoder
 
@@ -25,5 +27,9 @@ class AudioAnnouncer(object):
     def ping(self):
         log.info("Broadcasting audio ping")
         mod = modulator.MFSKModulator()
+        print repr(self.ping_buffer)
         mod.modulate_symbol(self.ping_buffer)
+        demod = demodulator.MFSKDemodulator(sample_rate=audio.RATE, callback=lambda i: sys.stdout.write("%s\n" % repr(i)))
+        demod.consume(mod.emit_all())
+
         mod.write_to_stream(self.stream)
