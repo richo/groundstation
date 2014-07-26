@@ -10,8 +10,10 @@ log = logger.getLogger("soundstationd")
 from groundstation.node import Node
 from groundstation.station import Station
 
-from groundstation.audio_discoverer import AudioDiscoverer
+from groundstation.audio_shrieker import AudioShrieker
 from groundstation.audio_announcer import AudioAnnouncer
+from groundstation.audio_discoverer import AudioDiscoverer
+from groundstation.audio_receiver import AudioReceiver
 from groundstation import settings
 
 import groundstation.audio
@@ -26,20 +28,14 @@ station = Station.from_env(myself)
 AUDIO = groundstation.audio.audio_singleton
 
 def main_server(opts):
-    discoverer = AudioDiscoverer(FREQUENCY, FREQUENCY_OFF, AUDIO)
+    receiver = AudioReceiver(FREQUENCY, station)
     log.info("Starting discoverer at %dhz" % FREQUENCY)
-    discoverer.start()
-    while True:
-        msg = discoverer.recv()
-        log.warn(repr(msg))
+    receiver.start_listening()
 
 def main_client(opts):
-    announcer  = AudioAnnouncer(FREQUENCY, FREQUENCY_OFF, AUDIO)
-    log.info("Starting announcer at %dhz" % FREQUENCY)
-    while True:
-        announcer.ping()
-        time.sleep(groundstation.audio.BEACON_TIMEOUT)
-
+    shrieker  = AudioShrieker(FREQUENCY, FREQUENCY_OFF, AUDIO)
+    log.info("Starting shrieker at %dhz" % FREQUENCY)
+    shrieker.shriek(station)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()

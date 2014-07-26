@@ -23,9 +23,12 @@ class AudioAnnouncer(object):
         self.freq_off = freq_off
         self.stream = audio.get_stream(self.audio, output=True)
         self.ping_buffer = ENCODER.encode("header", map(ord, PING_PAYLOAD))
+        self.other_ping = ENCODER.encode("header", (0,) * 4)
 
     def ping(self):
+        self.ping_buffer, self.other_ping = self.other_ping, self.ping_buffer
         log.info("Broadcasting audio ping")
+        log.info(repr(self.ping_buffer))
         mod = modulator.MFSKModulator()
         print repr(self.ping_buffer)
         mod.modulate_symbol(self.ping_buffer)
