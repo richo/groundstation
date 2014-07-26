@@ -1,6 +1,6 @@
 [submodule "quietnet"]
 	path = quietnet
-	url = git://github.com/Katee/quietnet.git
+	url = git://github.com/richo/quietnet.git
 [submodule "alltheFSKs"]
 	path = alltheFSKs
 	url = git@github.com:richo/alltheFSKs.git
