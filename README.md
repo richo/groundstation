@@ -34,7 +34,10 @@ groundstation is mostly self contained, and hasn't relied on unreleased
 features in libgit2 or pygit2 for some time now. Assuming that you have a
 working and recent libgit2 you should be able to run the test suite by running:
 
-Groundstation should work with the latest stable version of pygit2, which unfortunately still depends on an unreleased version of libgit2. It has been a while since I used new features in pygit2 though, so older versions should work fine as far back as 0.18.
+Groundstation should work with the latest stable version of pygit2, which
+unfortunately still depends on an unreleased version of libgit2. It has been a
+while since I used new features in pygit2 though, so older versions should work
+fine as far back as 0.18.
 
 
 1. install libgit2 from the `development` branch.
