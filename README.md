@@ -5,12 +5,6 @@ groundstation is a database, and framework for operating with the database,
 intended to build distributed knowledge graphs, and then sync them up in
 hostile network settings.
 
-Its uses are wide and varied, but some key examples are:
-
-* Locale-driven marketplaces.
-* Fully decentralised bulletin boards.
-* Networks that keep working long after the internet has failed.
-
 The core of its implementation is an object store of linked immutable objects
 that are synced via a gossip protocol.
 
