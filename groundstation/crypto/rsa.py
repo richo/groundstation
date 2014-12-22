@@ -6,18 +6,13 @@ we assert that you not only have a 40 character SHA1 hash, but also one that
 points to a valid object
 """
 
-import sys
 import base64
 import struct
 
 from Crypto.PublicKey import RSA
 
 
-def materialise_exponent(e):
-    return int(''.join(['%02X' % struct.unpack('B', x)[0] for x in e]), 16)
-
-
-def materialise_numeric(n):
+def materialise(n):
     return int(''.join(['%02X' % struct.unpack('B', x)[0] for x in n]), 16)
 
 
@@ -35,8 +30,8 @@ def convert_pubkey(key):
         data, keydata = keydata[4:dlen+4], keydata[4+dlen:]
 
         parts.append(data)
-    exponent = materialise_exponent(parts[1])
-    numeric = materialise_numeric(parts[2])
+    exponent = materialise(parts[1])
+    numeric = materialise(parts[2])
 
     return RSA.construct((long(numeric), long(exponent)))
 
