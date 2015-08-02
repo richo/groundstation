@@ -1,5 +1,5 @@
 cffi
-pygit2
+# pygit2
 protobuf==2.5.0
 Flask==0.9
 pycrypto

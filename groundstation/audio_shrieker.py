@@ -42,14 +42,13 @@ def convert_message_to_bits(msg):
     return bits
 
 class AudioShrieker(object):
-    def __init__(self, freq, freq_off, _audio):
+    def __init__(self, tones, _audio):
         self.audio = _audio
-        self.freq = freq
-        self.freq_off = freq_off
+        self.tones = tones
         self.stream = audio.get_stream(self.audio, output=True)
 
     def send(self, message):
-        bits = convert_message_to_bits(message)
+        bits = convert_message_to_bits(message, self.tones)
         for bit in bits:
             pattern = psk.encode([bit], options.sigil)
             buffer = make_buffer_from_bit_pattern(pattern, options.freq, 0)
@@ -77,6 +76,6 @@ class AudioShrieker(object):
             # print repr(map(bin, header_bytes))
             header_bytes = map(chr, header_bytes)
 
-            send_bytes(header_bytes)
+            send_bytes(header_bytes, self.tones)
             log.info("Sent header for %s" % name)
-            send_bytes(encoded)
+            send_bytes(encoded, self.tones)

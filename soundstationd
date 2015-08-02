@@ -19,8 +19,7 @@ from groundstation import settings
 import groundstation.audio
 
 BEACON_TIMEOUT = groundstation.audio.BEACON_TIMEOUT
-FREQUENCY = groundstation.audio.FREQUENCY
-FREQUENCY_OFF = groundstation.audio.FREQUENCY_OFF
+TONES = groundstation.audio.TONES
 
 myself = Node()
 station = Station.from_env(myself)
@@ -28,13 +27,13 @@ station = Station.from_env(myself)
 AUDIO = groundstation.audio.audio_singleton
 
 def main_server(opts):
-    receiver = AudioReceiver(FREQUENCY, station)
-    log.info("Starting discoverer at %dhz" % FREQUENCY)
+    receiver = AudioReceiver(TONES, station)
+    log.info("Starting discoverer at %dhz" % TONES)
     receiver.start_listening()
 
 def main_client(opts):
-    shrieker  = AudioShrieker(FREQUENCY, FREQUENCY_OFF, AUDIO)
-    log.info("Starting shrieker at %dhz" % FREQUENCY)
+    shrieker  = AudioShrieker(TONES, AUDIO)
+    log.info("Starting shrieker at %d:%d:%dhz" % tuple(TONES.values()))
     shrieker.shriek(station)
 
 if __name__ == "__main__":
