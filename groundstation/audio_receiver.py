@@ -14,14 +14,14 @@ def reset_payload():
     return list()
 
 class AudioReceiver(object):
-    def __init__(self, freq, station):
-        self.freq = freq
+    def __init__(self, tones, station):
+        self.tones = tones
         self.station = station
 
     def start_listening(self):
         header_byte_count, header_bytes, header_length = reset_header()
         payload = reset_payload()
-        listen.setup_processes()
+        listen.setup_processes(self.tones)
         for char in listen.start_analysing_stream():
             char_value = ord(char)
             if char_value & 0b10000000: # Header byte
