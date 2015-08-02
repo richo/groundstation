@@ -57,25 +57,26 @@ class AudioShrieker(object):
 
     def shriek(self, station):
         log.info("Sending the contents of station: %s" % (repr(station)))
-        for name in station.objects():
-            encoded = base64.b64encode(station[name])
-            length = len(encoded)
-            log.info("Yelling %s (%d bytes)" % (name, length))
-            # Use a really sketchy scheme:
-            # Set the high bit on length messages, leave it low on base64 transmissions (Since they're ascii)
-            # Only use the lower 4 bits to make the math easier
-            # always send in 4 messages, eg, if you've got messages longer than 64k you're toast
-            header_bytes = map(ord, struct.pack(">h", length))
-            header_bytes = [
-                    (header_bytes[0] & 0xf),
-                    (header_bytes[0] >> 4 & 0xf),
-                    (header_bytes[1] & 0xf),
-                    (header_bytes[1] >> 4 & 0xf),
-            ]
-            header_bytes = map(lambda x: x | 0b10000000, header_bytes)
-            # print repr(map(bin, header_bytes))
-            header_bytes = map(chr, header_bytes)
+        while True:
+            for name in station.objects():
+                encoded = base64.b64encode(station[name])
+                length = len(encoded)
+                log.info("Yelling %s (%d bytes)" % (name, length))
+                # Use a really sketchy scheme:
+                # Set the high bit on length messages, leave it low on base64 transmissions (Since they're ascii)
+                # Only use the lower 4 bits to make the math easier
+                # always send in 4 messages, eg, if you've got messages longer than 64k you're toast
+                header_bytes = map(ord, struct.pack(">h", length))
+                header_bytes = [
+                        (header_bytes[0] & 0xf),
+                        (header_bytes[0] >> 4 & 0xf),
+                        (header_bytes[1] & 0xf),
+                        (header_bytes[1] >> 4 & 0xf),
+                ]
+                header_bytes = map(lambda x: x | 0b10000000, header_bytes)
+                # print repr(map(bin, header_bytes))
+                header_bytes = map(chr, header_bytes)
 
-            send_bytes(header_bytes, self.tones)
-            log.info("Sent header for %s" % name)
-            send_bytes(encoded, self.tones)
+                send_bytes(header_bytes, self.tones)
+                log.info("Sent header for %s" % name)
+                send_bytes(encoded, self.tones)
