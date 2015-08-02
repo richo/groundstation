@@ -28,12 +28,12 @@ AUDIO = groundstation.audio.audio_singleton
 
 def main_server(opts):
     receiver = AudioReceiver(TONES, station)
-    log.info("Starting discoverer at %dhz" % TONES)
+    log.info("Starting discoverer at %d:%d:%dhz" % tuple(sorted(TONES.values())))
     receiver.start_listening()
 
 def main_client(opts):
     shrieker  = AudioShrieker(TONES, AUDIO)
-    log.info("Starting shrieker at %d:%d:%dhz" % tuple(TONES.values()))
+    log.info("Starting shrieker at %d:%d:%dhz" % tuple(sorted(TONES.values())))
     shrieker.shriek(station)
 
 if __name__ == "__main__":
