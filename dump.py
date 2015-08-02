@@ -17,11 +17,14 @@ def main():
     station = Station.from_env(myself)
 
     for obj in station.objects():
-        data = station[obj]
-        o = UpdateObject.from_object(data.read_raw())
-        filename, body = o.data.split(chr(0x00), 1)
-        log("%s: %s" % (obj, filename))
-        print(bz2.decompress(body))
+        try:
+            data = station[obj]
+            o = UpdateObject.from_object(data.read_raw())
+            filename, body = o.data.split(chr(0x00), 1)
+            log("%s: %s" % (obj, filename))
+            print(bz2.decompress(body))
+        except Exception as e:
+            log("Failed to decode %s: %s" % map(repr, (obj, e)))
 
 
 if __name__ == '__main__':
