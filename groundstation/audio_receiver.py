@@ -40,6 +40,7 @@ class AudioReceiver(object):
                     header_byte_count += 1
                     header_length = struct.unpack(">h", ''.join(map(chr, header_bytes)))[0]
                     log.info("Reading %d bytes of payload" % header_length)
+                    payload = reset_payload()
                 elif header_byte_count == 4:
                     log.warning("Got header bytes while still expecting payload")
                     payload.append(char)
