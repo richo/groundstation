@@ -1,5 +1,4 @@
 from sockets.stream_socket import StreamSocket
-from transfer.request import Request
 from transfer.notification import Notification
 import settings
 
@@ -16,11 +15,6 @@ class StreamClient(StreamSocket):
         self.peer = addr
         self.socket.connect((addr, settings.PORT))
         self.socket.setblocking(False)
-
-    def begin_handshake(self, station):
-        request = Request("LISTALLOBJECTS", station=station, stream=self)
-        station.register_request(request)
-        self.enqueue(request)
 
     def notify_new_object(self, station, path):
         # TODO FSWatcher should probably be responsible for catching these to
